@@ -103,9 +103,7 @@ def run(args: argparse.Namespace) -> None:
             log_path = run_output / "run.log"
             command = [
                 sys.executable, str(ROOT / "main.py"),
-                "--judge-config", str(ROOT / "config" / "judge.json"),
                 "--problem", problem,
-                "--judge", "local",
                 "--oracle", "--oracle-limit", str(args.oracle_limit),
                 "--iterations", "2",
                 "--output", str(run_output),
