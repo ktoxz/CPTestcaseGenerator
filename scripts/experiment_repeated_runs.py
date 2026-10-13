@@ -46,7 +46,7 @@ def summarize(output: Path, problems: list[str], replicates: int) -> dict:
                 "tpr": metric.get("tpr_label_based"),
                 "tnr": metric.get("tnr_label_based"),
                 "cases": len(report.get("cases", [])),
-                "report": str(report_path.relative_to(ROOT)),
+                "report": str(report_path.resolve().relative_to(ROOT.resolve())),
             })
     by_problem = []
     for problem in problems:
@@ -103,6 +103,7 @@ def run(args: argparse.Namespace) -> None:
             log_path = run_output / "run.log"
             command = [
                 sys.executable, str(ROOT / "main.py"),
+                "--judge-config", str(ROOT / "config" / "judge.json"),
                 "--problem", problem,
                 "--judge", "local",
                 "--oracle", "--oracle-limit", str(args.oracle_limit),
@@ -116,14 +117,15 @@ def run(args: argparse.Namespace) -> None:
                     command, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT,
                     text=True, check=False,
                 )
+            root_resolved = ROOT.resolve()
             attempt = {
                 "finished_at": datetime.now().astimezone().isoformat(),
                 "replicate": replicate,
                 "problem_id": problem,
                 "exit_code": completed.returncode,
                 "duration_seconds": round(time.monotonic() - started, 3),
-                "log": str(log_path.relative_to(ROOT)),
-                "report": str(report_path.relative_to(ROOT)) if report_path.is_file() else None,
+                "log": str(log_path.resolve().relative_to(root_resolved)),
+                "report": str(report_path.resolve().relative_to(root_resolved)) if report_path.is_file() else None,
             }
             status["attempts"].append(attempt)
             write_json(status_path, status)
