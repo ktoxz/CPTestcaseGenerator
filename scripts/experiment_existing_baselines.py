@@ -12,20 +12,61 @@ import argparse
 import csv
 import json
 import random
+import subprocess
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-STANDALONE_EXCLUSIONS = {"batches", "codenet-additional20-validation", "pilot20-20261007"}
+STANDALONE_EXCLUSIONS = {"batches", "codenet-additional20-validation", "pilot20-20261007", "experiments"}
+COHORT_FILE = ROOT / "config" / "experiments" / "report-cohort-20261013.json"
 
 
 def read_json(path: Path) -> dict | list:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def selected_reports(output_root: Path) -> dict[str, Path]:
+def git_provenance() -> dict:
+    """Return commit, branch and dirty flag of the working tree (None if not a repo)."""
+    def git(*args: str) -> str | None:
+        try:
+            done = subprocess.run(["git", *args], cwd=ROOT, capture_output=True,
+                                  text=True, timeout=15, check=True)
+        except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
+            return None
+        return done.stdout.strip()
+    status = git("status", "--porcelain", "--untracked-files=no")
+    return {
+        "commit": git("rev-parse", "HEAD"),
+        "branch": git("rev-parse", "--abbrev-ref", "HEAD"),
+        "dirty": bool(status) if status is not None else None,
+    }
+
+
+def selected_reports(output_root: Path, *, refresh: bool = False) -> dict[str, Path]:
+    """Return the thesis cohort: problem id -> report.json of the reported run.
+
+    The cohort is frozen in ``COHORT_FILE`` so that later runs written under
+    ``output/`` (repeated runs, new experiments) cannot silently replace the
+    suites that the thesis numbers were computed from.
+    """
+    if COHORT_FILE.is_file() and not refresh:
+        frozen = read_json(COHORT_FILE)
+        return {problem: ROOT / path for problem, path in frozen["reports"].items()}
+    return _scan_latest_reports(output_root)
+
+
+def freeze_cohort(reports: dict[str, Path]) -> None:
+    COHORT_FILE.parent.mkdir(parents=True, exist_ok=True)
+    COHORT_FILE.write_text(json.dumps({
+        "description": "Latest successful locked run per problem used in the 2026-10-13 thesis report",
+        "frozen_at": datetime.now().astimezone().isoformat(),
+        "reports": {problem: path.relative_to(ROOT).as_posix() for problem, path in sorted(reports.items())},
+    }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def _scan_latest_reports(output_root: Path) -> dict[str, Path]:
     candidates: list[Path] = []
     batches = output_root / "batches"
     if batches.is_dir():
@@ -182,6 +223,8 @@ def run(output: Path) -> dict:
         })
     summary = {
         "created_at": datetime.now().astimezone().isoformat(),
+        "provenance": git_provenance(),
+        "cohort_file": COHORT_FILE.relative_to(ROOT).as_posix() if COHORT_FILE.is_file() else None,
         "protocol": "Latest successful locked run per problem from completed batches and standalone runs; reconstructed prefix verdicts from final oracle execution logs.",
         "official_hidden_tests": {
             "available": False,
@@ -230,7 +273,11 @@ def run(output: Path) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, default=ROOT / "output" / "experiments" / "existing-baselines-20261013")
+    parser.add_argument("--freeze-cohort", action="store_true",
+                        help="Rescan output/ for the latest successful locked runs and rewrite the tracked cohort file")
     args = parser.parse_args()
+    if args.freeze_cohort:
+        freeze_cohort(selected_reports(ROOT / "output", refresh=True))
     summary = run(args.output)
     print(json.dumps({"output": str(args.output), "variants": summary["variants"],
                       "round0_to_final": summary["round0_to_final"]}, ensure_ascii=False, indent=2))

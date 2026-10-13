@@ -1,5 +1,5 @@
 {
-  "mode": "auto",
+  "mode": "local",
   "ssh_host": "KHOI@100.102.185.58",
   "infra_max_attempts": 3,
   "infra_retry_delay_seconds": 2,
