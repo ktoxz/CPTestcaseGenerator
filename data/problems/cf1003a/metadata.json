@@ -1,0 +1,19 @@
+{
+  "problem_id": "cf1003a",
+  "contest_id": 1003,
+  "index": "A",
+  "title": "A. Polycarp's Pockets",
+  "url": "https://codeforces.com/contest/1003/problem/A",
+  "time_limit_ms": 1000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "6\n1 2 4 3 3 2\n",
+      "output": "2\n"
+    },
+    {
+      "input": "1\n100\n",
+      "output": "1\n"
+    }
+  ]
+}

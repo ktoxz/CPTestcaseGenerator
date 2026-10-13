@@ -1,0 +1,2213 @@
+{
+  "collection": "Project CodeNet exact-output 100x30/30",
+  "selection": "One problem from each ordered-ID stratum, maximizing the smaller supported AC/WA pool within the stratum. Existing local CodeNet problems excluded.",
+  "minimum_pool_before_compile": 45,
+  "problem_count": 100,
+  "eligible_count": 564,
+  "rejected": {
+    "small_pool": 34,
+    "non_unique_output": 2
+  },
+  "problems": [
+    {
+      "problem_id": "p02536",
+      "name": "ACL Beginner Contest - Connect Cities",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 3457,
+        "Wrong Answer": 2278
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 25,
+          "C++": 2702,
+          "Python": 730
+        },
+        "Wrong Answer": {
+          "C": 62,
+          "C++": 1389,
+          "Python": 827
+        }
+      },
+      "official_output_requirement": "Print the answer."
+    },
+    {
+      "problem_id": "p02547",
+      "name": "AtCoder Beginner Contest 179 - Go to Jail",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 8586,
+        "Wrong Answer": 2307
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 171,
+          "C++": 5841,
+          "Python": 2574
+        },
+        "Wrong Answer": {
+          "C": 135,
+          "C++": 1556,
+          "Python": 616
+        }
+      },
+      "official_output_requirement": "Print Yes if doublets occurred at least three times in a row. Print No otherwise."
+    },
+    {
+      "problem_id": "p02572",
+      "name": "AtCoder Beginner Contest 177 - Sum of product of pairs",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 9333,
+        "Wrong Answer": 11706
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 119,
+          "C++": 6451,
+          "Python": 2763
+        },
+        "Wrong Answer": {
+          "C": 404,
+          "C++": 9373,
+          "Python": 1929
+        }
+      },
+      "official_output_requirement": "Print \\sum_{i=1}^{N-1}\\sum_{j=i+1}^{N} A_i A_j, modulo (10^9+7)."
+    },
+    {
+      "problem_id": "p02582",
+      "name": "AtCoder Beginner Contest 175 - Rainy Season",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 11095,
+        "Wrong Answer": 5392
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 278,
+          "C++": 7352,
+          "Python": 3465
+        },
+        "Wrong Answer": {
+          "C": 376,
+          "C++": 3609,
+          "Python": 1407
+        }
+      },
+      "official_output_requirement": "Print the maximum number of consecutive rainy days in the period."
+    },
+    {
+      "problem_id": "p02612",
+      "name": "AtCoder Beginner Contest 173 - Payment",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 15734,
+        "Wrong Answer": 7415
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 648,
+          "C++": 10010,
+          "Python": 5076
+        },
+        "Wrong Answer": {
+          "C": 650,
+          "C++": 4254,
+          "Python": 2511
+        }
+      },
+      "official_output_requirement": "Print the amount of change as an integer."
+    },
+    {
+      "problem_id": "p02627",
+      "name": "AtCoder Beginner Contest 171 - αlphabet",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 14051,
+        "Wrong Answer": 1975
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 563,
+          "C++": 8795,
+          "Python": 4693
+        },
+        "Wrong Answer": {
+          "C": 235,
+          "C++": 1248,
+          "Python": 492
+        }
+      },
+      "official_output_requirement": "If \\alpha is uppercase, print A; if it is lowercase, print a."
+    },
+    {
+      "problem_id": "p02640",
+      "name": "AtCoder Beginner Contest 170 - Crane and Turtle",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 12972,
+        "Wrong Answer": 10774
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 427,
+          "C++": 7999,
+          "Python": 4546
+        },
+        "Wrong Answer": {
+          "C": 558,
+          "C++": 6273,
+          "Python": 3943
+        }
+      },
+      "official_output_requirement": "If there is a combination of numbers of cranes and turtles in which the statement is correct, print Yes; otherwise, print No."
+    },
+    {
+      "problem_id": "p02660",
+      "name": "AtCoder Beginner Contest 169 - Div Game",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 8159,
+        "Wrong Answer": 8901
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 71,
+          "C++": 5334,
+          "Python": 2754
+        },
+        "Wrong Answer": {
+          "C": 175,
+          "C++": 5584,
+          "Python": 3142
+        }
+      },
+      "official_output_requirement": "Print the maximum number of times the operation can be applied."
+    },
+    {
+      "problem_id": "p02665",
+      "name": "NOMURA Programming Competition 2020 - Folia",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 2949,
+        "Wrong Answer": 7816
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 26,
+          "C++": 2158,
+          "Python": 765
+        },
+        "Wrong Answer": {
+          "C": 113,
+          "C++": 5878,
+          "Python": 1825
+        }
+      },
+      "official_output_requirement": "Print the answer as an integer."
+    },
+    {
+      "problem_id": "p02682",
+      "name": "AtCoder Beginner Contest 167 - Easy Linear Programming",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 14302,
+        "Wrong Answer": 9119
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 469,
+          "C++": 8886,
+          "Python": 4947
+        },
+        "Wrong Answer": {
+          "C": 513,
+          "C++": 4993,
+          "Python": 3613
+        }
+      },
+      "official_output_requirement": "Print the maximum possible sum of the numbers written on the cards chosen."
+    },
+    {
+      "problem_id": "p02700",
+      "name": "AtCoder Beginner Contest 164 - Battle",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 13697,
+        "Wrong Answer": 7992
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 624,
+          "C++": 8310,
+          "Python": 4763
+        },
+        "Wrong Answer": {
+          "C": 652,
+          "C++": 4737,
+          "Python": 2603
+        }
+      },
+      "official_output_requirement": "If Takahashi will win, print Yes; if he will lose, print No."
+    },
+    {
+      "problem_id": "p02718",
+      "name": "AtCoder Beginner Contest 161 - Popular Vote",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 13034,
+        "Wrong Answer": 17769
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 443,
+          "C++": 8079,
+          "Python": 4512
+        },
+        "Wrong Answer": {
+          "C": 1641,
+          "C++": 13055,
+          "Python": 3073
+        }
+      },
+      "official_output_requirement": "If M popular items can be selected, print Yes; otherwise, print No."
+    },
+    {
+      "problem_id": "p02742",
+      "name": "Panasonic Programming Contest 2020 - Bishop",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 7560,
+        "Wrong Answer": 16713
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 171,
+          "C++": 4766,
+          "Python": 2623
+        },
+        "Wrong Answer": {
+          "C": 636,
+          "C++": 10618,
+          "Python": 5459
+        }
+      },
+      "official_output_requirement": "Print the number of squares the bishop can reach."
+    },
+    {
+      "problem_id": "p02755",
+      "name": "AtCoder Beginner Contest 158 - Tax Increase",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 10579,
+        "Wrong Answer": 10213
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 225,
+          "C++": 6571,
+          "Python": 3783
+        },
+        "Wrong Answer": {
+          "C": 425,
+          "C++": 5591,
+          "Python": 4197
+        }
+      },
+      "official_output_requirement": "If there is a price that satisfies the condition, print an integer representing the lowest such price; otherwise, print -1."
+    },
+    {
+      "problem_id": "p02772",
+      "name": "AtCoder Beginner Contest 155 - Papers  Please",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 11296,
+        "Wrong Answer": 3523
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 491,
+          "C++": 6873,
+          "Python": 3932
+        },
+        "Wrong Answer": {
+          "C": 374,
+          "C++": 1890,
+          "Python": 1259
+        }
+      },
+      "official_output_requirement": "If the immigrant should be allowed entry according to the regulation, print APPROVED; otherwise, print DENIED."
+    },
+    {
+      "problem_id": "p02793",
+      "name": "AtCoder Beginner Contest 152 - Flatten",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 4406,
+        "Wrong Answer": 4872
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 23,
+          "C++": 2816,
+          "Python": 1567
+        },
+        "Wrong Answer": {
+          "C": 84,
+          "C++": 4090,
+          "Python": 698
+        }
+      },
+      "official_output_requirement": "Print the minimum possible value of B_1 + ... + B_N for B_1,...,B_N that satisfy the condition, modulo (10^9 +7)."
+    },
+    {
+      "problem_id": "p02803",
+      "name": "AtCoder Beginner Contest 151 - Maze Master",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 6386,
+        "Wrong Answer": 4687
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 50,
+          "C++": 4497,
+          "Python": 1839
+        },
+        "Wrong Answer": {
+          "C": 32,
+          "C++": 3095,
+          "Python": 1560
+        }
+      },
+      "official_output_requirement": "Print the maximum possible number of moves Aoki has to make."
+    },
+    {
+      "problem_id": "p02814",
+      "name": "AtCoder Beginner Contest 150 - Semi Common Multiple",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 3696,
+        "Wrong Answer": 10974
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 25,
+          "C++": 2678,
+          "Python": 993
+        },
+        "Wrong Answer": {
+          "C": 79,
+          "C++": 7877,
+          "Python": 3018
+        }
+      },
+      "official_output_requirement": "Print the number of semi-common multiples of A among the integers between 1 and M (inclusive)."
+    },
+    {
+      "problem_id": "p02838",
+      "name": "AtCoder Beginner Contest 147 - Xor Sum 4",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 5458,
+        "Wrong Answer": 6793
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 50,
+          "C++": 4015,
+          "Python": 1393
+        },
+        "Wrong Answer": {
+          "C": 149,
+          "C++": 5829,
+          "Python": 815
+        }
+      },
+      "official_output_requirement": "Print the value \\sum_{i=1}^{N-1}\\sum_{j=i+1}^{N} (A_i \\mbox{ XOR } A_j), modulo (10^9+7)."
+    },
+    {
+      "problem_id": "p02854",
+      "name": "DISCO Presents Discovery Channel Code Contest 2020 Qual - Iron Bar Cutting",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 3654,
+        "Wrong Answer": 2789
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 44,
+          "C++": 2501,
+          "Python": 1109
+        },
+        "Wrong Answer": {
+          "C": 85,
+          "C++": 1888,
+          "Python": 816
+        }
+      },
+      "official_output_requirement": "Print an integer representing the minimum amount of money needed before cutting the bar into two parts with the same length."
+    },
+    {
+      "problem_id": "p02862",
+      "name": "AtCoder Beginner Contest 145 - Knight",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 5987,
+        "Wrong Answer": 4403
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 53,
+          "C++": 4108,
+          "Python": 1826
+        },
+        "Wrong Answer": {
+          "C": 96,
+          "C++": 2592,
+          "Python": 1715
+        }
+      },
+      "official_output_requirement": "Print the number of ways for the knight to reach (X, Y) from (0, 0), modulo 10^9 + 7."
+    },
+    {
+      "problem_id": "p02880",
+      "name": "AtCoder Beginner Contest 144 - 81",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 12100,
+        "Wrong Answer": 4226
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 637,
+          "C++": 7205,
+          "Python": 4258
+        },
+        "Wrong Answer": {
+          "C": 396,
+          "C++": 2273,
+          "Python": 1557
+        }
+      },
+      "official_output_requirement": "If N can be represented as the product of two integers between 1 and 9 (inclusive), print Yes; if it cannot, print No."
+    },
+    {
+      "problem_id": "p02900",
+      "name": "AtCoder Beginner Contest 142 - Disjoint Set of Common Divisors",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 7561,
+        "Wrong Answer": 11443
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 87,
+          "C++": 5184,
+          "Python": 2290
+        },
+        "Wrong Answer": {
+          "C": 295,
+          "C++": 8499,
+          "Python": 2649
+        }
+      },
+      "official_output_requirement": "Print the maximum number of divisors that can be chosen to satisfy the condition."
+    },
+    {
+      "problem_id": "p02918",
+      "name": "AtCoder Beginner Contest 140 - Face Produces Unhappiness",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 5175,
+        "Wrong Answer": 3412
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 67,
+          "C++": 3577,
+          "Python": 1531
+        },
+        "Wrong Answer": {
+          "C": 68,
+          "C++": 2299,
+          "Python": 1045
+        }
+      },
+      "official_output_requirement": "Print the maximum possible number of happy people after at most K operations."
+    },
+    {
+      "problem_id": "p02936",
+      "name": "AtCoder Beginner Contest 138 - Ki",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 8391,
+        "Wrong Answer": 6852
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 46,
+          "C++": 5820,
+          "Python": 2525
+        },
+        "Wrong Answer": {
+          "C": 102,
+          "C++": 3939,
+          "Python": 2811
+        }
+      },
+      "official_output_requirement": "Print the values of the counters on Vertex 1, 2, \\ldots, N after all operations, in this order, with spaces in between."
+    },
+    {
+      "problem_id": "p02939",
+      "name": "AtCoder Grand Contest 037 - Dividing a String",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 3946,
+        "Wrong Answer": 3125
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 56,
+          "C++": 2904,
+          "Python": 986
+        },
+        "Wrong Answer": {
+          "C": 82,
+          "C++": 2188,
+          "Python": 855
+        }
+      },
+      "official_output_requirement": "Print the maximum positive integer K that satisfies the condition."
+    },
+    {
+      "problem_id": "p02952",
+      "name": "AtCoder Beginner Contest 136 - Uneven Numbers",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 10433,
+        "Wrong Answer": 3167
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 342,
+          "C++": 6243,
+          "Python": 3848
+        },
+        "Wrong Answer": {
+          "C": 236,
+          "C++": 1851,
+          "Python": 1080
+        }
+      },
+      "official_output_requirement": "Print the number of positive integers less than or equal to N that have an odd number of digits."
+    },
+    {
+      "problem_id": "p02983",
+      "name": "AtCoder Beginner Contest 133 - Remainder Minimization 2019",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 9334,
+        "Wrong Answer": 20864
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 226,
+          "C++": 5904,
+          "Python": 3204
+        },
+        "Wrong Answer": {
+          "C": 984,
+          "C++": 13746,
+          "Python": 6134
+        }
+      },
+      "official_output_requirement": "Print the minimum possible value of (i \\times j) \\mbox{ mod } 2019 when i and j are chosen under the given condition."
+    },
+    {
+      "problem_id": "p02993",
+      "name": "AtCoder Beginner Contest 131 - Security",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 10627,
+        "Wrong Answer": 2618
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 459,
+          "C++": 6178,
+          "Python": 3990
+        },
+        "Wrong Answer": {
+          "C": 394,
+          "C++": 1459,
+          "Python": 765
+        }
+      },
+      "official_output_requirement": "If S is hard to enter, print Bad; otherwise, print Good."
+    },
+    {
+      "problem_id": "p03013",
+      "name": "AtCoder Beginner Contest 129 - Typical Stairs",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 8884,
+        "Wrong Answer": 5256
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 140,
+          "C++": 5427,
+          "Python": 3317
+        },
+        "Wrong Answer": {
+          "C": 280,
+          "C++": 3521,
+          "Python": 1455
+        }
+      },
+      "official_output_requirement": "Print the number of ways to climb up the stairs under the condition, modulo 1\\ 000\\ 000\\ 007."
+    },
+    {
+      "problem_id": "p03030",
+      "name": "AtCoder Beginner Contest 128 - Guidebook",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 9732,
+        "Wrong Answer": 2121
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 159,
+          "C++": 6041,
+          "Python": 3532
+        },
+        "Wrong Answer": {
+          "C": 125,
+          "C++": 1030,
+          "Python": 966
+        }
+      },
+      "official_output_requirement": "Print N lines. The i-th line (1 ≤ i ≤ N) should contain the identification number of the restaurant that is introduced i-th in the book."
+    },
+    {
+      "problem_id": "p03042",
+      "name": "AtCoder Beginner Contest 126 - YYMM or MMYY",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 9370,
+        "Wrong Answer": 8611
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 328,
+          "C++": 5586,
+          "Python": 3456
+        },
+        "Wrong Answer": {
+          "C": 489,
+          "C++": 5064,
+          "Python": 3058
+        }
+      },
+      "official_output_requirement": "Print the specified string: YYMM, MMYY, AMBIGUOUS or NA."
+    },
+    {
+      "problem_id": "p03053",
+      "name": "AtCoder Grand Contest 033 - Darker and Darker",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 4723,
+        "Wrong Answer": 2947
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 62,
+          "C++": 3551,
+          "Python": 1110
+        },
+        "Wrong Answer": {
+          "C": 184,
+          "C++": 1872,
+          "Python": 891
+        }
+      },
+      "official_output_requirement": "Print the number of operations that will be performed."
+    },
+    {
+      "problem_id": "p03069",
+      "name": "Tenka1 Programmer Beginner Contest 2019 - Stones",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 2764,
+        "Wrong Answer": 12042
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 76,
+          "C++": 1665,
+          "Python": 1023
+        },
+        "Wrong Answer": {
+          "C": 719,
+          "C++": 6681,
+          "Python": 4642
+        }
+      },
+      "official_output_requirement": "Print the minimum number of stones that needs to be recolored."
+    },
+    {
+      "problem_id": "p03077",
+      "name": "AtCoder Beginner Contest 123 - Five Transportations",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 7230,
+        "Wrong Answer": 6135
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 176,
+          "C++": 4293,
+          "Python": 2761
+        },
+        "Wrong Answer": {
+          "C": 297,
+          "C++": 3710,
+          "Python": 2128
+        }
+      },
+      "official_output_requirement": "Print the minimum time required for all of the people to reach City 6, in minutes."
+    },
+    {
+      "problem_id": "p03095",
+      "name": "AtCoder Grand Contest 031 - Colorful Subsequence",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 4022,
+        "Wrong Answer": 3049
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 58,
+          "C++": 2950,
+          "Python": 1014
+        },
+        "Wrong Answer": {
+          "C": 138,
+          "C++": 1952,
+          "Python": 959
+        }
+      },
+      "official_output_requirement": "Print the number of the subsequences such that all characters are different, modulo 10^9+7."
+    },
+    {
+      "problem_id": "p03108",
+      "name": "AtCoder Beginner Contest 120 - Decayed Bridges",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 5039,
+        "Wrong Answer": 4550
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 53,
+          "C++": 3661,
+          "Python": 1325
+        },
+        "Wrong Answer": {
+          "C": 49,
+          "C++": 3812,
+          "Python": 689
+        }
+      },
+      "official_output_requirement": "In the order i = 1, 2, ..., M, print the inconvenience just after the i-th bridge collapses. Note that the answer may not fit into a 32-bit integer type."
+    },
+    {
+      "problem_id": "p03127",
+      "name": "AtCoder Beginner Contest 118 - Monsters Battle Royale",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 7082,
+        "Wrong Answer": 2919
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 157,
+          "C++": 4439,
+          "Python": 2486
+        },
+        "Wrong Answer": {
+          "C": 121,
+          "C++": 1734,
+          "Python": 1064
+        }
+      },
+      "official_output_requirement": "Print the minimum possible final health of the last monster alive."
+    },
+    {
+      "problem_id": "p03147",
+      "name": "AtCoder Beginner Contest 116 - Grand Garden",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 6509,
+        "Wrong Answer": 1367
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 146,
+          "C++": 3959,
+          "Python": 2404
+        },
+        "Wrong Answer": {
+          "C": 56,
+          "C++": 822,
+          "Python": 489
+        }
+      },
+      "official_output_requirement": "Print the minimum number of watering operations required to satisfy the condition."
+    },
+    {
+      "problem_id": "p03160",
+      "name": "Educational DP Contest - Frog 1",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 23729,
+        "Wrong Answer": 9802
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 231,
+          "C++": 19541,
+          "Python": 3957
+        },
+        "Wrong Answer": {
+          "C": 221,
+          "C++": 8482,
+          "Python": 1099
+        }
+      },
+      "official_output_requirement": "Print the minimum possible total cost incurred."
+    },
+    {
+      "problem_id": "p03178",
+      "name": "Educational DP Contest - Digit Sum",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 3014,
+        "Wrong Answer": 2419
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 32,
+          "C++": 2806,
+          "Python": 176
+        },
+        "Wrong Answer": {
+          "C": 7,
+          "C++": 2274,
+          "Python": 138
+        }
+      },
+      "official_output_requirement": "Print the number of integers satisfying the condition, modulo 10^9 + 7."
+    },
+    {
+      "problem_id": "p03181",
+      "name": "Educational DP Contest - Subtree",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 1601,
+        "Wrong Answer": 1310
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 58,
+          "C++": 1441,
+          "Python": 102
+        },
+        "Wrong Answer": {
+          "C": 76,
+          "C++": 1164,
+          "Python": 70
+        }
+      },
+      "official_output_requirement": "Print N lines. The v-th (1 \\leq v \\leq N) line should contain the answer to the following question: - Assuming that Vertex v has to be black, find the number of ways in which the vertices can be painted, modulo M."
+    },
+    {
+      "problem_id": "p03197",
+      "name": "CADDi 2018 - Harlequin",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 2032,
+        "Wrong Answer": 1289
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 20,
+          "C++": 1569,
+          "Python": 443
+        },
+        "Wrong Answer": {
+          "C": 4,
+          "C++": 1012,
+          "Python": 273
+        }
+      },
+      "official_output_requirement": "If you will win, print first; if Lunlun will win, print second."
+    },
+    {
+      "problem_id": "p03208",
+      "name": "AtCoder Beginner Contest 115 - Christmas Eve",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 7578,
+        "Wrong Answer": 2937
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 169,
+          "C++": 4740,
+          "Python": 2669
+        },
+        "Wrong Answer": {
+          "C": 182,
+          "C++": 1798,
+          "Python": 957
+        }
+      },
+      "official_output_requirement": "Print the minimum possible value of h_{max} - h_{min}."
+    },
+    {
+      "problem_id": "p03221",
+      "name": "AtCoder Beginner Contest 113 - ID",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 6470,
+        "Wrong Answer": 3288
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 83,
+          "C++": 4106,
+          "Python": 2281
+        },
+        "Wrong Answer": {
+          "C": 123,
+          "C++": 1946,
+          "Python": 1219
+        }
+      },
+      "official_output_requirement": "Print the ID numbers for all the cities, in ascending order of indices (City 1, City 2, ...)."
+    },
+    {
+      "problem_id": "p03241",
+      "name": "AtCoder Beginner Contest 112 - Partition",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 4993,
+        "Wrong Answer": 5303
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 110,
+          "C++": 3529,
+          "Python": 1354
+        },
+        "Wrong Answer": {
+          "C": 105,
+          "C++": 3547,
+          "Python": 1651
+        }
+      },
+      "official_output_requirement": "Print the maximum possible value of the greatest common divisor of a sequence a_1, a_2, ..., a_N that satisfies the condition."
+    },
+    {
+      "problem_id": "p03252",
+      "name": "AtCoder Beginner Contest 110 - String Transformation",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 5636,
+        "Wrong Answer": 4430
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 113,
+          "C++": 3614,
+          "Python": 1909
+        },
+        "Wrong Answer": {
+          "C": 237,
+          "C++": 2738,
+          "Python": 1455
+        }
+      },
+      "official_output_requirement": "If S and T can be made equal, print Yes; otherwise, print No."
+    },
+    {
+      "problem_id": "p03266",
+      "name": "AtCoder Beginner Contest 108 - Triangular Relationship",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 3301,
+        "Wrong Answer": 3188
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 79,
+          "C++": 2077,
+          "Python": 1145
+        },
+        "Wrong Answer": {
+          "C": 175,
+          "C++": 2671,
+          "Python": 342
+        }
+      },
+      "official_output_requirement": "Print the number of triples (a,b,c) of positive integers not greater than N such that a+b,b+c and c+a are all multiples of K."
+    },
+    {
+      "problem_id": "p03282",
+      "name": "AtCoder Beginner Contest 106 - To Infinity",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 6434,
+        "Wrong Answer": 6448
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 151,
+          "C++": 4091,
+          "Python": 2192
+        },
+        "Wrong Answer": {
+          "C": 290,
+          "C++": 4191,
+          "Python": 1967
+        }
+      },
+      "official_output_requirement": "Print the K-th character from the left in Mr. Infinity's string after 5 \\times 10^{15} days."
+    },
+    {
+      "problem_id": "p03295",
+      "name": "AtCoder Beginner Contest 103 - Islands War",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 5039,
+        "Wrong Answer": 2261
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 66,
+          "C++": 3489,
+          "Python": 1484
+        },
+        "Wrong Answer": {
+          "C": 69,
+          "C++": 1497,
+          "Python": 695
+        }
+      },
+      "official_output_requirement": "Print the minimum number of bridges that must be removed."
+    },
+    {
+      "problem_id": "p03309",
+      "name": "AtCoder Beginner Contest 102 - Linear Approximation",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 3773,
+        "Wrong Answer": 7550
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 64,
+          "C++": 2381,
+          "Python": 1328
+        },
+        "Wrong Answer": {
+          "C": 322,
+          "C++": 5311,
+          "Python": 1917
+        }
+      },
+      "official_output_requirement": "Print the minimum possible sadness of Snuke."
+    },
+    {
+      "problem_id": "p03317",
+      "name": "AtCoder Beginner Contest 101 - Minimization",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 5000,
+        "Wrong Answer": 6980
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 165,
+          "C++": 3116,
+          "Python": 1719
+        },
+        "Wrong Answer": {
+          "C": 287,
+          "C++": 4384,
+          "Python": 2309
+        }
+      },
+      "official_output_requirement": "Print the minimum number of operations required."
+    },
+    {
+      "problem_id": "p03337",
+      "name": "AtCoder Beginner Contest 098 - Add Sub Mul",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 6857,
+        "Wrong Answer": 1640
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 437,
+          "C++": 4090,
+          "Python": 2330
+        },
+        "Wrong Answer": {
+          "C": 536,
+          "C++": 957,
+          "Python": 147
+        }
+      },
+      "official_output_requirement": "Print the largest value among A+B, A-B and A \\times B."
+    },
+    {
+      "problem_id": "p03352",
+      "name": "AtCoder Beginner Contest 097 - Exponential",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 6214,
+        "Wrong Answer": 6138
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 207,
+          "C++": 3693,
+          "Python": 2314
+        },
+        "Wrong Answer": {
+          "C": 334,
+          "C++": 3337,
+          "Python": 2467
+        }
+      },
+      "official_output_requirement": "Print the largest perfect power that is at most X."
+    },
+    {
+      "problem_id": "p03363",
+      "name": "AtCoder Grand Contest 023 - Zero-Sum Ranges",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 4588,
+        "Wrong Answer": 3894
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 41,
+          "C++": 3466,
+          "Python": 1081
+        },
+        "Wrong Answer": {
+          "C": 187,
+          "C++": 3286,
+          "Python": 421
+        }
+      },
+      "official_output_requirement": "Find the number of the non-empty contiguous subsequences of A whose sum is 0."
+    },
+    {
+      "problem_id": "p03371",
+      "name": "AtCoder Beginner Contest 095 - Half and Half",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 7084,
+        "Wrong Answer": 3787
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 164,
+          "C++": 4342,
+          "Python": 2578
+        },
+        "Wrong Answer": {
+          "C": 196,
+          "C++": 2411,
+          "Python": 1180
+        }
+      },
+      "official_output_requirement": "Print the minimum amount of money required to prepare X A-pizzas and Y B-pizzas."
+    },
+    {
+      "problem_id": "p03393",
+      "name": "AtCoder Grand Contest 022 - Diverse Word",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 3033,
+        "Wrong Answer": 5105
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 33,
+          "C++": 2322,
+          "Python": 678
+        },
+        "Wrong Answer": {
+          "C": 67,
+          "C++": 3698,
+          "Python": 1340
+        }
+      },
+      "official_output_requirement": "Print the next word that appears after S in the dictionary, or -1 if it doesn't exist."
+    },
+    {
+      "problem_id": "p03408",
+      "name": "AtCoder Beginner Contest 091 - Two Colors Card Game",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 7508,
+        "Wrong Answer": 1895
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 141,
+          "C++": 4880,
+          "Python": 2487
+        },
+        "Wrong Answer": {
+          "C": 81,
+          "C++": 1346,
+          "Python": 468
+        }
+      },
+      "official_output_requirement": "If Takahashi can earn at most X yen on balance, print X."
+    },
+    {
+      "problem_id": "p03418",
+      "name": "AtCoder Beginner Contest 090 - Remainder Reminder",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 2133,
+        "Wrong Answer": 1615
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 36,
+          "C++": 1469,
+          "Python": 628
+        },
+        "Wrong Answer": {
+          "C": 81,
+          "C++": 1357,
+          "Python": 177
+        }
+      },
+      "official_output_requirement": "Print the number of possible pairs that he may have had."
+    },
+    {
+      "problem_id": "p03438",
+      "name": "AtCoder Petrozavodsk Contest 001 - Two Arrays",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 2800,
+        "Wrong Answer": 6443
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 30,
+          "C++": 2169,
+          "Python": 601
+        },
+        "Wrong Answer": {
+          "C": 137,
+          "C++": 5071,
+          "Python": 1235
+        }
+      },
+      "official_output_requirement": "If we can repeat the operation zero or more times so that the sequences a and b become equal, print Yes; otherwise, print No."
+    },
+    {
+      "problem_id": "p03450",
+      "name": "AtCoder Beginner Contest 087 - People on a Line",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 2759,
+        "Wrong Answer": 3216
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 23,
+          "C++": 2108,
+          "Python": 628
+        },
+        "Wrong Answer": {
+          "C": 47,
+          "C++": 2400,
+          "Python": 769
+        }
+      },
+      "official_output_requirement": "If there exists a set of values (x_1, x_2, ..., x_N) that is consistent with all given pieces of information, print Yes; if it does not exist, print No."
+    },
+    {
+      "problem_id": "p03456",
+      "name": "AtCoder Beginner Contest 086 - 1 21",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 7493,
+        "Wrong Answer": 3699
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 303,
+          "C++": 4438,
+          "Python": 2752
+        },
+        "Wrong Answer": {
+          "C": 269,
+          "C++": 2431,
+          "Python": 999
+        }
+      },
+      "official_output_requirement": "If the concatenation of a and b in this order is a square number, print Yes; otherwise, print No."
+    },
+    {
+      "problem_id": "p03478",
+      "name": "AtCoder Beginner Contest 083 - Some Sums",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 8907,
+        "Wrong Answer": 3072
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 374,
+          "C++": 4913,
+          "Python": 3620
+        },
+        "Wrong Answer": {
+          "C": 212,
+          "C++": 1921,
+          "Python": 939
+        }
+      },
+      "official_output_requirement": "Print the sum of the integers between 1 and N (inclusive), whose sum of digits written in base 10 is between A and B (inclusive)."
+    },
+    {
+      "problem_id": "p03486",
+      "name": "AtCoder Beginner Contest 082 - Two Anagrams",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 7025,
+        "Wrong Answer": 3077
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 137,
+          "C++": 4355,
+          "Python": 2533
+        },
+        "Wrong Answer": {
+          "C": 181,
+          "C++": 1899,
+          "Python": 997
+        }
+      },
+      "official_output_requirement": "If it is possible to satisfy s' < t', print Yes; if it is not, print No."
+    },
+    {
+      "problem_id": "p03494",
+      "name": "AtCoder Beginner Contest 081 - Shift only",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 11173,
+        "Wrong Answer": 2973
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 422,
+          "C++": 6551,
+          "Python": 4200
+        },
+        "Wrong Answer": {
+          "C": 215,
+          "C++": 1779,
+          "Python": 979
+        }
+      },
+      "official_output_requirement": "Print the maximum possible number of operations that Snuke can perform."
+    },
+    {
+      "problem_id": "p03523",
+      "name": "CODE FESTIVAL 2017 Final - AKIBA",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 1235,
+        "Wrong Answer": 1414
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 13,
+          "C++": 836,
+          "Python": 386
+        },
+        "Wrong Answer": {
+          "C": 27,
+          "C++": 941,
+          "Python": 446
+        }
+      },
+      "official_output_requirement": "If it is possible to change S into AKIHABARA, print YES; otherwise, print NO."
+    },
+    {
+      "problem_id": "p03525",
+      "name": "CODE FESTIVAL 2017 Final - Time Gap",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 1105,
+        "Wrong Answer": 1844
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 11,
+          "C++": 832,
+          "Python": 262
+        },
+        "Wrong Answer": {
+          "C": 8,
+          "C++": 1431,
+          "Python": 405
+        }
+      },
+      "official_output_requirement": "Print the maximum possible value of s."
+    },
+    {
+      "problem_id": "p03543",
+      "name": "AtCoder Beginner Contest 079 - Good Integer",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 8870,
+        "Wrong Answer": 6688
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 259,
+          "C++": 6235,
+          "Python": 2376
+        },
+        "Wrong Answer": {
+          "C": 274,
+          "C++": 5220,
+          "Python": 1194
+        }
+      },
+      "official_output_requirement": "If N is good, print Yes; otherwise, print No."
+    },
+    {
+      "problem_id": "p03565",
+      "name": "AtCoder Beginner Contest 076 - Dubious Document 2",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 6092,
+        "Wrong Answer": 7278
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 111,
+          "C++": 4105,
+          "Python": 1876
+        },
+        "Wrong Answer": {
+          "C": 223,
+          "C++": 4772,
+          "Python": 2283
+        }
+      },
+      "official_output_requirement": "Print the string S. If such a string does not exist, print UNRESTORABLE instead."
+    },
+    {
+      "problem_id": "p03576",
+      "name": "AtCoder Beginner Contest 075 - Axis-Parallel Rectangle",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 2626,
+        "Wrong Answer": 2474
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 37,
+          "C++": 2035,
+          "Python": 554
+        },
+        "Wrong Answer": {
+          "C": 36,
+          "C++": 1797,
+          "Python": 641
+        }
+      },
+      "official_output_requirement": "Print the minimum possible area of a rectangle that satisfies the condition."
+    },
+    {
+      "problem_id": "p03612",
+      "name": "AtCoder Beginner Contest 072 - Derangement",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 3737,
+        "Wrong Answer": 2741
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 69,
+          "C++": 2556,
+          "Python": 1112
+        },
+        "Wrong Answer": {
+          "C": 75,
+          "C++": 1810,
+          "Python": 856
+        }
+      },
+      "official_output_requirement": "Print the minimum required number of operations"
+    },
+    {
+      "problem_id": "p03624",
+      "name": "AtCoder Beginner Contest 071 - Not Found",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 6371,
+        "Wrong Answer": 2260
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 197,
+          "C++": 3933,
+          "Python": 2241
+        },
+        "Wrong Answer": {
+          "C": 68,
+          "C++": 1575,
+          "Python": 617
+        }
+      },
+      "official_output_requirement": "Print the lexicographically smallest lowercase English letter that does not occur in S. If every lowercase English letter occurs in S, print None instead."
+    },
+    {
+      "problem_id": "p03637",
+      "name": "AtCoder Beginner Contest 069 - 4-adjacent",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 3736,
+        "Wrong Answer": 4803
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 102,
+          "C++": 2533,
+          "Python": 1101
+        },
+        "Wrong Answer": {
+          "C": 169,
+          "C++": 3372,
+          "Python": 1262
+        }
+      },
+      "official_output_requirement": "If Snuke can achieve his objective, print Yes; otherwise, print No."
+    },
+    {
+      "problem_id": "p03644",
+      "name": "AtCoder Beginner Contest 068 - Break Number",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 7742,
+        "Wrong Answer": 2654
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 392,
+          "C++": 4722,
+          "Python": 2628
+        },
+        "Wrong Answer": {
+          "C": 183,
+          "C++": 1592,
+          "Python": 879
+        }
+      },
+      "official_output_requirement": "Print the answer."
+    },
+    {
+      "problem_id": "p03665",
+      "name": "AtCoder Grand Contest 017 - Biscuits",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 4050,
+        "Wrong Answer": 2808
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 58,
+          "C++": 3027,
+          "Python": 965
+        },
+        "Wrong Answer": {
+          "C": 47,
+          "C++": 2256,
+          "Python": 505
+        }
+      },
+      "official_output_requirement": "Print the number of ways to select bags so that the total number of biscuits inside is congruent to P modulo 2."
+    },
+    {
+      "problem_id": "p03679",
+      "name": "AtCoder Beginner Contest 065 - Expired?",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 5361,
+        "Wrong Answer": 3700
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 282,
+          "C++": 3225,
+          "Python": 1854
+        },
+        "Wrong Answer": {
+          "C": 325,
+          "C++": 2215,
+          "Python": 1160
+        }
+      },
+      "official_output_requirement": "Print delicious if Takahashi found the food delicious; print safe if he neither found it delicious nor got a stomachache; print dangerous if he got a stomachache."
+    },
+    {
+      "problem_id": "p03695",
+      "name": "AtCoder Beginner Contest 064 - Colorful Leaderboard",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 5815,
+        "Wrong Answer": 12846
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 176,
+          "C++": 3838,
+          "Python": 1801
+        },
+        "Wrong Answer": {
+          "C": 526,
+          "C++": 8397,
+          "Python": 3923
+        }
+      },
+      "official_output_requirement": "Print the minimum possible number of different colors of the users, and the maximum possible number of different colors, with a space in between."
+    },
+    {
+      "problem_id": "p03700",
+      "name": "AtCoder Beginner Contest 063 - Widespread",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 2204,
+        "Wrong Answer": 2603
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 51,
+          "C++": 1576,
+          "Python": 577
+        },
+        "Wrong Answer": {
+          "C": 87,
+          "C++": 2140,
+          "Python": 376
+        }
+      },
+      "official_output_requirement": "Print the minimum number of explosions that needs to be caused in order to vanish all the monsters."
+    },
+    {
+      "problem_id": "p03721",
+      "name": "AtCoder Beginner Contest 061 - Big Array",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 5708,
+        "Wrong Answer": 6999
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 120,
+          "C++": 3874,
+          "Python": 1714
+        },
+        "Wrong Answer": {
+          "C": 331,
+          "C++": 5431,
+          "Python": 1237
+        }
+      },
+      "official_output_requirement": "Print the K-th smallest integer in the array after the N operations."
+    },
+    {
+      "problem_id": "p03730",
+      "name": "AtCoder Beginner Contest 060 - Choose Integers",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 6413,
+        "Wrong Answer": 2059
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 234,
+          "C++": 4002,
+          "Python": 2177
+        },
+        "Wrong Answer": {
+          "C": 115,
+          "C++": 1246,
+          "Python": 698
+        }
+      },
+      "official_output_requirement": "Print YES or NO."
+    },
+    {
+      "problem_id": "p03745",
+      "name": "AtCoder Grand Contest 013 - Sorted Arrays",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 4071,
+        "Wrong Answer": 3533
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 78,
+          "C++": 2990,
+          "Python": 1003
+        },
+        "Wrong Answer": {
+          "C": 71,
+          "C++": 2697,
+          "Python": 765
+        }
+      },
+      "official_output_requirement": "Print the minimum possible number of subarrays after division of A."
+    },
+    {
+      "problem_id": "p03760",
+      "name": "AtCoder Beginner Contest 058 - ∵∴∵",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 5996,
+        "Wrong Answer": 2383
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 244,
+          "C++": 3664,
+          "Python": 2088
+        },
+        "Wrong Answer": {
+          "C": 310,
+          "C++": 1546,
+          "Python": 527
+        }
+      },
+      "official_output_requirement": "Print the original password."
+    },
+    {
+      "problem_id": "p03785",
+      "name": "AtCoder Grand Contest 011 - Airport Bus",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 3718,
+        "Wrong Answer": 3420
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 61,
+          "C++": 2766,
+          "Python": 891
+        },
+        "Wrong Answer": {
+          "C": 75,
+          "C++": 2407,
+          "Python": 938
+        }
+      },
+      "official_output_requirement": "Print the minimum required number of buses."
+    },
+    {
+      "problem_id": "p03797",
+      "name": "AtCoder Beginner Contest 055 - Scc Puzzle",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 3670,
+        "Wrong Answer": 3609
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 119,
+          "C++": 2471,
+          "Python": 1080
+        },
+        "Wrong Answer": {
+          "C": 279,
+          "C++": 2694,
+          "Python": 636
+        }
+      },
+      "official_output_requirement": "Print the answer."
+    },
+    {
+      "problem_id": "p03814",
+      "name": "AtCoder Beginner Contest 053 - A to Z String",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 6775,
+        "Wrong Answer": 1928
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 249,
+          "C++": 4210,
+          "Python": 2316
+        },
+        "Wrong Answer": {
+          "C": 155,
+          "C++": 1276,
+          "Python": 497
+        }
+      },
+      "official_output_requirement": "Print the answer."
+    },
+    {
+      "problem_id": "p03821",
+      "name": "AtCoder Grand Contest 009 - Multiple Array",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 3433,
+        "Wrong Answer": 2383
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 74,
+          "C++": 2548,
+          "Python": 811
+        },
+        "Wrong Answer": {
+          "C": 129,
+          "C++": 1938,
+          "Python": 316
+        }
+      },
+      "official_output_requirement": "Print an integer representing the minimum number of times Takahashi will press the buttons."
+    },
+    {
+      "problem_id": "p03838",
+      "name": "AtCoder Grand Contest 008 - Simple Calculator",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 3156,
+        "Wrong Answer": 7351
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 57,
+          "C++": 2295,
+          "Python": 804
+        },
+        "Wrong Answer": {
+          "C": 155,
+          "C++": 5427,
+          "Python": 1769
+        }
+      },
+      "official_output_requirement": "Print the minimum number of times Snuke needs to press the buttons to achieve his objective."
+    },
+    {
+      "problem_id": "p03854",
+      "name": "AtCoder Beginner Contest 049 - Daydream",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 6324,
+        "Wrong Answer": 4488
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 133,
+          "C++": 3572,
+          "Python": 2619
+        },
+        "Wrong Answer": {
+          "C": 138,
+          "C++": 2272,
+          "Python": 2078
+        }
+      },
+      "official_output_requirement": "If it is possible to obtain S = T, print YES. Otherwise, print NO."
+    },
+    {
+      "problem_id": "p03861",
+      "name": "AtCoder Beginner Contest 048 - Between a and b ...",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 6539,
+        "Wrong Answer": 8551
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 194,
+          "C++": 4161,
+          "Python": 2184
+        },
+        "Wrong Answer": {
+          "C": 476,
+          "C++": 6411,
+          "Python": 1664
+        }
+      },
+      "official_output_requirement": "Print the number of the integers between a and b, inclusive, that are divisible by x."
+    },
+    {
+      "problem_id": "p03889",
+      "name": "CODE FESTIVAL 2016 Relay (Parallel) - Mirror String",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 921,
+        "Wrong Answer": 390
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 14,
+          "C++": 848,
+          "Python": 59
+        },
+        "Wrong Answer": {
+          "C": 8,
+          "C++": 367,
+          "Python": 15
+        }
+      },
+      "official_output_requirement": "If S is a mirror string, print Yes. Otherwise, print No."
+    },
+    {
+      "problem_id": "p03909",
+      "name": "CODE FESTIVAL 2016 Final - Where's Snuke?",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 1063,
+        "Wrong Answer": 249
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 18,
+          "C++": 747,
+          "Python": 298
+        },
+        "Wrong Answer": {
+          "C": 11,
+          "C++": 200,
+          "Python": 38
+        }
+      },
+      "official_output_requirement": "Print the labels of the row and the column of the square containing the string snuke, with no space inbetween."
+    },
+    {
+      "problem_id": "p03929",
+      "name": "square869120Contest #3 - Calendar",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 315,
+        "Wrong Answer": 443
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 9,
+          "C++": 278,
+          "Python": 28
+        },
+        "Wrong Answer": {
+          "C": 10,
+          "C++": 401,
+          "Python": 32
+        }
+      },
+      "official_output_requirement": "- Print the number of good sub-grid. If there are no solution exists, print 0."
+    },
+    {
+      "problem_id": "p03937",
+      "name": "AtCoder Grand Contest 007 - Shik and Stone",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 3472,
+        "Wrong Answer": 2754
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 60,
+          "C++": 2586,
+          "Python": 826
+        },
+        "Wrong Answer": {
+          "C": 54,
+          "C++": 2080,
+          "Python": 620
+        }
+      },
+      "official_output_requirement": "If it is possible that Shik only uses right and down moves, print Possible. Otherwise, print Impossible."
+    },
+    {
+      "problem_id": "p03951",
+      "name": "AtCoder Grand Contest 006 - Prefix and Suffix",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 3582,
+        "Wrong Answer": 2314
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 63,
+          "C++": 2584,
+          "Python": 935
+        },
+        "Wrong Answer": {
+          "C": 64,
+          "C++": 1613,
+          "Python": 637
+        }
+      },
+      "official_output_requirement": "Print the length of the shortest string that satisfies the conditions."
+    },
+    {
+      "problem_id": "p03966",
+      "name": "AtCoder Regular Contest 062 - AtCoDeer and Election Report",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 1687,
+        "Wrong Answer": 1570
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 28,
+          "C++": 1375,
+          "Python": 284
+        },
+        "Wrong Answer": {
+          "C": 41,
+          "C++": 1191,
+          "Python": 338
+        }
+      },
+      "official_output_requirement": "Print the minimum possible total number of votes obtained by Takahashi and Aoki when AtCoDeer checked the report for the N-th time."
+    },
+    {
+      "problem_id": "p03994",
+      "name": "CODE FESTIVAL 2016 qual A - Next Letter",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 2765,
+        "Wrong Answer": 4260
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 44,
+          "C++": 2182,
+          "Python": 539
+        },
+        "Wrong Answer": {
+          "C": 149,
+          "C++": 3404,
+          "Python": 707
+        }
+      },
+      "official_output_requirement": "Print the lexicographically smallest string after performing exactly K operations on s."
+    },
+    {
+      "problem_id": "p04005",
+      "name": "AtCoder Grand Contest 004 - Divide a Cuboid",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 4116,
+        "Wrong Answer": 2898
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 67,
+          "C++": 3109,
+          "Python": 940
+        },
+        "Wrong Answer": {
+          "C": 139,
+          "C++": 2532,
+          "Python": 227
+        }
+      },
+      "official_output_requirement": "Print the minimum possible difference between the number of red blocks and the number of blue blocks."
+    },
+    {
+      "problem_id": "p04011",
+      "name": "AtCoder Beginner Contest 044 - Tak and Hotels (ABC Edit)",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 6939,
+        "Wrong Answer": 2797
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 416,
+          "C++": 4069,
+          "Python": 2454
+        },
+        "Wrong Answer": {
+          "C": 279,
+          "C++": 1585,
+          "Python": 933
+        }
+      },
+      "official_output_requirement": "Print Tak's total accommodation fee."
+    },
+    {
+      "problem_id": "p04031",
+      "name": "AtCoder Beginner Contest 043 - Be Together",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 4125,
+        "Wrong Answer": 1975
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 101,
+          "C++": 2703,
+          "Python": 1321
+        },
+        "Wrong Answer": {
+          "C": 117,
+          "C++": 1344,
+          "Python": 514
+        }
+      },
+      "official_output_requirement": "Print the minimum total cost to achieve Evi's objective."
+    },
+    {
+      "problem_id": "p04044",
+      "name": "AtCoder Beginner Contest 042 - Iroha Loves Strings (ABC Edition)",
+      "dataset": "AtCoder",
+      "pool": {
+        "Accepted": 9527,
+        "Wrong Answer": 1739
+      },
+      "available_languages": {
+        "Accepted": {
+          "C": 258,
+          "C++": 5882,
+          "Python": 3387
+        },
+        "Wrong Answer": {
+          "C": 220,
+          "C++": 1185,
+          "Python": 334
+        }
+      },
+      "official_output_requirement": "Print the lexicographically smallest string that Iroha can produce."
+    }
+  ]
+}

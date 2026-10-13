@@ -1,0 +1,35 @@
+{
+  "problem_id": "p02554",
+  "name": "AtCoder Beginner Contest 178 - Ubiquity",
+  "dataset": "AtCoder",
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 1048576,
+  "curation": {
+    "collection": "CodeNet additional20 20261012",
+    "exact_output": true,
+    "real_number_output": false,
+    "algorithm_family": "inclusion-exclusion",
+    "output_domain": "integer modulo 1000000007",
+    "official_output_requirement": "Print the answer modulo 10^9 + 7.",
+    "checker": {
+      "kind": "EXACT"
+    }
+  },
+  "samples": [
+    {
+      "id": "sample-1",
+      "input": "2\n",
+      "output": "2\n"
+    },
+    {
+      "id": "sample-2",
+      "input": "1\n",
+      "output": "0\n"
+    },
+    {
+      "id": "sample-3",
+      "input": "869121\n",
+      "output": "2511445\n"
+    }
+  ]
+}

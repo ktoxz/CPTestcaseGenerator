@@ -1,0 +1,9 @@
+{
+  "mode": "native",
+  "ssh_host": "",
+  "infra_max_attempts": 1,
+  "infra_retry_delay_seconds": 1,
+  "batch_size": 4,
+  "judge_workers": 2,
+  "compile_workers": 2
+}

@@ -1,0 +1,35 @@
+{
+  "problem_id": "p02586",
+  "name": "AtCoder Beginner Contest 175 - Picking Goods",
+  "dataset": "AtCoder",
+  "time_limit_ms": 3000,
+  "memory_limit_kb": 1048576,
+  "curation": {
+    "collection": "CodeNet additional20 20261012",
+    "exact_output": true,
+    "real_number_output": false,
+    "algorithm_family": "grid DP",
+    "output_domain": "integer",
+    "official_output_requirement": "Print the maximum possible sum of the values of items Takahashi picks up.",
+    "checker": {
+      "kind": "EXACT"
+    }
+  },
+  "samples": [
+    {
+      "id": "sample-1",
+      "input": "2 2 3\n1 1 3\n2 1 4\n1 2 5\n",
+      "output": "8\n"
+    },
+    {
+      "id": "sample-2",
+      "input": "2 5 5\n1 1 3\n2 4 20\n1 2 1\n1 3 4\n1 4 2\n",
+      "output": "29\n"
+    },
+    {
+      "id": "sample-3",
+      "input": "4 5 10\n2 5 12\n1 5 12\n2 3 15\n1 2 20\n1 1 28\n2 4 26\n3 2 27\n4 5 21\n3 5 10\n1 3 10\n",
+      "output": "142\n"
+    }
+  ]
+}

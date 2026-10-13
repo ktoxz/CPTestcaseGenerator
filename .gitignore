@@ -1,0 +1,17 @@
+output/
+__pycache__/
+*.pyc
+data/raw/*.parquet
+data/problems/*/oracle/
+
+# Local environments and caches
+.venv/
+.pytest_cache/
+.test-tmp/
+tmp/
+data/cache_hf/
+.codenet-descriptions.parquet
+
+# Rendered thesis drafts and transient logs
+reports/**/.thesis-render*/
+*.log

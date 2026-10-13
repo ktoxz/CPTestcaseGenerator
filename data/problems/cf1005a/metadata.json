@@ -1,0 +1,27 @@
+{
+  "problem_id": "cf1005a",
+  "contest_id": 1005,
+  "index": "A",
+  "title": "A. Tanya and Stairways",
+  "url": "https://codeforces.com/contest/1005/problem/A",
+  "time_limit_ms": 1000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "7\n1 2 3 1 2 3 4\n",
+      "output": "2\n3 4\n"
+    },
+    {
+      "input": "4\n1 1 1 1\n",
+      "output": "4\n1 1 1 1\n"
+    },
+    {
+      "input": "5\n1 2 3 4 5\n",
+      "output": "1\n5\n"
+    },
+    {
+      "input": "5\n1 2 1 2 1\n",
+      "output": "3\n2 2 1\n"
+    }
+  ]
+}

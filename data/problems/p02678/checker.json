@@ -1,0 +1,5 @@
+{
+  "kind": "PYTHON_SCRIPT",
+  "script": "output_checker.py",
+  "function": "accepts"
+}

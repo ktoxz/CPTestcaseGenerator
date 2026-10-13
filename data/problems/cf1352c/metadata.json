@@ -1,0 +1,20 @@
+{
+  "problem_id": "cf1352c",
+  "contest_id": 1352,
+  "index": "C",
+  "name": "1352_C. K-th Not Divisible by n",
+  "url": "https://codeforces.com/contest/1352/problem/C",
+  "rating": 1200,
+  "tags": [
+    "binary search",
+    "math"
+  ],
+  "public_tests": {
+    "input": [
+      "6\n3 7\n4 12\n2 1000000000\n7 97\n1000000000 1000000000\n2 1\n"
+    ],
+    "output": [
+      "10\n15\n1999999999\n113\n1000000001\n1\n"
+    ]
+  }
+}

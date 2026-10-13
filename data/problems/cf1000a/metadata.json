@@ -1,0 +1,23 @@
+{
+  "problem_id": "cf1000a",
+  "contest_id": 1000,
+  "index": "A",
+  "title": "A. Codehorses T-shirts",
+  "url": "https://codeforces.com/contest/1000/problem/A",
+  "time_limit_ms": 2000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "3\nXS\nXS\nM\nXL\nS\nXS\n",
+      "output": "2\n"
+    },
+    {
+      "input": "2\nXXXL\nXXL\nXXL\nXXXS\n",
+      "output": "1\n"
+    },
+    {
+      "input": "2\nM\nXS\nXS\nM\n",
+      "output": "0\n"
+    }
+  ]
+}

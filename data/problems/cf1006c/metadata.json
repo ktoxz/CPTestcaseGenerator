@@ -1,0 +1,23 @@
+{
+  "problem_id": "cf1006c",
+  "contest_id": 1006,
+  "index": "C",
+  "title": "C. Three Parts of the Array",
+  "url": "https://codeforces.com/contest/1006/problem/C",
+  "time_limit_ms": 1000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "5\n1 3 1 1 4\n",
+      "output": "5\n"
+    },
+    {
+      "input": "5\n1 3 2 1 4\n",
+      "output": "4\n"
+    },
+    {
+      "input": "3\n4 1 2\n",
+      "output": "0\n"
+    }
+  ]
+}

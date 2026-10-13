@@ -1,0 +1,27 @@
+{
+  "problem_id": "cf1011a",
+  "contest_id": 1011,
+  "index": "A",
+  "title": "A. Stages",
+  "url": "https://codeforces.com/contest/1011/problem/A",
+  "time_limit_ms": 1000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "5 3\nxyabd\n",
+      "output": "29\n"
+    },
+    {
+      "input": "7 4\nproblem\n",
+      "output": "34\n"
+    },
+    {
+      "input": "2 2\nab\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "12 1\nabaabbaaabbb\n",
+      "output": "1\n"
+    }
+  ]
+}

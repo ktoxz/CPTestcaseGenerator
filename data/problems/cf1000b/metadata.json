@@ -1,0 +1,23 @@
+{
+  "problem_id": "cf1000b",
+  "contest_id": 1000,
+  "index": "B",
+  "title": "B. Light It Up",
+  "url": "https://codeforces.com/contest/1000/problem/B",
+  "time_limit_ms": 1000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "3 10\n4 6 7\n",
+      "output": "8\n"
+    },
+    {
+      "input": "2 12\n1 10\n",
+      "output": "9\n"
+    },
+    {
+      "input": "2 7\n3 4\n",
+      "output": "6\n"
+    }
+  ]
+}

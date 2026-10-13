@@ -1,0 +1,36 @@
+{
+  "problem_id": "p02762",
+  "name": "AtCoder Beginner Contest 157 - Friend Suggestions",
+  "dataset": "AtCoder",
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 1048576,
+  "curation": {
+    "collection": "CodeNet additional20 20261012",
+    "exact_output": true,
+    "real_number_output": false,
+    "algorithm_family": "DSU / connected components",
+    "output_domain": "integer sequence",
+    "official_output_requirement": "Print the answers in order, with space in between.",
+    "checker": {
+      "kind": "TOKEN"
+    },
+    "format_note": "Unique integer sequence; token comparison permits accepted whitespace layouts."
+  },
+  "samples": [
+    {
+      "id": "sample-1",
+      "input": "4 4 1\n2 1\n1 3\n3 2\n3 4\n4 1\n",
+      "output": "0 1 0 1\n"
+    },
+    {
+      "id": "sample-2",
+      "input": "5 10 0\n1 2\n1 3\n1 4\n1 5\n3 2\n2 4\n2 5\n4 3\n5 3\n4 5\n",
+      "output": "0 0 0 0 0\n"
+    },
+    {
+      "id": "sample-3",
+      "input": "10 9 3\n10 1\n6 7\n8 2\n2 5\n8 4\n7 3\n10 9\n6 4\n5 8\n2 6\n7 5\n3 1\n",
+      "output": "1 3 5 4 3 3 3 3 1 0\n"
+    }
+  ]
+}

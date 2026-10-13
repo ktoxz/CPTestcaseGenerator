@@ -1,0 +1,19 @@
+{
+  "problem_id": "cf1004c",
+  "contest_id": 1004,
+  "index": "C",
+  "title": "C. Sonya and Robots",
+  "url": "https://codeforces.com/contest/1004/problem/C",
+  "time_limit_ms": 1000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "5\n1 5 4 1 3\n",
+      "output": "9\n"
+    },
+    {
+      "input": "7\n1 2 1 1 1 3 2\n",
+      "output": "7\n"
+    }
+  ]
+}

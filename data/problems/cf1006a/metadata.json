@@ -1,0 +1,19 @@
+{
+  "problem_id": "cf1006a",
+  "contest_id": 1006,
+  "index": "A",
+  "title": "A. Adjacent Replacements",
+  "url": "https://codeforces.com/contest/1006/problem/A",
+  "time_limit_ms": 1000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "5\n1 2 4 5 10\n",
+      "output": "1 1 3 5 9\n"
+    },
+    {
+      "input": "10\n10000 10 50605065 1 5 89 5 999999999 60506056 1000000000\n",
+      "output": "9999 9 50605065 1 5 89 5 999999999 60506055 999999999\n"
+    }
+  ]
+}

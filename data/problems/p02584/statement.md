@@ -1,0 +1,101 @@
+# AtCoder Beginner Contest 175 - Walking Takahashi
+
+- CodeNet ID: `p02584`
+- Dataset: `AtCoder`
+- Time limit: `2000 ms`
+- Memory limit: `1048576 KB`
+
+Score : 300 points
+
+## Problem Statement
+
+Takahashi, who lives on the number line, is now at coordinate X. He will make exactly K moves of distance D in the positive or negative direction.
+
+More specifically, in one move, he can go from coordinate x to x + D or x - D.
+
+He wants to make K moves so that the absolute value of the coordinate of the destination will be the smallest possible.
+
+Find the minimum possible absolute value of the coordinate of the destination.
+
+## Constraints
+
+- -10^{15} \leq X \leq 10^{15}
+
+- 1 \leq K \leq 10^{15}
+
+- 1 \leq D \leq 10^{15}
+
+- All values in input are integers.
+
+## Input
+
+Input is given from Standard Input in the following format:
+```text
+X K D
+```
+
+## Output
+
+Print the minimum possible absolute value of the coordinate of the destination.
+
+## Sample Input 1
+```text
+6 2 4
+```
+
+## Output for the Sample Input 1
+```text
+2
+```
+
+Takahashi is now at coordinate 6. It is optimal to make the following moves:
+
+- Move from coordinate 6 to (6 - 4 =) 2.
+
+- Move from coordinate 2 to (2 - 4 =) -2.
+
+Here, the absolute value of the coordinate of the destination is 2, and we cannot make it smaller.
+
+## Sample Input 2
+```text
+7 4 3
+```
+
+## Output for the Sample Input 2
+```text
+1
+```
+
+Takahashi is now at coordinate 7. It is optimal to make, for example, the following moves:
+
+- Move from coordinate 7 to 4.
+
+- Move from coordinate 4 to 7.
+
+- Move from coordinate 7 to 4.
+
+- Move from coordinate 4 to 1.
+
+Here, the absolute value of the coordinate of the destination is 1, and we cannot make it smaller.
+
+## Sample Input 3
+```text
+10 1 2
+```
+
+## Output for the Sample Input 3
+```text
+8
+```
+
+## Sample Input 4
+```text
+1000000000000000 1000000000000000 1000000000000000
+```
+
+## Output for the Sample Input 4
+```text
+1000000000000000
+```
+
+The answer can be enormous.

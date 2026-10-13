@@ -1,0 +1,35 @@
+{
+  "problem_id": "p02598",
+  "name": "AtCoder Beginner Contest 174 - Logs",
+  "dataset": "AtCoder",
+  "time_limit_ms": 2000,
+  "memory_limit_kb": 1048576,
+  "curation": {
+    "collection": "CodeNet additional20 20261012",
+    "exact_output": true,
+    "real_number_output": false,
+    "algorithm_family": "binary search",
+    "output_domain": "integer (rounded up)",
+    "official_output_requirement": "Print an integer representing the answer.",
+    "checker": {
+      "kind": "EXACT"
+    }
+  },
+  "samples": [
+    {
+      "id": "sample-1",
+      "input": "2 3\n7 9\n",
+      "output": "4\n"
+    },
+    {
+      "id": "sample-2",
+      "input": "3 0\n3 4 5\n",
+      "output": "5\n"
+    },
+    {
+      "id": "sample-3",
+      "input": "10 10\n158260522 877914575 602436426 24979445 861648772 623690081 433933447 476190629 262703497 211047202\n",
+      "output": "292638192\n"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "host": "ktoxz",
+  "staging_root": "/srv/guidelet/staging/codenet",
+  "pyarrow_version": "23.0.1",
+  "max_per_label": 100
+}

@@ -1,0 +1,9 @@
+{
+  "mode": "auto",
+  "ssh_host": "KHOI@100.102.185.58",
+  "infra_max_attempts": 3,
+  "infra_retry_delay_seconds": 2,
+  "batch_size": 8,
+  "judge_workers": 8,
+  "compile_workers": 2
+}

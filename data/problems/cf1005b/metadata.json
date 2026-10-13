@@ -1,0 +1,27 @@
+{
+  "problem_id": "cf1005b",
+  "contest_id": 1005,
+  "index": "B",
+  "title": "B. Delete from the Left",
+  "url": "https://codeforces.com/contest/1005/problem/B",
+  "time_limit_ms": 1000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "test\nwest\n",
+      "output": "2\n"
+    },
+    {
+      "input": "codeforces\nyes\n",
+      "output": "9\n"
+    },
+    {
+      "input": "test\nyes\n",
+      "output": "7\n"
+    },
+    {
+      "input": "b\nab\n",
+      "output": "1\n"
+    }
+  ]
+}

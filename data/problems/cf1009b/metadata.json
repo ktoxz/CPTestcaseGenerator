@@ -1,0 +1,23 @@
+{
+  "problem_id": "cf1009b",
+  "contest_id": 1009,
+  "index": "B",
+  "title": "B. Minimum Ternary String",
+  "url": "https://codeforces.com/contest/1009/problem/B",
+  "time_limit_ms": 1000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "100210\n",
+      "output": "001120\n"
+    },
+    {
+      "input": "11222121\n",
+      "output": "11112222\n"
+    },
+    {
+      "input": "20\n",
+      "output": "20\n"
+    }
+  ]
+}

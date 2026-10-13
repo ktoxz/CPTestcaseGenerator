@@ -1,0 +1,12 @@
+{
+  "memory": "512m",
+  "cpus": "1",
+  "pids_limit": 64,
+  "tmpfs_size": "32m",
+  "compile_timeout_seconds": 90,
+  "run_timeout_seconds": 5,
+  "docker_startup_grace_seconds": 30,
+  "container_cleanup_timeout_seconds": 15,
+  "stdout_limit_bytes": 65536,
+  "stderr_limit_bytes": 8192
+}

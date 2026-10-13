@@ -1,0 +1,17 @@
+{
+  "images": {
+    "main": {"tag": "testgen-judge:local", "dockerfile": "Dockerfile"},
+    "python2": {"tag": "testgen-python2:local", "dockerfile": "Dockerfile.python2", "oracle_only": true}
+  },
+  "prompt_notes": ["Java source must declare class Main", "Each program must read until EOF"],
+  "runtimes": [
+    {"id": "c", "language": "C", "dialects": ["", "C"], "extension": ".c", "source_file": "main.c", "image": "main", "compile": "gcc -std=gnu11 -O2 /src/main.c -lm -o /work/main", "execute": "/work/main", "llm": true},
+    {"id": "cpp17", "language": "C++", "dialects": ["", "C++17", "DeepMind CodeContests CPP"], "extension": ".cpp", "source_file": "main.cpp", "image": "main", "compile": "g++ -std=gnu++17 -O2 /src/main.cpp -o /work/main", "execute": "/work/main", "llm": true},
+    {"id": "cpp14", "language": "C++", "dialects": ["C++14"], "extension": ".cpp", "source_file": "main.cpp", "image": "main", "compile": "g++ -std=gnu++14 -O2 /src/main.cpp -o /work/main", "execute": "/work/main"},
+    {"id": "cpp11", "language": "C++", "dialects": ["C++11"], "extension": ".cpp", "source_file": "main.cpp", "image": "main", "compile": "g++ -std=gnu++11 -O2 /src/main.cpp -o /work/main", "execute": "/work/main"},
+    {"id": "cpp98", "language": "C++", "dialects": ["C++"], "extension": ".cpp", "source_file": "main.cpp", "image": "main", "compile": "g++ -std=gnu++98 -O2 /src/main.cpp -o /work/main", "execute": "/work/main"},
+    {"id": "java", "language": "Java", "dialects": ["", "Java", "JAVA"], "extension": ".java", "source_file": "Main.java", "image": "main", "compile": "javac -encoding UTF-8 -d /work /src/Main.java", "execute": "java -Xmx192m -cp /work Main", "llm": true},
+    {"id": "python3", "language": "Python", "dialects": ["", "Python3"], "extension": ".py", "source_file": "main.py", "image": "main", "compile": "cp /src/main.py /work/main.py && python3 -m py_compile /work/main.py", "execute": "python3 -I /work/main.py", "llm": true},
+    {"id": "python2", "language": "Python", "dialects": ["Python"], "extension": ".py", "source_file": "main.py", "image": "python2", "compile": "cp /src/main.py /work/main.py && python -m py_compile /work/main.py", "execute": "python /work/main.py"}
+  ]
+}

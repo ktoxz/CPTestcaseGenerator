@@ -1,0 +1,19 @@
+{
+  "problem_id": "cf1004a",
+  "contest_id": 1004,
+  "index": "A",
+  "title": "A. Sonya and Hotels",
+  "url": "https://codeforces.com/contest/1004/problem/A",
+  "time_limit_ms": 1000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "4 3\n-3 2 9 16\n",
+      "output": "6\n"
+    },
+    {
+      "input": "5 2\n4 8 11 18 19\n",
+      "output": "5\n"
+    }
+  ]
+}

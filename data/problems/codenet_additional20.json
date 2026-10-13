@@ -1,0 +1,328 @@
+{
+  "collection": "CodeNet additional20 20261012",
+  "problem_count": 20,
+  "total_submissions": 800,
+  "bundle_sha256": "a024a49b36bda96a5304ccfa5a1a8011d566665e13f2f531319dd1bff6ce8fae",
+  "problems": [
+    {
+      "problem_id": "p02554",
+      "name": "AtCoder Beginner Contest 178 - Ubiquity",
+      "checker": "EXACT",
+      "algorithm_family": "inclusion-exclusion",
+      "output_domain": "integer modulo 1000000007",
+      "languages": {
+        "C": 10,
+        "Python": 12,
+        "Java": 6,
+        "C++": 12
+      },
+      "Accepted": 20,
+      "Wrong Answer": 20,
+      "samples": 3
+    },
+    {
+      "problem_id": "p02555",
+      "name": "AtCoder Beginner Contest 178 - Redistribution",
+      "checker": "EXACT",
+      "algorithm_family": "composition counting / DP",
+      "output_domain": "integer modulo 1000000007",
+      "languages": {
+        "C": 9,
+        "C++": 11,
+        "Java": 8,
+        "Python": 12
+      },
+      "Accepted": 20,
+      "Wrong Answer": 20,
+      "samples": 3
+    },
+    {
+      "problem_id": "p02584",
+      "name": "AtCoder Beginner Contest 175 - Walking Takahashi",
+      "checker": "EXACT",
+      "algorithm_family": "greedy / parity",
+      "output_domain": "integer",
+      "languages": {
+        "C": 9,
+        "C++": 12,
+        "Java": 8,
+        "Python": 11
+      },
+      "Accepted": 20,
+      "Wrong Answer": 20,
+      "samples": 4
+    },
+    {
+      "problem_id": "p02585",
+      "name": "AtCoder Beginner Contest 175 - Moving Piece",
+      "checker": "EXACT",
+      "algorithm_family": "permutation cycles",
+      "output_domain": "integer",
+      "languages": {
+        "C": 9,
+        "C++": 13,
+        "Java": 7,
+        "Python": 11
+      },
+      "Accepted": 20,
+      "Wrong Answer": 20,
+      "samples": 4
+    },
+    {
+      "problem_id": "p02586",
+      "name": "AtCoder Beginner Contest 175 - Picking Goods",
+      "checker": "EXACT",
+      "algorithm_family": "grid DP",
+      "output_domain": "integer",
+      "languages": {
+        "C": 5,
+        "Python": 12,
+        "C++": 15,
+        "Java": 8
+      },
+      "Accepted": 20,
+      "Wrong Answer": 20,
+      "samples": 3
+    },
+    {
+      "problem_id": "p02596",
+      "name": "AtCoder Beginner Contest 174 - Repsept",
+      "checker": "EXACT",
+      "algorithm_family": "modular arithmetic",
+      "output_domain": "integer or -1",
+      "languages": {
+        "C": 9,
+        "Python": 12,
+        "C++": 13,
+        "Java": 6
+      },
+      "Accepted": 20,
+      "Wrong Answer": 20,
+      "samples": 3
+    },
+    {
+      "problem_id": "p02598",
+      "name": "AtCoder Beginner Contest 174 - Logs",
+      "checker": "EXACT",
+      "algorithm_family": "binary search",
+      "output_domain": "integer (rounded up)",
+      "languages": {
+        "C": 8,
+        "Java": 9,
+        "Python": 13,
+        "C++": 10
+      },
+      "Accepted": 20,
+      "Wrong Answer": 20,
+      "samples": 3
+    },
+    {
+      "problem_id": "p02599",
+      "name": "AtCoder Beginner Contest 174 - Range Set Query",
+      "checker": "EXACT",
+      "algorithm_family": "offline range queries / Fenwick tree",
+      "output_domain": "integer per query",
+      "languages": {
+        "C": 6,
+        "Java": 7,
+        "Python": 12,
+        "C++": 15
+      },
+      "Accepted": 20,
+      "Wrong Answer": 20,
+      "samples": 2
+    },
+    {
+      "problem_id": "p02614",
+      "name": "AtCoder Beginner Contest 173 - H and V",
+      "checker": "EXACT",
+      "algorithm_family": "bitmask enumeration",
+      "output_domain": "integer",
+      "languages": {
+        "C": 8,
+        "C++": 12,
+        "Java": 8,
+        "Python": 12
+      },
+      "Accepted": 20,
+      "Wrong Answer": 20,
+      "samples": 4
+    },
+    {
+      "problem_id": "p02623",
+      "name": "AtCoder Beginner Contest 172 - Tsundoku",
+      "checker": "EXACT",
+      "algorithm_family": "prefix sums / two pointers",
+      "output_domain": "integer",
+      "languages": {
+        "C": 7,
+        "Python": 14,
+        "C++": 13,
+        "Java": 6
+      },
+      "Accepted": 20,
+      "Wrong Answer": 20,
+      "samples": 3
+    },
+    {
+      "problem_id": "p02629",
+      "name": "AtCoder Beginner Contest 171 - One Quadrillion and One Dalmatians",
+      "checker": "EXACT",
+      "algorithm_family": "bijective base 26",
+      "output_domain": "unique lowercase string",
+      "languages": {
+        "Python": 13,
+        "C": 8,
+        "C++": 12,
+        "Java": 7
+      },
+      "Accepted": 20,
+      "Wrong Answer": 20,
+      "samples": 3
+    },
+    {
+      "problem_id": "p02642",
+      "name": "AtCoder Beginner Contest 170 - Not Divisible",
+      "checker": "EXACT",
+      "algorithm_family": "sieve / duplicate counting",
+      "output_domain": "integer",
+      "languages": {
+        "C": 7,
+        "Java": 7,
+        "Python": 12,
+        "C++": 14
+      },
+      "Accepted": 20,
+      "Wrong Answer": 20,
+      "samples": 3
+    },
+    {
+      "problem_id": "p02678",
+      "name": "AtCoder Beginner Contest 168 - .. (Double Dots)",
+      "checker": "PYTHON_SCRIPT",
+      "algorithm_family": "BFS / shortest-path tree",
+      "output_domain": "any valid shortest-path predecessors",
+      "languages": {
+        "C": 11,
+        "Python": 12,
+        "C++": 11,
+        "Java": 6
+      },
+      "Accepted": 20,
+      "Wrong Answer": 20,
+      "samples": 2
+    },
+    {
+      "problem_id": "p02691",
+      "name": "AtCoder Beginner Contest 166 - This Message Will Self-Destruct in 5s",
+      "checker": "EXACT",
+      "algorithm_family": "frequency counting",
+      "output_domain": "integer",
+      "languages": {
+        "C": 10,
+        "Python": 12,
+        "C++": 12,
+        "Java": 6
+      },
+      "Accepted": 20,
+      "Wrong Answer": 20,
+      "samples": 3
+    },
+    {
+      "problem_id": "p02702",
+      "name": "AtCoder Beginner Contest 164 - Multiple of 2019",
+      "checker": "EXACT",
+      "algorithm_family": "suffix remainders",
+      "output_domain": "integer",
+      "languages": {
+        "C": 9,
+        "Java": 5,
+        "Python": 15,
+        "C++": 11
+      },
+      "Accepted": 20,
+      "Wrong Answer": 20,
+      "samples": 3
+    },
+    {
+      "problem_id": "p02714",
+      "name": "AtCoder Beginner Contest 162 - RGB Triplets",
+      "checker": "EXACT",
+      "algorithm_family": "counting / excluded arithmetic progressions",
+      "output_domain": "integer",
+      "languages": {
+        "C": 7,
+        "C++": 13,
+        "Java": 6,
+        "Python": 14
+      },
+      "Accepted": 20,
+      "Wrong Answer": 20,
+      "samples": 2
+    },
+    {
+      "problem_id": "p02720",
+      "name": "AtCoder Beginner Contest 161 - Lunlun Number",
+      "checker": "EXACT",
+      "algorithm_family": "BFS enumeration",
+      "output_domain": "integer",
+      "languages": {
+        "C": 8,
+        "Java": 5,
+        "C++": 11,
+        "Python": 16
+      },
+      "Accepted": 20,
+      "Wrong Answer": 20,
+      "samples": 4
+    },
+    {
+      "problem_id": "p02762",
+      "name": "AtCoder Beginner Contest 157 - Friend Suggestions",
+      "checker": "TOKEN",
+      "algorithm_family": "DSU / connected components",
+      "output_domain": "integer sequence",
+      "languages": {
+        "C": 7,
+        "Python": 9,
+        "C++": 16,
+        "Java": 8
+      },
+      "Accepted": 20,
+      "Wrong Answer": 20,
+      "samples": 3
+    },
+    {
+      "problem_id": "p02787",
+      "name": "AtCoder Beginner Contest 153 - Crested Ibis vs Monster",
+      "checker": "EXACT",
+      "algorithm_family": "unbounded knapsack",
+      "output_domain": "integer",
+      "languages": {
+        "C": 9,
+        "C++": 13,
+        "Java": 8,
+        "Python": 10
+      },
+      "Accepted": 20,
+      "Wrong Answer": 20,
+      "samples": 3
+    },
+    {
+      "problem_id": "p03044",
+      "name": "AtCoder Beginner Contest 126 - Even Relation",
+      "checker": "PYTHON_SCRIPT",
+      "algorithm_family": "tree distance parity",
+      "output_domain": "any valid binary coloring",
+      "languages": {
+        "C": 9,
+        "Java": 7,
+        "C++": 15,
+        "Python": 9
+      },
+      "Accepted": 20,
+      "Wrong Answer": 20,
+      "samples": 2
+    }
+  ]
+}

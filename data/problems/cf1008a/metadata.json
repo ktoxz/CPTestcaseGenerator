@@ -1,0 +1,23 @@
+{
+  "problem_id": "cf1008a",
+  "contest_id": 1008,
+  "index": "A",
+  "title": "A. Romaji",
+  "url": "https://codeforces.com/contest/1008/problem/A",
+  "time_limit_ms": 2000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "sumimasen\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "ninja\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "codeforces\n",
+      "output": "NO\n"
+    }
+  ]
+}

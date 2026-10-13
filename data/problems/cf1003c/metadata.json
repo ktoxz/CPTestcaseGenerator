@@ -1,0 +1,15 @@
+{
+  "problem_id": "cf1003c",
+  "contest_id": 1003,
+  "index": "C",
+  "title": "C. Intense Heat",
+  "url": "https://codeforces.com/contest/1003/problem/C",
+  "time_limit_ms": 4000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "4 3\n3 4 1 2\n",
+      "output": "2.666666666666667\n"
+    }
+  ]
+}

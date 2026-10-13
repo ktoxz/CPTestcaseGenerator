@@ -1,0 +1,23 @@
+{
+  "problem_id": "cf1003b",
+  "contest_id": 1003,
+  "index": "B",
+  "title": "B. Binary String Constructing",
+  "url": "https://codeforces.com/contest/1003/problem/B",
+  "time_limit_ms": 1000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "2 2 1\n",
+      "output": "1100\n"
+    },
+    {
+      "input": "3 3 3\n",
+      "output": "101100\n"
+    },
+    {
+      "input": "5 3 6\n",
+      "output": "01010100\n"
+    }
+  ]
+}

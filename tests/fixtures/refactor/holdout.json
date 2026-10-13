@@ -1,0 +1,2482 @@
+{
+  "report": {
+    "problem_id": "fixture",
+    "iterations_used": 1,
+    "llm_metrics": {
+      "positive_label": "candidate_ac",
+      "negative_label": "candidate_wa",
+      "positive_pass": 2,
+      "positive_evaluable": 2,
+      "negative_killed_logic": 4,
+      "negative_evaluable": 4,
+      "tpr_label_based": 1.0,
+      "tnr_label_based": 1.0,
+      "ce_infra": {
+        "positive": 0,
+        "negative": 0
+      },
+      "warning": "Original and LLM labels are provisional until independently verified."
+    },
+    "llm_holdout_metrics": {
+      "positive_label": "candidate_ac",
+      "negative_label": "candidate_wa",
+      "positive_pass": 2,
+      "positive_evaluable": 2,
+      "negative_killed_logic": 1,
+      "negative_evaluable": 1,
+      "tpr_label_based": 1.0,
+      "tnr_label_based": 1.0,
+      "ce_infra": {
+        "positive": 0,
+        "negative": 0
+      },
+      "warning": "Original and LLM labels are provisional until independently verified."
+    },
+    "cases": [
+      {
+        "id": "fixture_i0_001",
+        "input": "1 2\n",
+        "expected": "1.000\n",
+        "family": "boundary",
+        "iteration": 0,
+        "coverage_tags": []
+      }
+    ],
+    "quarantined": [],
+    "llm_verdicts": {
+      "ac1": {
+        "solution_id": "ac1",
+        "verdict": "PASS",
+        "case_id": null,
+        "actual": "",
+        "stderr": ""
+      },
+      "ac2": {
+        "solution_id": "ac2",
+        "verdict": "PASS",
+        "case_id": null,
+        "actual": "",
+        "stderr": ""
+      },
+      "wa1": {
+        "solution_id": "wa1",
+        "verdict": "WA",
+        "case_id": "fixture_i0_001",
+        "actual": "2.000\n",
+        "stderr": ""
+      },
+      "wa2": {
+        "solution_id": "wa2",
+        "verdict": "WA",
+        "case_id": "fixture_i0_001",
+        "actual": "2.000\n",
+        "stderr": ""
+      },
+      "wa3": {
+        "solution_id": "wa3",
+        "verdict": "WA",
+        "case_id": "fixture_i0_001",
+        "actual": "2.000\n",
+        "stderr": ""
+      },
+      "wa4": {
+        "solution_id": "wa4",
+        "verdict": "WA",
+        "case_id": "fixture_i0_001",
+        "actual": "2.000\n",
+        "stderr": ""
+      }
+    },
+    "llm_holdout_verdicts": {
+      "wa5": {
+        "solution_id": "wa5",
+        "verdict": "WA",
+        "case_id": "fixture_i0_001",
+        "actual": "2.000\n",
+        "stderr": ""
+      }
+    },
+    "test_model": {
+      "model_version": 1,
+      "input_grammar": "",
+      "constraints": [],
+      "variables": [],
+      "relations": [],
+      "output_partitions": [],
+      "sequences": [],
+      "fault_model": [],
+      "coverage_obligations": [],
+      "warnings": [
+        "Test-model generation is unsupported by this generator."
+      ]
+    },
+    "coverage": {
+      "obligations": 0,
+      "covered": 0,
+      "coverage_ratio": 1.0,
+      "critical_total": 0,
+      "critical_covered": 0,
+      "critical_ratio": 1.0,
+      "normal_total": 0,
+      "normal_covered": 0,
+      "normal_ratio": 1.0,
+      "covered_ids": [],
+      "uncovered_critical": [],
+      "uncovered_normal": []
+    },
+    "stop_reason": "all_quality_criteria_met",
+    "stop_criteria": {
+      "metric_threshold": true,
+      "coverage_threshold": true,
+      "minimum_rounds": true,
+      "minimum_cases": true,
+      "progress_exhausted": true,
+      "met": true
+    },
+    "mutant_certification": {
+      "requested_wrong_candidates": 5,
+      "validated_wrong_candidates": 5,
+      "validated_solution_ids": [
+        "wa1",
+        "wa2",
+        "wa3",
+        "wa4",
+        "wa5"
+      ],
+      "strict_sample_preserving_verified": 5,
+      "official_sample_fallback_available": 0,
+      "official_sample_fallback_used": [],
+      "verification_policy": {
+        "preferred": "sample_preserving_witness",
+        "minimum_pool_fallback": "stable_official_sample_failure",
+        "fallback_trials": 2,
+        "never_accept": [
+          "equivalent mutant",
+          "unstable failure",
+          "CE",
+          "INFRA"
+        ]
+      },
+      "rejected_or_unverified": 0,
+      "rejection_reason_counts": {},
+      "replacement_rounds_allowed": 4,
+      "replacement_oversampling": 1.5,
+      "witness_repair_rounds_allowed": 2,
+      "witness_candidates_per_round": 2,
+      "witness_early_stop": {
+        "enabled": true,
+        "criterion": "stop after the first witness that produces the same deterministic failure in two candidate trials",
+        "repair_witnesses_proposed": 0,
+        "repair_witnesses_evaluated": 0,
+        "repair_witnesses_skipped_after_verified": 0,
+        "repair_witnesses_skipped_after_pool_full": 0
+      },
+      "compile_policy": {
+        "compile_once_per_candidate": true,
+        "compiled_mutant_candidates": 5
+      },
+      "candidate_trials_per_witness": 2,
+      "mutants_verified_by_repaired_witness": 0,
+      "minimum_required": 3,
+      "full_requested_pool_built": true,
+      "stage_status": "ready_full",
+      "skipped_after_pool_full": [],
+      "verified_reserve_not_selected": [],
+      "records": [
+        {
+          "solution_id": "wa1",
+          "strategy_id": "",
+          "bug_class": "",
+          "bug_origin": "",
+          "failure_condition": "",
+          "witness_input": "1\n",
+          "parent_ac_id": "",
+          "mutation_operator": "",
+          "target_behavior": "",
+          "sample_preservation_reason": "",
+          "verified": true,
+          "fallback_verified": false,
+          "verification_tier": "sample_preserving_witness",
+          "promoted_to_minimum_pool": false,
+          "reason": "witness produced the same deterministic failure in two trials",
+          "validator_verdict": "PASS",
+          "reference_expected": "1.000\n",
+          "candidate_verdict": "PASS",
+          "candidate_actual": "2.000\n",
+          "candidate_trials": [
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            },
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            }
+          ],
+          "official_samples": [],
+          "official_samples_passed": true
+        },
+        {
+          "solution_id": "wa2",
+          "strategy_id": "",
+          "bug_class": "",
+          "bug_origin": "",
+          "failure_condition": "",
+          "witness_input": "2\n",
+          "parent_ac_id": "",
+          "mutation_operator": "",
+          "target_behavior": "",
+          "sample_preservation_reason": "",
+          "verified": true,
+          "fallback_verified": false,
+          "verification_tier": "sample_preserving_witness",
+          "promoted_to_minimum_pool": false,
+          "reason": "witness produced the same deterministic failure in two trials",
+          "validator_verdict": "PASS",
+          "reference_expected": "1.000\n",
+          "candidate_verdict": "PASS",
+          "candidate_actual": "2.000\n",
+          "candidate_trials": [
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            },
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            }
+          ],
+          "official_samples": [],
+          "official_samples_passed": true
+        },
+        {
+          "solution_id": "wa3",
+          "strategy_id": "",
+          "bug_class": "",
+          "bug_origin": "",
+          "failure_condition": "",
+          "witness_input": "3\n",
+          "parent_ac_id": "",
+          "mutation_operator": "",
+          "target_behavior": "",
+          "sample_preservation_reason": "",
+          "verified": true,
+          "fallback_verified": false,
+          "verification_tier": "sample_preserving_witness",
+          "promoted_to_minimum_pool": false,
+          "reason": "witness produced the same deterministic failure in two trials",
+          "validator_verdict": "PASS",
+          "reference_expected": "1.000\n",
+          "candidate_verdict": "PASS",
+          "candidate_actual": "2.000\n",
+          "candidate_trials": [
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            },
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            }
+          ],
+          "official_samples": [],
+          "official_samples_passed": true
+        },
+        {
+          "solution_id": "wa4",
+          "strategy_id": "",
+          "bug_class": "",
+          "bug_origin": "",
+          "failure_condition": "",
+          "witness_input": "4\n",
+          "parent_ac_id": "",
+          "mutation_operator": "",
+          "target_behavior": "",
+          "sample_preservation_reason": "",
+          "verified": true,
+          "fallback_verified": false,
+          "verification_tier": "sample_preserving_witness",
+          "promoted_to_minimum_pool": false,
+          "reason": "witness produced the same deterministic failure in two trials",
+          "validator_verdict": "PASS",
+          "reference_expected": "1.000\n",
+          "candidate_verdict": "PASS",
+          "candidate_actual": "2.000\n",
+          "candidate_trials": [
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            },
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            }
+          ],
+          "official_samples": [],
+          "official_samples_passed": true
+        },
+        {
+          "solution_id": "wa5",
+          "strategy_id": "",
+          "bug_class": "",
+          "bug_origin": "",
+          "failure_condition": "",
+          "witness_input": "5\n",
+          "parent_ac_id": "",
+          "mutation_operator": "",
+          "target_behavior": "",
+          "sample_preservation_reason": "",
+          "verified": true,
+          "fallback_verified": false,
+          "verification_tier": "sample_preserving_witness",
+          "promoted_to_minimum_pool": false,
+          "reason": "witness produced the same deterministic failure in two trials",
+          "validator_verdict": "PASS",
+          "reference_expected": "1.000\n",
+          "candidate_verdict": "PASS",
+          "candidate_actual": "2.000\n",
+          "candidate_trials": [
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            },
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            }
+          ],
+          "official_samples": [],
+          "official_samples_passed": true
+        }
+      ],
+      "rejected": [],
+      "development_mutants": [
+        "wa1",
+        "wa2",
+        "wa3",
+        "wa4"
+      ],
+      "holdout_mutants": [
+        "wa5"
+      ]
+    },
+    "candidate_contexts": {
+      "wa1": {
+        "id": "wa1",
+        "label": "candidate_wa",
+        "language": "Python",
+        "bug_class": "",
+        "strategy_id": "",
+        "bug_origin": "",
+        "failure_condition": "",
+        "witness_input": "1\n",
+        "parent_ac_id": "",
+        "mutation_operator": "",
+        "target_behavior": "",
+        "sample_preservation_reason": "",
+        "source_code": "# fake",
+        "certification": {
+          "solution_id": "wa1",
+          "strategy_id": "",
+          "bug_class": "",
+          "bug_origin": "",
+          "failure_condition": "",
+          "witness_input": "1\n",
+          "parent_ac_id": "",
+          "mutation_operator": "",
+          "target_behavior": "",
+          "sample_preservation_reason": "",
+          "verified": true,
+          "fallback_verified": false,
+          "verification_tier": "sample_preserving_witness",
+          "promoted_to_minimum_pool": false,
+          "reason": "witness produced the same deterministic failure in two trials",
+          "validator_verdict": "PASS",
+          "reference_expected": "1.000\n",
+          "candidate_verdict": "PASS",
+          "candidate_actual": "2.000\n",
+          "candidate_trials": [
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            },
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            }
+          ],
+          "official_samples": [],
+          "official_samples_passed": true
+        },
+        "status": "killed",
+        "attempts": [
+          {
+            "round": 0,
+            "case_id": "fixture_i0_001",
+            "family": "boundary",
+            "coverage_tags": [],
+            "targeted": false,
+            "target_solution_ids": [],
+            "hypothesis_id": "",
+            "input": "1 2\n",
+            "predicted_expected": "",
+            "predicted_candidate_output": "",
+            "reason_for_difference": "",
+            "observed_expected": "1.000\n",
+            "observed_candidate_output": "2.000\n",
+            "observed_verdict": "WA",
+            "killed": true,
+            "lesson": "Candidate was distinguished: expected '1.000\\n', observed verdict=WA, output='2.000\\n'."
+          }
+        ],
+        "audits": [],
+        "failed_hypotheses": [],
+        "first_failing_case": "fixture_i0_001"
+      },
+      "wa2": {
+        "id": "wa2",
+        "label": "candidate_wa",
+        "language": "Python",
+        "bug_class": "",
+        "strategy_id": "",
+        "bug_origin": "",
+        "failure_condition": "",
+        "witness_input": "2\n",
+        "parent_ac_id": "",
+        "mutation_operator": "",
+        "target_behavior": "",
+        "sample_preservation_reason": "",
+        "source_code": "# fake",
+        "certification": {
+          "solution_id": "wa2",
+          "strategy_id": "",
+          "bug_class": "",
+          "bug_origin": "",
+          "failure_condition": "",
+          "witness_input": "2\n",
+          "parent_ac_id": "",
+          "mutation_operator": "",
+          "target_behavior": "",
+          "sample_preservation_reason": "",
+          "verified": true,
+          "fallback_verified": false,
+          "verification_tier": "sample_preserving_witness",
+          "promoted_to_minimum_pool": false,
+          "reason": "witness produced the same deterministic failure in two trials",
+          "validator_verdict": "PASS",
+          "reference_expected": "1.000\n",
+          "candidate_verdict": "PASS",
+          "candidate_actual": "2.000\n",
+          "candidate_trials": [
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            },
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            }
+          ],
+          "official_samples": [],
+          "official_samples_passed": true
+        },
+        "status": "killed",
+        "attempts": [
+          {
+            "round": 0,
+            "case_id": "fixture_i0_001",
+            "family": "boundary",
+            "coverage_tags": [],
+            "targeted": false,
+            "target_solution_ids": [],
+            "hypothesis_id": "",
+            "input": "1 2\n",
+            "predicted_expected": "",
+            "predicted_candidate_output": "",
+            "reason_for_difference": "",
+            "observed_expected": "1.000\n",
+            "observed_candidate_output": "2.000\n",
+            "observed_verdict": "WA",
+            "killed": true,
+            "lesson": "Candidate was distinguished: expected '1.000\\n', observed verdict=WA, output='2.000\\n'."
+          }
+        ],
+        "audits": [],
+        "failed_hypotheses": [],
+        "first_failing_case": "fixture_i0_001"
+      },
+      "wa3": {
+        "id": "wa3",
+        "label": "candidate_wa",
+        "language": "Python",
+        "bug_class": "",
+        "strategy_id": "",
+        "bug_origin": "",
+        "failure_condition": "",
+        "witness_input": "3\n",
+        "parent_ac_id": "",
+        "mutation_operator": "",
+        "target_behavior": "",
+        "sample_preservation_reason": "",
+        "source_code": "# fake",
+        "certification": {
+          "solution_id": "wa3",
+          "strategy_id": "",
+          "bug_class": "",
+          "bug_origin": "",
+          "failure_condition": "",
+          "witness_input": "3\n",
+          "parent_ac_id": "",
+          "mutation_operator": "",
+          "target_behavior": "",
+          "sample_preservation_reason": "",
+          "verified": true,
+          "fallback_verified": false,
+          "verification_tier": "sample_preserving_witness",
+          "promoted_to_minimum_pool": false,
+          "reason": "witness produced the same deterministic failure in two trials",
+          "validator_verdict": "PASS",
+          "reference_expected": "1.000\n",
+          "candidate_verdict": "PASS",
+          "candidate_actual": "2.000\n",
+          "candidate_trials": [
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            },
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            }
+          ],
+          "official_samples": [],
+          "official_samples_passed": true
+        },
+        "status": "killed",
+        "attempts": [
+          {
+            "round": 0,
+            "case_id": "fixture_i0_001",
+            "family": "boundary",
+            "coverage_tags": [],
+            "targeted": false,
+            "target_solution_ids": [],
+            "hypothesis_id": "",
+            "input": "1 2\n",
+            "predicted_expected": "",
+            "predicted_candidate_output": "",
+            "reason_for_difference": "",
+            "observed_expected": "1.000\n",
+            "observed_candidate_output": "2.000\n",
+            "observed_verdict": "WA",
+            "killed": true,
+            "lesson": "Candidate was distinguished: expected '1.000\\n', observed verdict=WA, output='2.000\\n'."
+          }
+        ],
+        "audits": [],
+        "failed_hypotheses": [],
+        "first_failing_case": "fixture_i0_001"
+      },
+      "wa4": {
+        "id": "wa4",
+        "label": "candidate_wa",
+        "language": "Python",
+        "bug_class": "",
+        "strategy_id": "",
+        "bug_origin": "",
+        "failure_condition": "",
+        "witness_input": "4\n",
+        "parent_ac_id": "",
+        "mutation_operator": "",
+        "target_behavior": "",
+        "sample_preservation_reason": "",
+        "source_code": "# fake",
+        "certification": {
+          "solution_id": "wa4",
+          "strategy_id": "",
+          "bug_class": "",
+          "bug_origin": "",
+          "failure_condition": "",
+          "witness_input": "4\n",
+          "parent_ac_id": "",
+          "mutation_operator": "",
+          "target_behavior": "",
+          "sample_preservation_reason": "",
+          "verified": true,
+          "fallback_verified": false,
+          "verification_tier": "sample_preserving_witness",
+          "promoted_to_minimum_pool": false,
+          "reason": "witness produced the same deterministic failure in two trials",
+          "validator_verdict": "PASS",
+          "reference_expected": "1.000\n",
+          "candidate_verdict": "PASS",
+          "candidate_actual": "2.000\n",
+          "candidate_trials": [
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            },
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            }
+          ],
+          "official_samples": [],
+          "official_samples_passed": true
+        },
+        "status": "killed",
+        "attempts": [
+          {
+            "round": 0,
+            "case_id": "fixture_i0_001",
+            "family": "boundary",
+            "coverage_tags": [],
+            "targeted": false,
+            "target_solution_ids": [],
+            "hypothesis_id": "",
+            "input": "1 2\n",
+            "predicted_expected": "",
+            "predicted_candidate_output": "",
+            "reason_for_difference": "",
+            "observed_expected": "1.000\n",
+            "observed_candidate_output": "2.000\n",
+            "observed_verdict": "WA",
+            "killed": true,
+            "lesson": "Candidate was distinguished: expected '1.000\\n', observed verdict=WA, output='2.000\\n'."
+          }
+        ],
+        "audits": [],
+        "failed_hypotheses": [],
+        "first_failing_case": "fixture_i0_001"
+      }
+    },
+    "test_suite_lock": {
+      "sha256": "e5d18f635db3a6340ff57e46f89d259051e702408e2d14a8e61ba27cb69d5ff8",
+      "cases": [
+        {
+          "id": "fixture_i0_001",
+          "input_sha256": "f251ddc12234e0da8d3b778bd0f7463fb477f16f47757f5617dc8b4ff4d4f14a",
+          "expected_sha256": "f1aa996e7ab6a38734f26f887239313d8bc0000863cd4bb322c058ef8086486a"
+        }
+      ]
+    },
+    "experiment_protocol": {
+      "baseline_generation_pool": "statement and test model only",
+      "test_generation_pool": "LLM development candidates only",
+      "tnr_denominator": "two-trial verified development mutants; sample-preserving preferred, official-sample fallback disclosed",
+      "llm_holdout_pool": "two-trial verified mutants hidden until suite lock",
+      "external_evaluation_pool": "CodeNet oracle",
+      "oracle_used_for_generation_or_refinement": false,
+      "llm_execution_log": "executions-llm.jsonl",
+      "llm_holdout_execution_log": "executions-holdout.jsonl",
+      "oracle_execution_log": "oracle/executions.jsonl",
+      "execution_concurrency": {
+        "judge_workers": 1,
+        "compile_workers": 1,
+        "batch_size": 8
+      }
+    },
+    "latency": {
+      "log": "latency.jsonl",
+      "summary": {
+        "event_count": 0,
+        "components": {}
+      }
+    },
+    "generation_latency": {
+      "target_seconds": 180,
+      "scope": "startup through certified suite and holdout; excludes optional external oracle",
+      "quality_criteria_met": true
+    }
+  },
+  "artifacts": {
+    "context/candidates/wa1.json": {
+      "id": "wa1",
+      "label": "candidate_wa",
+      "language": "Python",
+      "bug_class": "",
+      "strategy_id": "",
+      "bug_origin": "",
+      "failure_condition": "",
+      "witness_input": "1\n",
+      "parent_ac_id": "",
+      "mutation_operator": "",
+      "target_behavior": "",
+      "sample_preservation_reason": "",
+      "source_code": "# fake",
+      "certification": {
+        "solution_id": "wa1",
+        "strategy_id": "",
+        "bug_class": "",
+        "bug_origin": "",
+        "failure_condition": "",
+        "witness_input": "1\n",
+        "parent_ac_id": "",
+        "mutation_operator": "",
+        "target_behavior": "",
+        "sample_preservation_reason": "",
+        "verified": true,
+        "fallback_verified": false,
+        "verification_tier": "sample_preserving_witness",
+        "promoted_to_minimum_pool": false,
+        "reason": "witness produced the same deterministic failure in two trials",
+        "validator_verdict": "PASS",
+        "reference_expected": "1.000\n",
+        "candidate_verdict": "PASS",
+        "candidate_actual": "2.000\n",
+        "candidate_trials": [
+          {
+            "verdict": "PASS",
+            "actual": "2.000\n",
+            "stderr": ""
+          },
+          {
+            "verdict": "PASS",
+            "actual": "2.000\n",
+            "stderr": ""
+          }
+        ],
+        "official_samples": [],
+        "official_samples_passed": true
+      },
+      "status": "killed",
+      "attempts": [
+        {
+          "round": 0,
+          "case_id": "fixture_i0_001",
+          "family": "boundary",
+          "coverage_tags": [],
+          "targeted": false,
+          "target_solution_ids": [],
+          "hypothesis_id": "",
+          "input": "1 2\n",
+          "predicted_expected": "",
+          "predicted_candidate_output": "",
+          "reason_for_difference": "",
+          "observed_expected": "1.000\n",
+          "observed_candidate_output": "2.000\n",
+          "observed_verdict": "WA",
+          "killed": true,
+          "lesson": "Candidate was distinguished: expected '1.000\\n', observed verdict=WA, output='2.000\\n'."
+        }
+      ],
+      "audits": [],
+      "failed_hypotheses": [],
+      "first_failing_case": "fixture_i0_001"
+    },
+    "context/candidates/wa2.json": {
+      "id": "wa2",
+      "label": "candidate_wa",
+      "language": "Python",
+      "bug_class": "",
+      "strategy_id": "",
+      "bug_origin": "",
+      "failure_condition": "",
+      "witness_input": "2\n",
+      "parent_ac_id": "",
+      "mutation_operator": "",
+      "target_behavior": "",
+      "sample_preservation_reason": "",
+      "source_code": "# fake",
+      "certification": {
+        "solution_id": "wa2",
+        "strategy_id": "",
+        "bug_class": "",
+        "bug_origin": "",
+        "failure_condition": "",
+        "witness_input": "2\n",
+        "parent_ac_id": "",
+        "mutation_operator": "",
+        "target_behavior": "",
+        "sample_preservation_reason": "",
+        "verified": true,
+        "fallback_verified": false,
+        "verification_tier": "sample_preserving_witness",
+        "promoted_to_minimum_pool": false,
+        "reason": "witness produced the same deterministic failure in two trials",
+        "validator_verdict": "PASS",
+        "reference_expected": "1.000\n",
+        "candidate_verdict": "PASS",
+        "candidate_actual": "2.000\n",
+        "candidate_trials": [
+          {
+            "verdict": "PASS",
+            "actual": "2.000\n",
+            "stderr": ""
+          },
+          {
+            "verdict": "PASS",
+            "actual": "2.000\n",
+            "stderr": ""
+          }
+        ],
+        "official_samples": [],
+        "official_samples_passed": true
+      },
+      "status": "killed",
+      "attempts": [
+        {
+          "round": 0,
+          "case_id": "fixture_i0_001",
+          "family": "boundary",
+          "coverage_tags": [],
+          "targeted": false,
+          "target_solution_ids": [],
+          "hypothesis_id": "",
+          "input": "1 2\n",
+          "predicted_expected": "",
+          "predicted_candidate_output": "",
+          "reason_for_difference": "",
+          "observed_expected": "1.000\n",
+          "observed_candidate_output": "2.000\n",
+          "observed_verdict": "WA",
+          "killed": true,
+          "lesson": "Candidate was distinguished: expected '1.000\\n', observed verdict=WA, output='2.000\\n'."
+        }
+      ],
+      "audits": [],
+      "failed_hypotheses": [],
+      "first_failing_case": "fixture_i0_001"
+    },
+    "context/candidates/wa3.json": {
+      "id": "wa3",
+      "label": "candidate_wa",
+      "language": "Python",
+      "bug_class": "",
+      "strategy_id": "",
+      "bug_origin": "",
+      "failure_condition": "",
+      "witness_input": "3\n",
+      "parent_ac_id": "",
+      "mutation_operator": "",
+      "target_behavior": "",
+      "sample_preservation_reason": "",
+      "source_code": "# fake",
+      "certification": {
+        "solution_id": "wa3",
+        "strategy_id": "",
+        "bug_class": "",
+        "bug_origin": "",
+        "failure_condition": "",
+        "witness_input": "3\n",
+        "parent_ac_id": "",
+        "mutation_operator": "",
+        "target_behavior": "",
+        "sample_preservation_reason": "",
+        "verified": true,
+        "fallback_verified": false,
+        "verification_tier": "sample_preserving_witness",
+        "promoted_to_minimum_pool": false,
+        "reason": "witness produced the same deterministic failure in two trials",
+        "validator_verdict": "PASS",
+        "reference_expected": "1.000\n",
+        "candidate_verdict": "PASS",
+        "candidate_actual": "2.000\n",
+        "candidate_trials": [
+          {
+            "verdict": "PASS",
+            "actual": "2.000\n",
+            "stderr": ""
+          },
+          {
+            "verdict": "PASS",
+            "actual": "2.000\n",
+            "stderr": ""
+          }
+        ],
+        "official_samples": [],
+        "official_samples_passed": true
+      },
+      "status": "killed",
+      "attempts": [
+        {
+          "round": 0,
+          "case_id": "fixture_i0_001",
+          "family": "boundary",
+          "coverage_tags": [],
+          "targeted": false,
+          "target_solution_ids": [],
+          "hypothesis_id": "",
+          "input": "1 2\n",
+          "predicted_expected": "",
+          "predicted_candidate_output": "",
+          "reason_for_difference": "",
+          "observed_expected": "1.000\n",
+          "observed_candidate_output": "2.000\n",
+          "observed_verdict": "WA",
+          "killed": true,
+          "lesson": "Candidate was distinguished: expected '1.000\\n', observed verdict=WA, output='2.000\\n'."
+        }
+      ],
+      "audits": [],
+      "failed_hypotheses": [],
+      "first_failing_case": "fixture_i0_001"
+    },
+    "context/candidates/wa4.json": {
+      "id": "wa4",
+      "label": "candidate_wa",
+      "language": "Python",
+      "bug_class": "",
+      "strategy_id": "",
+      "bug_origin": "",
+      "failure_condition": "",
+      "witness_input": "4\n",
+      "parent_ac_id": "",
+      "mutation_operator": "",
+      "target_behavior": "",
+      "sample_preservation_reason": "",
+      "source_code": "# fake",
+      "certification": {
+        "solution_id": "wa4",
+        "strategy_id": "",
+        "bug_class": "",
+        "bug_origin": "",
+        "failure_condition": "",
+        "witness_input": "4\n",
+        "parent_ac_id": "",
+        "mutation_operator": "",
+        "target_behavior": "",
+        "sample_preservation_reason": "",
+        "verified": true,
+        "fallback_verified": false,
+        "verification_tier": "sample_preserving_witness",
+        "promoted_to_minimum_pool": false,
+        "reason": "witness produced the same deterministic failure in two trials",
+        "validator_verdict": "PASS",
+        "reference_expected": "1.000\n",
+        "candidate_verdict": "PASS",
+        "candidate_actual": "2.000\n",
+        "candidate_trials": [
+          {
+            "verdict": "PASS",
+            "actual": "2.000\n",
+            "stderr": ""
+          },
+          {
+            "verdict": "PASS",
+            "actual": "2.000\n",
+            "stderr": ""
+          }
+        ],
+        "official_samples": [],
+        "official_samples_passed": true
+      },
+      "status": "killed",
+      "attempts": [
+        {
+          "round": 0,
+          "case_id": "fixture_i0_001",
+          "family": "boundary",
+          "coverage_tags": [],
+          "targeted": false,
+          "target_solution_ids": [],
+          "hypothesis_id": "",
+          "input": "1 2\n",
+          "predicted_expected": "",
+          "predicted_candidate_output": "",
+          "reason_for_difference": "",
+          "observed_expected": "1.000\n",
+          "observed_candidate_output": "2.000\n",
+          "observed_verdict": "WA",
+          "killed": true,
+          "lesson": "Candidate was distinguished: expected '1.000\\n', observed verdict=WA, output='2.000\\n'."
+        }
+      ],
+      "audits": [],
+      "failed_hypotheses": [],
+      "first_failing_case": "fixture_i0_001"
+    },
+    "executions-holdout.jsonl": [
+      {
+        "solution_id": "wa5",
+        "label": "candidate_wa",
+        "case_id": "fixture_i0_001",
+        "input": "1 2\n",
+        "expected": "1.000\n",
+        "actual": "2.000\n",
+        "stderr": "",
+        "verdict": "WA"
+      }
+    ],
+    "executions-llm.jsonl": [
+      {
+        "solution_id": "ac1",
+        "label": "candidate_ac",
+        "case_id": "fixture_i0_001",
+        "input": "1 2\n",
+        "expected": "1.000\n",
+        "actual": "1.000\n",
+        "stderr": "",
+        "verdict": "PASS"
+      },
+      {
+        "solution_id": "ac2",
+        "label": "candidate_ac",
+        "case_id": "fixture_i0_001",
+        "input": "1 2\n",
+        "expected": "1.000\n",
+        "actual": "1.000\n",
+        "stderr": "",
+        "verdict": "PASS"
+      },
+      {
+        "solution_id": "wa1",
+        "label": "candidate_wa",
+        "case_id": "fixture_i0_001",
+        "input": "1 2\n",
+        "expected": "1.000\n",
+        "actual": "2.000\n",
+        "stderr": "",
+        "verdict": "WA"
+      },
+      {
+        "solution_id": "wa2",
+        "label": "candidate_wa",
+        "case_id": "fixture_i0_001",
+        "input": "1 2\n",
+        "expected": "1.000\n",
+        "actual": "2.000\n",
+        "stderr": "",
+        "verdict": "WA"
+      },
+      {
+        "solution_id": "wa3",
+        "label": "candidate_wa",
+        "case_id": "fixture_i0_001",
+        "input": "1 2\n",
+        "expected": "1.000\n",
+        "actual": "2.000\n",
+        "stderr": "",
+        "verdict": "WA"
+      },
+      {
+        "solution_id": "wa4",
+        "label": "candidate_wa",
+        "case_id": "fixture_i0_001",
+        "input": "1 2\n",
+        "expected": "1.000\n",
+        "actual": "2.000\n",
+        "stderr": "",
+        "verdict": "WA"
+      }
+    ],
+    "generated/mutant-certification.json": {
+      "requested_wrong_candidates": 5,
+      "validated_wrong_candidates": 5,
+      "validated_solution_ids": [
+        "wa1",
+        "wa2",
+        "wa3",
+        "wa4",
+        "wa5"
+      ],
+      "strict_sample_preserving_verified": 5,
+      "official_sample_fallback_available": 0,
+      "official_sample_fallback_used": [],
+      "verification_policy": {
+        "preferred": "sample_preserving_witness",
+        "minimum_pool_fallback": "stable_official_sample_failure",
+        "fallback_trials": 2,
+        "never_accept": [
+          "equivalent mutant",
+          "unstable failure",
+          "CE",
+          "INFRA"
+        ]
+      },
+      "rejected_or_unverified": 0,
+      "rejection_reason_counts": {},
+      "replacement_rounds_allowed": 4,
+      "replacement_oversampling": 1.5,
+      "witness_repair_rounds_allowed": 2,
+      "witness_candidates_per_round": 2,
+      "witness_early_stop": {
+        "enabled": true,
+        "criterion": "stop after the first witness that produces the same deterministic failure in two candidate trials",
+        "repair_witnesses_proposed": 0,
+        "repair_witnesses_evaluated": 0,
+        "repair_witnesses_skipped_after_verified": 0,
+        "repair_witnesses_skipped_after_pool_full": 0
+      },
+      "compile_policy": {
+        "compile_once_per_candidate": true,
+        "compiled_mutant_candidates": 5
+      },
+      "candidate_trials_per_witness": 2,
+      "mutants_verified_by_repaired_witness": 0,
+      "minimum_required": 3,
+      "full_requested_pool_built": true,
+      "stage_status": "ready_full",
+      "skipped_after_pool_full": [],
+      "verified_reserve_not_selected": [],
+      "records": [
+        {
+          "solution_id": "wa1",
+          "strategy_id": "",
+          "bug_class": "",
+          "bug_origin": "",
+          "failure_condition": "",
+          "witness_input": "1\n",
+          "parent_ac_id": "",
+          "mutation_operator": "",
+          "target_behavior": "",
+          "sample_preservation_reason": "",
+          "verified": true,
+          "fallback_verified": false,
+          "verification_tier": "sample_preserving_witness",
+          "promoted_to_minimum_pool": false,
+          "reason": "witness produced the same deterministic failure in two trials",
+          "validator_verdict": "PASS",
+          "reference_expected": "1.000\n",
+          "candidate_verdict": "PASS",
+          "candidate_actual": "2.000\n",
+          "candidate_trials": [
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            },
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            }
+          ],
+          "official_samples": [],
+          "official_samples_passed": true
+        },
+        {
+          "solution_id": "wa2",
+          "strategy_id": "",
+          "bug_class": "",
+          "bug_origin": "",
+          "failure_condition": "",
+          "witness_input": "2\n",
+          "parent_ac_id": "",
+          "mutation_operator": "",
+          "target_behavior": "",
+          "sample_preservation_reason": "",
+          "verified": true,
+          "fallback_verified": false,
+          "verification_tier": "sample_preserving_witness",
+          "promoted_to_minimum_pool": false,
+          "reason": "witness produced the same deterministic failure in two trials",
+          "validator_verdict": "PASS",
+          "reference_expected": "1.000\n",
+          "candidate_verdict": "PASS",
+          "candidate_actual": "2.000\n",
+          "candidate_trials": [
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            },
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            }
+          ],
+          "official_samples": [],
+          "official_samples_passed": true
+        },
+        {
+          "solution_id": "wa3",
+          "strategy_id": "",
+          "bug_class": "",
+          "bug_origin": "",
+          "failure_condition": "",
+          "witness_input": "3\n",
+          "parent_ac_id": "",
+          "mutation_operator": "",
+          "target_behavior": "",
+          "sample_preservation_reason": "",
+          "verified": true,
+          "fallback_verified": false,
+          "verification_tier": "sample_preserving_witness",
+          "promoted_to_minimum_pool": false,
+          "reason": "witness produced the same deterministic failure in two trials",
+          "validator_verdict": "PASS",
+          "reference_expected": "1.000\n",
+          "candidate_verdict": "PASS",
+          "candidate_actual": "2.000\n",
+          "candidate_trials": [
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            },
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            }
+          ],
+          "official_samples": [],
+          "official_samples_passed": true
+        },
+        {
+          "solution_id": "wa4",
+          "strategy_id": "",
+          "bug_class": "",
+          "bug_origin": "",
+          "failure_condition": "",
+          "witness_input": "4\n",
+          "parent_ac_id": "",
+          "mutation_operator": "",
+          "target_behavior": "",
+          "sample_preservation_reason": "",
+          "verified": true,
+          "fallback_verified": false,
+          "verification_tier": "sample_preserving_witness",
+          "promoted_to_minimum_pool": false,
+          "reason": "witness produced the same deterministic failure in two trials",
+          "validator_verdict": "PASS",
+          "reference_expected": "1.000\n",
+          "candidate_verdict": "PASS",
+          "candidate_actual": "2.000\n",
+          "candidate_trials": [
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            },
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            }
+          ],
+          "official_samples": [],
+          "official_samples_passed": true
+        },
+        {
+          "solution_id": "wa5",
+          "strategy_id": "",
+          "bug_class": "",
+          "bug_origin": "",
+          "failure_condition": "",
+          "witness_input": "5\n",
+          "parent_ac_id": "",
+          "mutation_operator": "",
+          "target_behavior": "",
+          "sample_preservation_reason": "",
+          "verified": true,
+          "fallback_verified": false,
+          "verification_tier": "sample_preserving_witness",
+          "promoted_to_minimum_pool": false,
+          "reason": "witness produced the same deterministic failure in two trials",
+          "validator_verdict": "PASS",
+          "reference_expected": "1.000\n",
+          "candidate_verdict": "PASS",
+          "candidate_actual": "2.000\n",
+          "candidate_trials": [
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            },
+            {
+              "verdict": "PASS",
+              "actual": "2.000\n",
+              "stderr": ""
+            }
+          ],
+          "official_samples": [],
+          "official_samples_passed": true
+        }
+      ],
+      "rejected": [],
+      "development_mutants": [
+        "wa1",
+        "wa2",
+        "wa3",
+        "wa4"
+      ],
+      "holdout_mutants": [
+        "wa5"
+      ]
+    },
+    "generated/reference-certification.json": [
+      {
+        "solution_id": "ac1",
+        "compile_verdict": "PASS",
+        "official_samples": [],
+        "verified_for_consensus": true
+      },
+      {
+        "solution_id": "ac2",
+        "compile_verdict": "PASS",
+        "official_samples": [],
+        "verified_for_consensus": true
+      }
+    ],
+    "generated/validator.py": "# fake",
+    "iteration-0.json": {
+      "problem_id": "fixture",
+      "iteration": 0,
+      "checker": {
+        "kind": "TOKEN"
+      },
+      "cases": 1,
+      "quarantined": 0,
+      "llm_metrics": {
+        "positive_label": "candidate_ac",
+        "negative_label": "candidate_wa",
+        "positive_pass": 2,
+        "positive_evaluable": 2,
+        "negative_killed_logic": 4,
+        "negative_evaluable": 4,
+        "tpr_label_based": 1.0,
+        "tnr_label_based": 1.0,
+        "ce_infra": {
+          "positive": 0,
+          "negative": 0
+        },
+        "warning": "Original and LLM labels are provisional until independently verified."
+      },
+      "coverage": {
+        "obligations": 0,
+        "covered": 0,
+        "coverage_ratio": 1.0,
+        "critical_total": 0,
+        "critical_covered": 0,
+        "critical_ratio": 1.0,
+        "normal_total": 0,
+        "normal_covered": 0,
+        "normal_ratio": 1.0,
+        "covered_ids": [],
+        "uncovered_critical": [],
+        "uncovered_normal": []
+      },
+      "stop_criteria": {
+        "metric_threshold": true,
+        "coverage_threshold": true,
+        "minimum_rounds": true,
+        "minimum_cases": true,
+        "progress_exhausted": true,
+        "met": true
+      },
+      "dynamic_case_quota": {
+        "minimum": 10,
+        "maximum": 14,
+        "requested": 10,
+        "generated": 1,
+        "accepted": 1,
+        "top_up_rounds": 2,
+        "basis": {
+          "survivors": 4,
+          "previous_tnr": null,
+          "uncovered_critical": 0,
+          "previous_rejected_or_duplicate": 0,
+          "stalled_rounds": 0
+        }
+      },
+      "mutant_pool": {
+        "requested": 5,
+        "verified": 5,
+        "witness_verified": 5,
+        "official_sample_fallback": 0,
+        "development": 4,
+        "holdout": 1,
+        "survivors": 0
+      },
+      "verdicts": {
+        "ac1": {
+          "solution_id": "ac1",
+          "verdict": "PASS",
+          "case_id": null,
+          "actual": "",
+          "stderr": ""
+        },
+        "ac2": {
+          "solution_id": "ac2",
+          "verdict": "PASS",
+          "case_id": null,
+          "actual": "",
+          "stderr": ""
+        },
+        "wa1": {
+          "solution_id": "wa1",
+          "verdict": "WA",
+          "case_id": "fixture_i0_001",
+          "actual": "2.000\n",
+          "stderr": ""
+        },
+        "wa2": {
+          "solution_id": "wa2",
+          "verdict": "WA",
+          "case_id": "fixture_i0_001",
+          "actual": "2.000\n",
+          "stderr": ""
+        },
+        "wa3": {
+          "solution_id": "wa3",
+          "verdict": "WA",
+          "case_id": "fixture_i0_001",
+          "actual": "2.000\n",
+          "stderr": ""
+        },
+        "wa4": {
+          "solution_id": "wa4",
+          "verdict": "WA",
+          "case_id": "fixture_i0_001",
+          "actual": "2.000\n",
+          "stderr": ""
+        }
+      }
+    },
+    "refinement/case-plan-0-topup-1.json": {
+      "requested_count": 1,
+      "rationale": "fake",
+      "cases": [
+        {
+          "input": "1 2\n",
+          "family": "boundary"
+        }
+      ]
+    },
+    "refinement/case-plan-0-topup-2.json": {
+      "requested_count": 1,
+      "rationale": "fake",
+      "cases": [
+        {
+          "input": "1 2\n",
+          "family": "boundary"
+        }
+      ]
+    },
+    "refinement/case-plan-0.json": {
+      "requested_count": 1,
+      "rationale": "fake",
+      "cases": [
+        {
+          "input": "1 2\n",
+          "family": "boundary"
+        }
+      ]
+    },
+    "refinement/feedback-0.json": {
+      "context_version": 3,
+      "provenance": "LLM candidates and LLM-stage executions only",
+      "oracle_used": false,
+      "instruction": "Use accumulated evidence. Do not repeat a failed hypothesis. If an audit says likely_equivalent or nondeterministic_ub, do not keep producing the same test family.",
+      "generation_mode": "adaptive_fault_and_coverage",
+      "test_model": {
+        "model_version": 1,
+        "input_grammar": "",
+        "constraints": [],
+        "variables": [],
+        "relations": [],
+        "output_partitions": [],
+        "sequences": [],
+        "fault_model": [],
+        "coverage_obligations": [],
+        "warnings": [
+          "Test-model generation is unsupported by this generator."
+        ]
+      },
+      "coverage": {
+        "obligations": 0,
+        "covered": 0,
+        "coverage_ratio": 1.0,
+        "critical_total": 0,
+        "critical_covered": 0,
+        "critical_ratio": 1.0,
+        "normal_total": 0,
+        "normal_covered": 0,
+        "normal_ratio": 1.0,
+        "covered_ids": [],
+        "uncovered_critical": [],
+        "uncovered_normal": []
+      },
+      "quota_basis": {
+        "survivors": 4,
+        "previous_tnr": null,
+        "uncovered_critical": 0,
+        "previous_rejected_or_duplicate": 0,
+        "stalled_rounds": 0
+      },
+      "metrics": null,
+      "surviving_wrong_candidates": [
+        {
+          "id": "wa1",
+          "label": "candidate_wa",
+          "language": "Python",
+          "bug_class": "",
+          "strategy_id": "",
+          "bug_origin": "",
+          "failure_condition": "",
+          "witness_input": "1\n",
+          "parent_ac_id": "",
+          "mutation_operator": "",
+          "target_behavior": "",
+          "sample_preservation_reason": "",
+          "source_code": "# fake",
+          "certification": {
+            "solution_id": "wa1",
+            "strategy_id": "",
+            "bug_class": "",
+            "bug_origin": "",
+            "failure_condition": "",
+            "witness_input": "1\n",
+            "parent_ac_id": "",
+            "mutation_operator": "",
+            "target_behavior": "",
+            "sample_preservation_reason": "",
+            "verified": true,
+            "fallback_verified": false,
+            "verification_tier": "sample_preserving_witness",
+            "promoted_to_minimum_pool": false,
+            "reason": "witness produced the same deterministic failure in two trials",
+            "validator_verdict": "PASS",
+            "reference_expected": "1.000\n",
+            "candidate_verdict": "PASS",
+            "candidate_actual": "2.000\n",
+            "candidate_trials": [
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              },
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              }
+            ],
+            "official_samples": [],
+            "official_samples_passed": true
+          },
+          "status": "active",
+          "attempts": [],
+          "audits": [],
+          "failed_hypotheses": []
+        },
+        {
+          "id": "wa2",
+          "label": "candidate_wa",
+          "language": "Python",
+          "bug_class": "",
+          "strategy_id": "",
+          "bug_origin": "",
+          "failure_condition": "",
+          "witness_input": "2\n",
+          "parent_ac_id": "",
+          "mutation_operator": "",
+          "target_behavior": "",
+          "sample_preservation_reason": "",
+          "source_code": "# fake",
+          "certification": {
+            "solution_id": "wa2",
+            "strategy_id": "",
+            "bug_class": "",
+            "bug_origin": "",
+            "failure_condition": "",
+            "witness_input": "2\n",
+            "parent_ac_id": "",
+            "mutation_operator": "",
+            "target_behavior": "",
+            "sample_preservation_reason": "",
+            "verified": true,
+            "fallback_verified": false,
+            "verification_tier": "sample_preserving_witness",
+            "promoted_to_minimum_pool": false,
+            "reason": "witness produced the same deterministic failure in two trials",
+            "validator_verdict": "PASS",
+            "reference_expected": "1.000\n",
+            "candidate_verdict": "PASS",
+            "candidate_actual": "2.000\n",
+            "candidate_trials": [
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              },
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              }
+            ],
+            "official_samples": [],
+            "official_samples_passed": true
+          },
+          "status": "active",
+          "attempts": [],
+          "audits": [],
+          "failed_hypotheses": []
+        },
+        {
+          "id": "wa3",
+          "label": "candidate_wa",
+          "language": "Python",
+          "bug_class": "",
+          "strategy_id": "",
+          "bug_origin": "",
+          "failure_condition": "",
+          "witness_input": "3\n",
+          "parent_ac_id": "",
+          "mutation_operator": "",
+          "target_behavior": "",
+          "sample_preservation_reason": "",
+          "source_code": "# fake",
+          "certification": {
+            "solution_id": "wa3",
+            "strategy_id": "",
+            "bug_class": "",
+            "bug_origin": "",
+            "failure_condition": "",
+            "witness_input": "3\n",
+            "parent_ac_id": "",
+            "mutation_operator": "",
+            "target_behavior": "",
+            "sample_preservation_reason": "",
+            "verified": true,
+            "fallback_verified": false,
+            "verification_tier": "sample_preserving_witness",
+            "promoted_to_minimum_pool": false,
+            "reason": "witness produced the same deterministic failure in two trials",
+            "validator_verdict": "PASS",
+            "reference_expected": "1.000\n",
+            "candidate_verdict": "PASS",
+            "candidate_actual": "2.000\n",
+            "candidate_trials": [
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              },
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              }
+            ],
+            "official_samples": [],
+            "official_samples_passed": true
+          },
+          "status": "active",
+          "attempts": [],
+          "audits": [],
+          "failed_hypotheses": []
+        },
+        {
+          "id": "wa4",
+          "label": "candidate_wa",
+          "language": "Python",
+          "bug_class": "",
+          "strategy_id": "",
+          "bug_origin": "",
+          "failure_condition": "",
+          "witness_input": "4\n",
+          "parent_ac_id": "",
+          "mutation_operator": "",
+          "target_behavior": "",
+          "sample_preservation_reason": "",
+          "source_code": "# fake",
+          "certification": {
+            "solution_id": "wa4",
+            "strategy_id": "",
+            "bug_class": "",
+            "bug_origin": "",
+            "failure_condition": "",
+            "witness_input": "4\n",
+            "parent_ac_id": "",
+            "mutation_operator": "",
+            "target_behavior": "",
+            "sample_preservation_reason": "",
+            "verified": true,
+            "fallback_verified": false,
+            "verification_tier": "sample_preserving_witness",
+            "promoted_to_minimum_pool": false,
+            "reason": "witness produced the same deterministic failure in two trials",
+            "validator_verdict": "PASS",
+            "reference_expected": "1.000\n",
+            "candidate_verdict": "PASS",
+            "candidate_actual": "2.000\n",
+            "candidate_trials": [
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              },
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              }
+            ],
+            "official_samples": [],
+            "official_samples_passed": true
+          },
+          "status": "active",
+          "attempts": [],
+          "audits": [],
+          "failed_hypotheses": []
+        }
+      ],
+      "failed_correct_candidates": [],
+      "previous_round": {
+        "certified_tests": [],
+        "rejected_tests": []
+      },
+      "experiment_history": {
+        "certified_tests": [],
+        "rejected_tests": []
+      }
+    },
+    "report.json": {
+      "problem_id": "fixture",
+      "iterations_used": 1,
+      "llm_metrics": {
+        "positive_label": "candidate_ac",
+        "negative_label": "candidate_wa",
+        "positive_pass": 2,
+        "positive_evaluable": 2,
+        "negative_killed_logic": 4,
+        "negative_evaluable": 4,
+        "tpr_label_based": 1.0,
+        "tnr_label_based": 1.0,
+        "ce_infra": {
+          "positive": 0,
+          "negative": 0
+        },
+        "warning": "Original and LLM labels are provisional until independently verified."
+      },
+      "llm_holdout_metrics": {
+        "positive_label": "candidate_ac",
+        "negative_label": "candidate_wa",
+        "positive_pass": 2,
+        "positive_evaluable": 2,
+        "negative_killed_logic": 1,
+        "negative_evaluable": 1,
+        "tpr_label_based": 1.0,
+        "tnr_label_based": 1.0,
+        "ce_infra": {
+          "positive": 0,
+          "negative": 0
+        },
+        "warning": "Original and LLM labels are provisional until independently verified."
+      },
+      "cases": [
+        {
+          "id": "fixture_i0_001",
+          "input": "1 2\n",
+          "expected": "1.000\n",
+          "family": "boundary",
+          "iteration": 0,
+          "coverage_tags": []
+        }
+      ],
+      "quarantined": [],
+      "llm_verdicts": {
+        "ac1": {
+          "solution_id": "ac1",
+          "verdict": "PASS",
+          "case_id": null,
+          "actual": "",
+          "stderr": ""
+        },
+        "ac2": {
+          "solution_id": "ac2",
+          "verdict": "PASS",
+          "case_id": null,
+          "actual": "",
+          "stderr": ""
+        },
+        "wa1": {
+          "solution_id": "wa1",
+          "verdict": "WA",
+          "case_id": "fixture_i0_001",
+          "actual": "2.000\n",
+          "stderr": ""
+        },
+        "wa2": {
+          "solution_id": "wa2",
+          "verdict": "WA",
+          "case_id": "fixture_i0_001",
+          "actual": "2.000\n",
+          "stderr": ""
+        },
+        "wa3": {
+          "solution_id": "wa3",
+          "verdict": "WA",
+          "case_id": "fixture_i0_001",
+          "actual": "2.000\n",
+          "stderr": ""
+        },
+        "wa4": {
+          "solution_id": "wa4",
+          "verdict": "WA",
+          "case_id": "fixture_i0_001",
+          "actual": "2.000\n",
+          "stderr": ""
+        }
+      },
+      "llm_holdout_verdicts": {
+        "wa5": {
+          "solution_id": "wa5",
+          "verdict": "WA",
+          "case_id": "fixture_i0_001",
+          "actual": "2.000\n",
+          "stderr": ""
+        }
+      },
+      "test_model": {
+        "model_version": 1,
+        "input_grammar": "",
+        "constraints": [],
+        "variables": [],
+        "relations": [],
+        "output_partitions": [],
+        "sequences": [],
+        "fault_model": [],
+        "coverage_obligations": [],
+        "warnings": [
+          "Test-model generation is unsupported by this generator."
+        ]
+      },
+      "coverage": {
+        "obligations": 0,
+        "covered": 0,
+        "coverage_ratio": 1.0,
+        "critical_total": 0,
+        "critical_covered": 0,
+        "critical_ratio": 1.0,
+        "normal_total": 0,
+        "normal_covered": 0,
+        "normal_ratio": 1.0,
+        "covered_ids": [],
+        "uncovered_critical": [],
+        "uncovered_normal": []
+      },
+      "stop_reason": "all_quality_criteria_met",
+      "stop_criteria": {
+        "metric_threshold": true,
+        "coverage_threshold": true,
+        "minimum_rounds": true,
+        "minimum_cases": true,
+        "progress_exhausted": true,
+        "met": true
+      },
+      "mutant_certification": {
+        "requested_wrong_candidates": 5,
+        "validated_wrong_candidates": 5,
+        "validated_solution_ids": [
+          "wa1",
+          "wa2",
+          "wa3",
+          "wa4",
+          "wa5"
+        ],
+        "strict_sample_preserving_verified": 5,
+        "official_sample_fallback_available": 0,
+        "official_sample_fallback_used": [],
+        "verification_policy": {
+          "preferred": "sample_preserving_witness",
+          "minimum_pool_fallback": "stable_official_sample_failure",
+          "fallback_trials": 2,
+          "never_accept": [
+            "equivalent mutant",
+            "unstable failure",
+            "CE",
+            "INFRA"
+          ]
+        },
+        "rejected_or_unverified": 0,
+        "rejection_reason_counts": {},
+        "replacement_rounds_allowed": 4,
+        "replacement_oversampling": 1.5,
+        "witness_repair_rounds_allowed": 2,
+        "witness_candidates_per_round": 2,
+        "witness_early_stop": {
+          "enabled": true,
+          "criterion": "stop after the first witness that produces the same deterministic failure in two candidate trials",
+          "repair_witnesses_proposed": 0,
+          "repair_witnesses_evaluated": 0,
+          "repair_witnesses_skipped_after_verified": 0,
+          "repair_witnesses_skipped_after_pool_full": 0
+        },
+        "compile_policy": {
+          "compile_once_per_candidate": true,
+          "compiled_mutant_candidates": 5
+        },
+        "candidate_trials_per_witness": 2,
+        "mutants_verified_by_repaired_witness": 0,
+        "minimum_required": 3,
+        "full_requested_pool_built": true,
+        "stage_status": "ready_full",
+        "skipped_after_pool_full": [],
+        "verified_reserve_not_selected": [],
+        "records": [
+          {
+            "solution_id": "wa1",
+            "strategy_id": "",
+            "bug_class": "",
+            "bug_origin": "",
+            "failure_condition": "",
+            "witness_input": "1\n",
+            "parent_ac_id": "",
+            "mutation_operator": "",
+            "target_behavior": "",
+            "sample_preservation_reason": "",
+            "verified": true,
+            "fallback_verified": false,
+            "verification_tier": "sample_preserving_witness",
+            "promoted_to_minimum_pool": false,
+            "reason": "witness produced the same deterministic failure in two trials",
+            "validator_verdict": "PASS",
+            "reference_expected": "1.000\n",
+            "candidate_verdict": "PASS",
+            "candidate_actual": "2.000\n",
+            "candidate_trials": [
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              },
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              }
+            ],
+            "official_samples": [],
+            "official_samples_passed": true
+          },
+          {
+            "solution_id": "wa2",
+            "strategy_id": "",
+            "bug_class": "",
+            "bug_origin": "",
+            "failure_condition": "",
+            "witness_input": "2\n",
+            "parent_ac_id": "",
+            "mutation_operator": "",
+            "target_behavior": "",
+            "sample_preservation_reason": "",
+            "verified": true,
+            "fallback_verified": false,
+            "verification_tier": "sample_preserving_witness",
+            "promoted_to_minimum_pool": false,
+            "reason": "witness produced the same deterministic failure in two trials",
+            "validator_verdict": "PASS",
+            "reference_expected": "1.000\n",
+            "candidate_verdict": "PASS",
+            "candidate_actual": "2.000\n",
+            "candidate_trials": [
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              },
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              }
+            ],
+            "official_samples": [],
+            "official_samples_passed": true
+          },
+          {
+            "solution_id": "wa3",
+            "strategy_id": "",
+            "bug_class": "",
+            "bug_origin": "",
+            "failure_condition": "",
+            "witness_input": "3\n",
+            "parent_ac_id": "",
+            "mutation_operator": "",
+            "target_behavior": "",
+            "sample_preservation_reason": "",
+            "verified": true,
+            "fallback_verified": false,
+            "verification_tier": "sample_preserving_witness",
+            "promoted_to_minimum_pool": false,
+            "reason": "witness produced the same deterministic failure in two trials",
+            "validator_verdict": "PASS",
+            "reference_expected": "1.000\n",
+            "candidate_verdict": "PASS",
+            "candidate_actual": "2.000\n",
+            "candidate_trials": [
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              },
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              }
+            ],
+            "official_samples": [],
+            "official_samples_passed": true
+          },
+          {
+            "solution_id": "wa4",
+            "strategy_id": "",
+            "bug_class": "",
+            "bug_origin": "",
+            "failure_condition": "",
+            "witness_input": "4\n",
+            "parent_ac_id": "",
+            "mutation_operator": "",
+            "target_behavior": "",
+            "sample_preservation_reason": "",
+            "verified": true,
+            "fallback_verified": false,
+            "verification_tier": "sample_preserving_witness",
+            "promoted_to_minimum_pool": false,
+            "reason": "witness produced the same deterministic failure in two trials",
+            "validator_verdict": "PASS",
+            "reference_expected": "1.000\n",
+            "candidate_verdict": "PASS",
+            "candidate_actual": "2.000\n",
+            "candidate_trials": [
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              },
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              }
+            ],
+            "official_samples": [],
+            "official_samples_passed": true
+          },
+          {
+            "solution_id": "wa5",
+            "strategy_id": "",
+            "bug_class": "",
+            "bug_origin": "",
+            "failure_condition": "",
+            "witness_input": "5\n",
+            "parent_ac_id": "",
+            "mutation_operator": "",
+            "target_behavior": "",
+            "sample_preservation_reason": "",
+            "verified": true,
+            "fallback_verified": false,
+            "verification_tier": "sample_preserving_witness",
+            "promoted_to_minimum_pool": false,
+            "reason": "witness produced the same deterministic failure in two trials",
+            "validator_verdict": "PASS",
+            "reference_expected": "1.000\n",
+            "candidate_verdict": "PASS",
+            "candidate_actual": "2.000\n",
+            "candidate_trials": [
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              },
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              }
+            ],
+            "official_samples": [],
+            "official_samples_passed": true
+          }
+        ],
+        "rejected": [],
+        "development_mutants": [
+          "wa1",
+          "wa2",
+          "wa3",
+          "wa4"
+        ],
+        "holdout_mutants": [
+          "wa5"
+        ]
+      },
+      "candidate_contexts": {
+        "wa1": {
+          "id": "wa1",
+          "label": "candidate_wa",
+          "language": "Python",
+          "bug_class": "",
+          "strategy_id": "",
+          "bug_origin": "",
+          "failure_condition": "",
+          "witness_input": "1\n",
+          "parent_ac_id": "",
+          "mutation_operator": "",
+          "target_behavior": "",
+          "sample_preservation_reason": "",
+          "source_code": "# fake",
+          "certification": {
+            "solution_id": "wa1",
+            "strategy_id": "",
+            "bug_class": "",
+            "bug_origin": "",
+            "failure_condition": "",
+            "witness_input": "1\n",
+            "parent_ac_id": "",
+            "mutation_operator": "",
+            "target_behavior": "",
+            "sample_preservation_reason": "",
+            "verified": true,
+            "fallback_verified": false,
+            "verification_tier": "sample_preserving_witness",
+            "promoted_to_minimum_pool": false,
+            "reason": "witness produced the same deterministic failure in two trials",
+            "validator_verdict": "PASS",
+            "reference_expected": "1.000\n",
+            "candidate_verdict": "PASS",
+            "candidate_actual": "2.000\n",
+            "candidate_trials": [
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              },
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              }
+            ],
+            "official_samples": [],
+            "official_samples_passed": true
+          },
+          "status": "killed",
+          "attempts": [
+            {
+              "round": 0,
+              "case_id": "fixture_i0_001",
+              "family": "boundary",
+              "coverage_tags": [],
+              "targeted": false,
+              "target_solution_ids": [],
+              "hypothesis_id": "",
+              "input": "1 2\n",
+              "predicted_expected": "",
+              "predicted_candidate_output": "",
+              "reason_for_difference": "",
+              "observed_expected": "1.000\n",
+              "observed_candidate_output": "2.000\n",
+              "observed_verdict": "WA",
+              "killed": true,
+              "lesson": "Candidate was distinguished: expected '1.000\\n', observed verdict=WA, output='2.000\\n'."
+            }
+          ],
+          "audits": [],
+          "failed_hypotheses": [],
+          "first_failing_case": "fixture_i0_001"
+        },
+        "wa2": {
+          "id": "wa2",
+          "label": "candidate_wa",
+          "language": "Python",
+          "bug_class": "",
+          "strategy_id": "",
+          "bug_origin": "",
+          "failure_condition": "",
+          "witness_input": "2\n",
+          "parent_ac_id": "",
+          "mutation_operator": "",
+          "target_behavior": "",
+          "sample_preservation_reason": "",
+          "source_code": "# fake",
+          "certification": {
+            "solution_id": "wa2",
+            "strategy_id": "",
+            "bug_class": "",
+            "bug_origin": "",
+            "failure_condition": "",
+            "witness_input": "2\n",
+            "parent_ac_id": "",
+            "mutation_operator": "",
+            "target_behavior": "",
+            "sample_preservation_reason": "",
+            "verified": true,
+            "fallback_verified": false,
+            "verification_tier": "sample_preserving_witness",
+            "promoted_to_minimum_pool": false,
+            "reason": "witness produced the same deterministic failure in two trials",
+            "validator_verdict": "PASS",
+            "reference_expected": "1.000\n",
+            "candidate_verdict": "PASS",
+            "candidate_actual": "2.000\n",
+            "candidate_trials": [
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              },
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              }
+            ],
+            "official_samples": [],
+            "official_samples_passed": true
+          },
+          "status": "killed",
+          "attempts": [
+            {
+              "round": 0,
+              "case_id": "fixture_i0_001",
+              "family": "boundary",
+              "coverage_tags": [],
+              "targeted": false,
+              "target_solution_ids": [],
+              "hypothesis_id": "",
+              "input": "1 2\n",
+              "predicted_expected": "",
+              "predicted_candidate_output": "",
+              "reason_for_difference": "",
+              "observed_expected": "1.000\n",
+              "observed_candidate_output": "2.000\n",
+              "observed_verdict": "WA",
+              "killed": true,
+              "lesson": "Candidate was distinguished: expected '1.000\\n', observed verdict=WA, output='2.000\\n'."
+            }
+          ],
+          "audits": [],
+          "failed_hypotheses": [],
+          "first_failing_case": "fixture_i0_001"
+        },
+        "wa3": {
+          "id": "wa3",
+          "label": "candidate_wa",
+          "language": "Python",
+          "bug_class": "",
+          "strategy_id": "",
+          "bug_origin": "",
+          "failure_condition": "",
+          "witness_input": "3\n",
+          "parent_ac_id": "",
+          "mutation_operator": "",
+          "target_behavior": "",
+          "sample_preservation_reason": "",
+          "source_code": "# fake",
+          "certification": {
+            "solution_id": "wa3",
+            "strategy_id": "",
+            "bug_class": "",
+            "bug_origin": "",
+            "failure_condition": "",
+            "witness_input": "3\n",
+            "parent_ac_id": "",
+            "mutation_operator": "",
+            "target_behavior": "",
+            "sample_preservation_reason": "",
+            "verified": true,
+            "fallback_verified": false,
+            "verification_tier": "sample_preserving_witness",
+            "promoted_to_minimum_pool": false,
+            "reason": "witness produced the same deterministic failure in two trials",
+            "validator_verdict": "PASS",
+            "reference_expected": "1.000\n",
+            "candidate_verdict": "PASS",
+            "candidate_actual": "2.000\n",
+            "candidate_trials": [
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              },
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              }
+            ],
+            "official_samples": [],
+            "official_samples_passed": true
+          },
+          "status": "killed",
+          "attempts": [
+            {
+              "round": 0,
+              "case_id": "fixture_i0_001",
+              "family": "boundary",
+              "coverage_tags": [],
+              "targeted": false,
+              "target_solution_ids": [],
+              "hypothesis_id": "",
+              "input": "1 2\n",
+              "predicted_expected": "",
+              "predicted_candidate_output": "",
+              "reason_for_difference": "",
+              "observed_expected": "1.000\n",
+              "observed_candidate_output": "2.000\n",
+              "observed_verdict": "WA",
+              "killed": true,
+              "lesson": "Candidate was distinguished: expected '1.000\\n', observed verdict=WA, output='2.000\\n'."
+            }
+          ],
+          "audits": [],
+          "failed_hypotheses": [],
+          "first_failing_case": "fixture_i0_001"
+        },
+        "wa4": {
+          "id": "wa4",
+          "label": "candidate_wa",
+          "language": "Python",
+          "bug_class": "",
+          "strategy_id": "",
+          "bug_origin": "",
+          "failure_condition": "",
+          "witness_input": "4\n",
+          "parent_ac_id": "",
+          "mutation_operator": "",
+          "target_behavior": "",
+          "sample_preservation_reason": "",
+          "source_code": "# fake",
+          "certification": {
+            "solution_id": "wa4",
+            "strategy_id": "",
+            "bug_class": "",
+            "bug_origin": "",
+            "failure_condition": "",
+            "witness_input": "4\n",
+            "parent_ac_id": "",
+            "mutation_operator": "",
+            "target_behavior": "",
+            "sample_preservation_reason": "",
+            "verified": true,
+            "fallback_verified": false,
+            "verification_tier": "sample_preserving_witness",
+            "promoted_to_minimum_pool": false,
+            "reason": "witness produced the same deterministic failure in two trials",
+            "validator_verdict": "PASS",
+            "reference_expected": "1.000\n",
+            "candidate_verdict": "PASS",
+            "candidate_actual": "2.000\n",
+            "candidate_trials": [
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              },
+              {
+                "verdict": "PASS",
+                "actual": "2.000\n",
+                "stderr": ""
+              }
+            ],
+            "official_samples": [],
+            "official_samples_passed": true
+          },
+          "status": "killed",
+          "attempts": [
+            {
+              "round": 0,
+              "case_id": "fixture_i0_001",
+              "family": "boundary",
+              "coverage_tags": [],
+              "targeted": false,
+              "target_solution_ids": [],
+              "hypothesis_id": "",
+              "input": "1 2\n",
+              "predicted_expected": "",
+              "predicted_candidate_output": "",
+              "reason_for_difference": "",
+              "observed_expected": "1.000\n",
+              "observed_candidate_output": "2.000\n",
+              "observed_verdict": "WA",
+              "killed": true,
+              "lesson": "Candidate was distinguished: expected '1.000\\n', observed verdict=WA, output='2.000\\n'."
+            }
+          ],
+          "audits": [],
+          "failed_hypotheses": [],
+          "first_failing_case": "fixture_i0_001"
+        }
+      },
+      "test_suite_lock": {
+        "sha256": "e5d18f635db3a6340ff57e46f89d259051e702408e2d14a8e61ba27cb69d5ff8",
+        "cases": [
+          {
+            "id": "fixture_i0_001",
+            "input_sha256": "f251ddc12234e0da8d3b778bd0f7463fb477f16f47757f5617dc8b4ff4d4f14a",
+            "expected_sha256": "f1aa996e7ab6a38734f26f887239313d8bc0000863cd4bb322c058ef8086486a"
+          }
+        ]
+      },
+      "experiment_protocol": {
+        "baseline_generation_pool": "statement and test model only",
+        "test_generation_pool": "LLM development candidates only",
+        "tnr_denominator": "two-trial verified development mutants; sample-preserving preferred, official-sample fallback disclosed",
+        "llm_holdout_pool": "two-trial verified mutants hidden until suite lock",
+        "external_evaluation_pool": "CodeNet oracle",
+        "oracle_used_for_generation_or_refinement": false,
+        "llm_execution_log": "executions-llm.jsonl",
+        "llm_holdout_execution_log": "executions-holdout.jsonl",
+        "oracle_execution_log": "oracle/executions.jsonl",
+        "execution_concurrency": {
+          "judge_workers": 1,
+          "compile_workers": 1,
+          "batch_size": 8
+        }
+      },
+      "latency": {
+        "log": "latency.jsonl",
+        "summary": {
+          "event_count": 0,
+          "components": {}
+        }
+      },
+      "generation_latency": {
+        "target_seconds": 180,
+        "scope": "startup through certified suite and holdout; excludes optional external oracle",
+        "quality_criteria_met": true
+      }
+    },
+    "test-model.json": {
+      "model_version": 1,
+      "input_grammar": "",
+      "constraints": [],
+      "variables": [],
+      "relations": [],
+      "output_partitions": [],
+      "sequences": [],
+      "fault_model": [],
+      "coverage_obligations": [],
+      "warnings": [
+        "Test-model generation is unsupported by this generator."
+      ]
+    },
+    "test-suite.lock.json": {
+      "sha256": "e5d18f635db3a6340ff57e46f89d259051e702408e2d14a8e61ba27cb69d5ff8",
+      "cases": [
+        {
+          "id": "fixture_i0_001",
+          "input_sha256": "f251ddc12234e0da8d3b778bd0f7463fb477f16f47757f5617dc8b4ff4d4f14a",
+          "expected_sha256": "f1aa996e7ab6a38734f26f887239313d8bc0000863cd4bb322c058ef8086486a"
+        }
+      ]
+    },
+    "tests/fixture_i0_001.in": "1 2\n",
+    "tests/fixture_i0_001.out": "1.000\n"
+  }
+}

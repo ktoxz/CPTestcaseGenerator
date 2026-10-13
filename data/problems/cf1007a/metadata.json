@@ -1,0 +1,19 @@
+{
+  "problem_id": "cf1007a",
+  "contest_id": 1007,
+  "index": "A",
+  "title": "A. Reorder the Array",
+  "url": "https://codeforces.com/contest/1007/problem/A",
+  "time_limit_ms": 2000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "7\n10 1 1 1 5 5 3\n",
+      "output": "4\n"
+    },
+    {
+      "input": "5\n1 1 1 1 1\n",
+      "output": "0\n"
+    }
+  ]
+}
