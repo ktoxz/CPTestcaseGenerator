@@ -3,6 +3,7 @@ from .llm_contract import (
     LLMRequest, TaskType, FailurePolicy, LLMTransportError, LLMResponseError,
     LLMContractError, ask_json,
 )
+from .throttle import EndpointBusyError
 
 
 def neutral_result(task: TaskType) -> dict:
@@ -43,7 +44,7 @@ class FallbackLLMClient:
             try:
                 return ask_json(client, request.task_type, request.prompt, request.label,
                                 request.response_model, request.failure_policy)
-            except (LLMTransportError, LLMResponseError, OSError) as error:
+            except (LLMTransportError, LLMResponseError, EndpointBusyError, TimeoutError, OSError) as error:
                 failures.append(f"{name}: {type(error).__name__}: {error}")
                 if self.progress:
                     self.progress.log(f"LLM {name} lỗi ở {request.label}: {type(error).__name__}")
