@@ -109,6 +109,34 @@ class TestModelSpecTests(unittest.TestCase):
             self.assertEqual(backend.limits["run_timeout_seconds"], 5)
             self.assertEqual(backend.limits["memory"], "1024m")
 
+    def test_pipeline_test_model_is_preserved_for_solution_generation(self):
+        model = normalize_test_model({
+            "checker": {"kind": "FLOAT", "epsilon": 1e-6},
+            "input_grammar": "n followed by n values",
+            "variables": [{
+                "name": "n", "description": "size", "domain": "1..100"
+            }],
+            "fault_model": ["off-by-one"],
+            "coverage_obligations": [{
+                "id": "minimum", "category": "boundary",
+                "description": "n = 1", "priority": "critical",
+                "required": True,
+            }],
+        })
+        from testgen.generation.cases import CaseGenerationService
+        from testgen.generation.solutions import SolutionGenerationService
+        forwarded = SolutionGenerationService._compact_analysis({
+            "analysis_source": "pipeline_test_model", **model
+        })
+        self.assertEqual(forwarded["checker"]["kind"], "FLOAT")
+        self.assertEqual(forwarded["input_grammar"], "n followed by n values")
+        self.assertEqual(forwarded["fault_model"], ["off-by-one"])
+        self.assertEqual(forwarded["coverage_obligations"][0]["id"], "minimum")
+        case_model = CaseGenerationService._compact_test_model(model)
+        self.assertEqual(case_model["checker"]["kind"], "FLOAT")
+        self.assertEqual(case_model["variables"][0]["name"], "n")
+        self.assertEqual(case_model["fault_model"], ["off-by-one"])
+
     def test_generated_special_checker_is_never_executed(self):
         class Generator:
             cases_per_round = 10

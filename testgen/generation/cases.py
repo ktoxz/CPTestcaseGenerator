@@ -80,8 +80,9 @@ class CaseGenerationService(CaseGenerator):
         compact = {
             key: test_model.get(key)
             for key in (
-                "input_grammar", "constraints", "relations",
-                "output_partitions", "sequences", "warnings",
+                "checker", "sandbox", "input_grammar", "constraints",
+                "variables", "relations", "output_partitions", "sequences",
+                "fault_model", "warnings",
             )
             if key in test_model
         }

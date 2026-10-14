@@ -65,11 +65,18 @@ class SolutionGenerationService(SolutionGenerator):
 
     @staticmethod
     def _compact_analysis(analysis: dict) -> dict:
-        """Keep reasoning useful for code generation, not the whole test model."""
-        keys = (
-            "interpretation", "constraints", "correct_strategies",
-            "validator_requirements", "warnings",
-        )
+        """Keep the complete bounded pipeline model used for code generation."""
+        if analysis.get("analysis_source") == "pipeline_test_model":
+            keys = (
+                "model_version", "checker", "sandbox", "input_grammar",
+                "constraints", "variables", "relations", "output_partitions",
+                "sequences", "fault_model", "coverage_obligations", "warnings",
+            )
+        else:
+            keys = (
+                "interpretation", "constraints", "correct_strategies",
+                "validator_requirements", "warnings",
+            )
         return {key: analysis[key] for key in keys if key in analysis}
 
     @staticmethod
