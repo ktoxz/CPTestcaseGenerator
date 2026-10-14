@@ -28,7 +28,11 @@ class FloatChecker(Checker):
             pairs = [(Decimal(a), Decimal(e)) for a, e in zip(left, right)]
         except InvalidOperation:
             return False
-        if not all(a.is_finite() and e.is_finite() and abs(a - e) <= epsilon
-                   for a, e in pairs):
+        if not all(
+            a.is_finite()
+            and e.is_finite()
+            and abs(a - e) <= epsilon * max(Decimal(1), abs(e))
+            for a, e in pairs
+        ):
             return False
         return valid_numeric_layout(actual, expected, self.decimal_places, self.values_per_line)

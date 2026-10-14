@@ -282,6 +282,11 @@ class PipelineTests(unittest.TestCase):
                         .accepts("0.0015", "0.0010"))
         self.assertFalse(checker_from_profile({"kind": "FLOAT", "epsilon": 0.0005})
                          .accepts("0.001501", "0.0010"))
+        relative = checker_from_profile({"kind": "FLOAT", "epsilon": 1e-6})
+        self.assertTrue(relative.accepts(
+            "3.2732646578712519e91", "3.2732646578712497e91"
+        ))
+        self.assertFalse(relative.accepts("1000002", "1000000"))
 
     def test_sample_parser(self):
         statement = "## Sample Input\n\n```text\n1 2\n```\n\n## Output for the Sample Input\n\n```text\n1.000\n```\n"
