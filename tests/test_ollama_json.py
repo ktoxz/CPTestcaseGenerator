@@ -144,7 +144,10 @@ class OllamaJsonTests(unittest.TestCase):
         )
 
         self.assertEqual(urlopen.call_count, 2)
-        self.assertEqual(result, valid_test_model())
+        self.assertEqual(
+            result,
+            TestModelResponse.model_validate(valid_test_model()).model_dump(),
+        )
         retry = json.loads(urlopen.call_args_list[1].args[0].data)
         self.assertIn("ORIGINAL PROBLEM", retry["messages"][1]["content"])
         self.assertIn("Field required", retry["messages"][-1]["content"])

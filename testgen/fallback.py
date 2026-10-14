@@ -8,7 +8,12 @@ from .throttle import EndpointBusyError
 
 def neutral_result(task: TaskType) -> dict:
     if task == TaskType.BUILD_TEST_MODEL:
-        return {"input_grammar": "", "constraints": [], "variables": [], "relations": [],
+        return {"checker": {"kind": "TOKEN", "epsilon": None,
+                            "case_sensitive": True, "multiple_valid_answers": False,
+                            "reasoning": "LLM unavailable"},
+                "sandbox": {"time_limit_seconds": 5.0, "memory_limit_mb": 512,
+                            "reasoning": "LLM unavailable"},
+                "input_grammar": "", "constraints": [], "variables": [], "relations": [],
                 "output_partitions": [], "sequences": [], "fault_model": [],
                 "warnings": ["all configured LLM backends were unavailable"],
                 "coverage_obligations": []}

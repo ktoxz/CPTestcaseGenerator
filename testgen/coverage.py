@@ -82,10 +82,35 @@ class CoverageObligationModel(BaseModel):
     )
 
 
+class CheckerSpecModel(BaseModel):
+    """Output-comparison requirements extracted during test modelling."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    kind: Literal["TOKEN", "FLOAT", "EXACT", "PYTHON_SCRIPT"] = "TOKEN"
+    epsilon: float | None = Field(default=None, gt=0, le=1)
+    case_sensitive: bool = True
+    multiple_valid_answers: bool = False
+    reasoning: str = ""
+
+
+class SandboxSpecModel(BaseModel):
+    """Contest limits extracted from the problem statement."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    time_limit_seconds: float = Field(default=5.0, gt=0, le=60)
+    memory_limit_mb: int = Field(default=512, ge=32, le=4096)
+    reasoning: str = ""
+
+
 class TestModelResponse(BaseModel):
     """Strict LLM response contract for specification-only test modelling."""
 
     model_config = ConfigDict(extra="forbid")
+
+    checker: CheckerSpecModel = Field(default_factory=CheckerSpecModel)
+    sandbox: SandboxSpecModel = Field(default_factory=SandboxSpecModel)
 
     input_grammar: NonEmptyText = Field(
         description="Compact grammar for one complete valid stdin payload"
@@ -158,8 +183,42 @@ def normalize_test_model(raw: dict) -> dict:
                 "priority": priority if priority in _PRIORITIES else "normal",
                 "required": row.get("required", True) is not False,
             })
+    checker = raw.get("checker") if isinstance(raw.get("checker"), dict) else {}
+    checker_kind = str(checker.get("kind", "TOKEN")).strip().upper()
+    if checker_kind not in {"TOKEN", "FLOAT", "EXACT", "PYTHON_SCRIPT"}:
+        checker_kind = "TOKEN"
+    epsilon = checker.get("epsilon")
+    try:
+        epsilon = float(epsilon) if epsilon is not None else None
+    except (TypeError, ValueError):
+        epsilon = None
+    if epsilon is not None and not 0 < epsilon <= 1:
+        epsilon = None
+
+    sandbox = raw.get("sandbox") if isinstance(raw.get("sandbox"), dict) else {}
+    try:
+        time_limit = min(60.0, max(0.1, float(sandbox.get("time_limit_seconds", 5.0))))
+    except (TypeError, ValueError):
+        time_limit = 5.0
+    try:
+        memory_limit = min(4096, max(32, int(sandbox.get("memory_limit_mb", 512))))
+    except (TypeError, ValueError):
+        memory_limit = 512
+
     return {
         "model_version": 1,
+        "checker": {
+            "kind": checker_kind,
+            "epsilon": epsilon,
+            "case_sensitive": checker.get("case_sensitive", True) is not False,
+            "multiple_valid_answers": checker.get("multiple_valid_answers", False) is True,
+            "reasoning": str(checker.get("reasoning", "")).strip(),
+        },
+        "sandbox": {
+            "time_limit_seconds": time_limit,
+            "memory_limit_mb": memory_limit,
+            "reasoning": str(sandbox.get("reasoning", "")).strip(),
+        },
         "input_grammar": str(raw.get("input_grammar", "")).strip(),
         "constraints": _string_list(raw.get("constraints", [])),
         "variables": raw.get("variables", []) if isinstance(raw.get("variables"), list) else [],
