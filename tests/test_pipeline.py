@@ -438,7 +438,7 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(catalog.resolve(Solution(
             "dc", "CodeNet Accepted", "C++", source,
             dialect="DeepMind CodeContests CPP",
-        )).id, "cpp17")
+        )).id, "cpp20")
         self.assertEqual(catalog.resolve(Solution("x", "CodeNet Accepted", "Python",
                                                   Path("sample.py"), dialect="Python")).id,
                          "python2")
