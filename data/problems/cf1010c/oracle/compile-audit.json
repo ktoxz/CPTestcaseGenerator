@@ -1,0 +1,75 @@
+{
+  "problem_id": "cf1010c",
+  "dataset_problem_id": "1010/C",
+  "dataset": "open-r1/codeforces-submissions",
+  "parquet": "D:\\KLTN\\Final_TestcaseGenerator\\data\\cache_hf\\0000.parquet",
+  "policy": {
+    "per_label": 20,
+    "total": 40,
+    "verdicts": [
+      "OK",
+      "WRONG_ANSWER"
+    ],
+    "formatting_deduplication": true,
+    "diversity": "round-robin by runtime and source-size band",
+    "compile_verified": true
+  },
+  "labels": {
+    "OK": {
+      "input_candidates": 802,
+      "unique_candidates": 802,
+      "compile_attempts": 32,
+      "compile_rejections": 4,
+      "rejected_examples": [
+        {
+          "submission_id": "40796502",
+          "dataset_language": "C++14 (GCC 6-32)",
+          "diagnostic": "D:\\KLTN\\Final_TestcaseGenerator\\output\\output\\.hf-oracle-compile\\candidate-z96olo1y\\main.cpp: In function 'void err(const char*, ...)':\nD:\\KLTN\\Final_TestcaseGenerator\\output\\output\\.hf-oracle-compile\\candidate-z96olo1y\\main.cpp:77:20: error: ordered comparison of pointer with integer zero ('const char*' and 'int')\n   77 |         if (format < 0) {\n      |             ~~~~~~~^~~\nD:\\KLTN\\Final_TestcaseGenerator\\output\\output\\.hf-oracle-compile\\candidate-z96olo1y\\main.cpp: In function 'void errln(const char*, ...)':\nD:\\KLTN\\Final_TestcaseGenerator\\output\\output\\.hf-oracle-compile\\candidate-z96olo1y\\main.cpp:92:20: error: ordered comparison of pointer with integer zero ('const char*' and 'int')\n   92 |         if (format < 0) {\n      |             ~~~~~~~^~~"
+        },
+        {
+          "submission_id": "40787524",
+          "dataset_language": "C++14 (GCC 6-32)",
+          "diagnostic": "st':\nlib/math/poly.h:87:9: error: 'assert' was not declared in this scope\nlib/math/poly.h:87:9: note: 'assert' is defined in header '<cassert>'; this is probably fixable by adding '#include <cassert>'\nlib/math/poly.h: In member function 'poly poly::sqrt() const':\nlib/math/poly.h:98:9: error: 'assert' was not declared in this scope\nlib/math/poly.h:98:9: note: 'assert' is defined in header '<cassert>'; this is probably fixable by adding '#include <cassert>'\nlib/math/poly.h: In member function 'std::pair<poly, poly> poly::div(poly) const':\nlib/math/poly.h:130:9: error: 'assert' was not declared in this scope\nlib/math/poly.h:130:9: note: 'assert' is defined in header '<cassert>'; this is probably fixable by adding '#include <cassert>'\nlib/math/poly.h: In member function 'poly poly::exp() const':\nlib/math/poly.h:165:9: error: 'assert' was not declared in this scope\nlib/math/poly.h:165:9: note: 'assert' is defined in header '<cassert>'; this is probably fixable by adding '#include <cassert>'"
+        },
+        {
+          "submission_id": "40792192",
+          "dataset_language": "C++17 (GCC 7-32)",
+          "diagnostic": "D:\\KLTN\\Final_TestcaseGenerator\\output\\output\\.hf-oracle-compile\\candidate-5pumlek9\\main.cpp: In function 'void fft::fft(std::vector<num>&, int)':\nD:\\KLTN\\Final_TestcaseGenerator\\output\\output\\.hf-oracle-compile\\candidate-5pumlek9\\main.cpp:60:9: error: 'assert' was not declared in this scope\n   60 |         assert((n&(n-1))==0);\n      |         ^~~~~~\nD:\\KLTN\\Final_TestcaseGenerator\\output\\output\\.hf-oracle-compile\\candidate-5pumlek9\\main.cpp:10:1: note: 'assert' is defined in header '<cassert>'; this is probably fixable by adding '#include <cassert>'\n    9 | #include<bits/stdc++.h>\n  +++ |+#include <cassert>\n   10 | #define MAXN 100005"
+        },
+        {
+          "submission_id": "40797975",
+          "dataset_language": "C++17 (GCC 7-32)",
+          "diagnostic": "t/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/include/c++/16.1.0/ext/pb_ds/detail/standard_policies.hpp:45,\n                 from C:/Users/USER/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/include/c++/16.1.0/ext/pb_ds/assoc_container.hpp:47,\n                 from D:\\KLTN\\Final_TestcaseGenerator\\output\\output\\.hf-oracle-compile\\candidate-_aeycu62\\main.cpp:14:\nC:/Users/USER/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/include/c++/16.1.0/ext/pb_ds/hash_policy.hpp:52:10: fatal error: ext/pb_ds/detail/resize_policy/hash_load_check_resize_trigger_size_base.hpp: No such file or directory\n   52 | #include <ext/pb_ds/detail/resize_policy/hash_load_check_resize_trigger_size_base.hpp>\n      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\ncompilation terminated."
+        }
+      ],
+      "selected": 20,
+      "languages": {
+        "C++/C++11": 6,
+        "C++/C++": 2,
+        "Python/Python3": 3,
+        "C++/C++14": 4,
+        "C++/C++17": 4,
+        "C/C": 1
+      },
+      "source_bytes": {
+        "min": 172,
+        "max": 58701
+      }
+    },
+    "WRONG_ANSWER": {
+      "input_candidates": 27,
+      "unique_candidates": 26,
+      "compile_attempts": 26,
+      "compile_rejections": 0,
+      "rejected_examples": [],
+      "selected": 20,
+      "languages": {
+        "Python/Python3": 20
+      },
+      "source_bytes": {
+        "min": 61,
+        "max": 697
+      }
+    }
+  }
+}

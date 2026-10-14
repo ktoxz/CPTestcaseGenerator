@@ -1,0 +1,59 @@
+{
+  "problem_id": "cf103b",
+  "dataset_problem_id": "103/B",
+  "dataset": "open-r1/codeforces-submissions",
+  "parquet": "D:\\KLTN\\Final_TestcaseGenerator\\data\\cache_hf\\0000.parquet",
+  "policy": {
+    "per_label": 20,
+    "total": 40,
+    "verdicts": [
+      "OK",
+      "WRONG_ANSWER"
+    ],
+    "formatting_deduplication": true,
+    "diversity": "round-robin by runtime and source-size band",
+    "compile_verified": true
+  },
+  "labels": {
+    "OK": {
+      "input_candidates": 476,
+      "unique_candidates": 470,
+      "compile_attempts": 32,
+      "compile_rejections": 1,
+      "rejected_examples": [
+        {
+          "submission_id": "21966548",
+          "dataset_language": "C++14 (GCC 6-32)",
+          "diagnostic": "ft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/include/c++/16.1.0/ext/pb_ds/detail/standard_policies.hpp:45,\n                 from C:/Users/USER/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/include/c++/16.1.0/ext/pb_ds/assoc_container.hpp:47,\n                 from D:\\KLTN\\Final_TestcaseGenerator\\output\\output\\.hf-oracle-compile\\candidate-h7ddk10o\\main.cpp:3:\nC:/Users/USER/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/include/c++/16.1.0/ext/pb_ds/hash_policy.hpp:52:10: fatal error: ext/pb_ds/detail/resize_policy/hash_load_check_resize_trigger_size_base.hpp: No such file or directory\n   52 | #include <ext/pb_ds/detail/resize_policy/hash_load_check_resize_trigger_size_base.hpp>\n      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\ncompilation terminated."
+        }
+      ],
+      "selected": 20,
+      "languages": {
+        "C++/C++11": 4,
+        "C++/C++": 8,
+        "C++/C++14": 3,
+        "C/C": 2,
+        "Python/Python3": 3
+      },
+      "source_bytes": {
+        "min": 451,
+        "max": 9000
+      }
+    },
+    "WRONG_ANSWER": {
+      "input_candidates": 49,
+      "unique_candidates": 49,
+      "compile_attempts": 32,
+      "compile_rejections": 0,
+      "rejected_examples": [],
+      "selected": 20,
+      "languages": {
+        "Python/Python3": 20
+      },
+      "source_bytes": {
+        "min": 67,
+        "max": 3620
+      }
+    }
+  }
+}

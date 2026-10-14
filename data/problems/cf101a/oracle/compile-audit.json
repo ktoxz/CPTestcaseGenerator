@@ -1,0 +1,63 @@
+{
+  "problem_id": "cf101a",
+  "dataset_problem_id": "101/A",
+  "dataset": "open-r1/codeforces-submissions",
+  "parquet": "D:\\KLTN\\Final_TestcaseGenerator\\data\\cache_hf\\0000.parquet",
+  "policy": {
+    "per_label": 20,
+    "total": 40,
+    "verdicts": [
+      "OK",
+      "WRONG_ANSWER"
+    ],
+    "formatting_deduplication": true,
+    "diversity": "round-robin by runtime and source-size band",
+    "compile_verified": true
+  },
+  "labels": {
+    "OK": {
+      "input_candidates": 386,
+      "unique_candidates": 381,
+      "compile_attempts": 32,
+      "compile_rejections": 2,
+      "rejected_examples": [
+        {
+          "submission_id": "580485",
+          "dataset_language": "GNU C",
+          "diagnostic": "D:\\KLTN\\Final_TestcaseGenerator\\output\\output\\.hf-oracle-compile\\candidate-khymb_a2\\main.c: In function 'main':\nD:\\KLTN\\Final_TestcaseGenerator\\output\\output\\.hf-oracle-compile\\candidate-khymb_a2\\main.c:32:3: error: implicit declaration of function 'qsort' [-Wimplicit-function-declaration]\n   32 |   qsort( H, 26, sizeof( H[ 0 ] ), comp );\n      |   ^~~~~"
+        },
+        {
+          "submission_id": "580132",
+          "dataset_language": "GNU C",
+          "diagnostic": "enerator\\output\\output\\.hf-oracle-compile\\candidate-rogov6xp\\main.c: In function 'main':\nD:\\KLTN\\Final_TestcaseGenerator\\output\\output\\.hf-oracle-compile\\candidate-rogov6xp\\main.c:18:19: error: implicit declaration of function 'strlen' [-Wimplicit-function-declaration]\n   18 |         int len = strlen(in);\n      |                   ^~~~~~\nD:\\KLTN\\Final_TestcaseGenerator\\output\\output\\.hf-oracle-compile\\candidate-rogov6xp\\main.c:2:1: note: include '<string.h>' or provide a declaration of 'strlen'\n    1 | #include<stdio.h>\n  +++ |+#include <string.h>\n    2 | \nD:\\KLTN\\Final_TestcaseGenerator\\output\\output\\.hf-oracle-compile\\candidate-rogov6xp\\main.c:18:19: warning: incompatible implicit declaration of built-in function 'strlen' [-Wbuiltin-declaration-mismatch]\n   18 |         int len = strlen(in);\n      |                   ^~~~~~\nD:\\KLTN\\Final_TestcaseGenerator\\output\\output\\.hf-oracle-compile\\candidate-rogov6xp\\main.c:18:19: note: include '<string.h>' or provide a declaration of 'strlen'"
+        }
+      ],
+      "selected": 20,
+      "languages": {
+        "C++/C++11": 6,
+        "C++/C++": 9,
+        "Python/Python3": 3,
+        "C/C": 2
+      },
+      "source_bytes": {
+        "min": 252,
+        "max": 7220
+      }
+    },
+    "WRONG_ANSWER": {
+      "input_candidates": 30,
+      "unique_candidates": 30,
+      "compile_attempts": 30,
+      "compile_rejections": 0,
+      "rejected_examples": [],
+      "selected": 20,
+      "languages": {
+        "Python/Python3": 20
+      },
+      "source_bytes": {
+        "min": 20,
+        "max": 1438
+      }
+    }
+  }
+}

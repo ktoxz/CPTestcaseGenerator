@@ -1,0 +1,53 @@
+{
+  "problem_id": "cf102b",
+  "dataset_problem_id": "102/B",
+  "dataset": "open-r1/codeforces-submissions",
+  "parquet": "D:\\KLTN\\Final_TestcaseGenerator\\data\\cache_hf\\0000.parquet",
+  "policy": {
+    "per_label": 20,
+    "total": 40,
+    "verdicts": [
+      "OK",
+      "WRONG_ANSWER"
+    ],
+    "formatting_deduplication": true,
+    "diversity": "round-robin by runtime and source-size band",
+    "compile_verified": true
+  },
+  "labels": {
+    "OK": {
+      "input_candidates": 1195,
+      "unique_candidates": 1178,
+      "compile_attempts": 32,
+      "compile_rejections": 0,
+      "rejected_examples": [],
+      "selected": 20,
+      "languages": {
+        "C++/C++11": 4,
+        "C++/C++": 4,
+        "Python/Python3": 8,
+        "C++/C++14": 3,
+        "C/C": 1
+      },
+      "source_bytes": {
+        "min": 84,
+        "max": 18608
+      }
+    },
+    "WRONG_ANSWER": {
+      "input_candidates": 250,
+      "unique_candidates": 250,
+      "compile_attempts": 32,
+      "compile_rejections": 0,
+      "rejected_examples": [],
+      "selected": 20,
+      "languages": {
+        "Python/Python3": 20
+      },
+      "source_bytes": {
+        "min": 23,
+        "max": 3164
+      }
+    }
+  }
+}

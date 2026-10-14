@@ -1,0 +1,58 @@
+{
+  "problem_id": "cf106b",
+  "dataset_problem_id": "106/B",
+  "dataset": "open-r1/codeforces-submissions",
+  "parquet": "D:\\KLTN\\Final_TestcaseGenerator\\data\\cache_hf\\0000.parquet",
+  "policy": {
+    "per_label": 20,
+    "total": 40,
+    "verdicts": [
+      "OK",
+      "WRONG_ANSWER"
+    ],
+    "formatting_deduplication": true,
+    "diversity": "round-robin by runtime and source-size band",
+    "compile_verified": true
+  },
+  "labels": {
+    "OK": {
+      "input_candidates": 550,
+      "unique_candidates": 543,
+      "compile_attempts": 32,
+      "compile_rejections": 1,
+      "rejected_examples": [
+        {
+          "submission_id": "616745",
+          "dataset_language": "GNU C",
+          "diagnostic": "D:\\KLTN\\Final_TestcaseGenerator\\output\\output\\.hf-oracle-compile\\candidate-77h0xou9\\main.c:19:1: error: return type defaults to 'int' [-Wimplicit-int]\n   19 | main(i,j,k){\n      | ^~~~\nD:\\KLTN\\Final_TestcaseGenerator\\output\\output\\.hf-oracle-compile\\candidate-77h0xou9\\main.c: In function 'main':\nD:\\KLTN\\Final_TestcaseGenerator\\output\\output\\.hf-oracle-compile\\candidate-77h0xou9\\main.c:19:1: error: type of 'i' defaults to 'int' [-Wimplicit-int]\nD:\\KLTN\\Final_TestcaseGenerator\\output\\output\\.hf-oracle-compile\\candidate-77h0xou9\\main.c:19:1: error: type of 'j' defaults to 'int' [-Wimplicit-int]\nD:\\KLTN\\Final_TestcaseGenerator\\output\\output\\.hf-oracle-compile\\candidate-77h0xou9\\main.c:19:1: error: type of 'k' defaults to 'int' [-Wimplicit-int]"
+        }
+      ],
+      "selected": 20,
+      "languages": {
+        "C++/C++11": 4,
+        "C++/C++": 7,
+        "Python/Python3": 5,
+        "C++/C++14": 4
+      },
+      "source_bytes": {
+        "min": 229,
+        "max": 8713
+      }
+    },
+    "WRONG_ANSWER": {
+      "input_candidates": 88,
+      "unique_candidates": 88,
+      "compile_attempts": 32,
+      "compile_rejections": 0,
+      "rejected_examples": [],
+      "selected": 20,
+      "languages": {
+        "Python/Python3": 20
+      },
+      "source_bytes": {
+        "min": 61,
+        "max": 1929
+      }
+    }
+  }
+}
