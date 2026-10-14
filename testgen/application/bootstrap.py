@@ -137,7 +137,8 @@ def build_pipeline(args, parser, settings, judge_settings, catalog, checker, pro
         fallback_clients: list[tuple[str, object]] = [
             (f"Ollama/{args.ollama_model}", primary)
         ]
-        if args.ollama_fallback_model != args.ollama_model:
+        if (args.llm_fallback and
+                args.ollama_fallback_model != args.ollama_model):
             fallback_clients.append((
                 f"Ollama/{args.ollama_fallback_model}",
                 OllamaClient(
@@ -149,7 +150,7 @@ def build_pipeline(args, parser, settings, judge_settings, catalog, checker, pro
                     timeout_cooldown_seconds=args.ollama_timeout_cooldown,
                 ),
             ))
-        if args.code_model != "claude":
+        if args.llm_fallback and args.code_model != "claude":
             fallback_clients.append((
                 f"Claude/{args.claude_model}",
                 ClaudeClient(
@@ -176,10 +177,14 @@ def build_pipeline(args, parser, settings, judge_settings, catalog, checker, pro
             f"({args.llama_server_url}); timeout={args.llm_timeout}s"
         )
     else:
+        fallback_label = f"Ollama/{args.ollama_model}"
+        if (args.llm_fallback and
+                args.ollama_fallback_model != args.ollama_model):
+            fallback_label += f" → Ollama/{args.ollama_fallback_model}"
         progress.log(
-            f"LLM chain: Ollama/{args.ollama_model} → "
-            f"Ollama/{args.ollama_fallback_model}"
-            + (f" → Claude/{args.claude_model}" if args.code_model != "claude" else "")
+            f"LLM chain: {fallback_label}"
+            + (f" → Claude/{args.claude_model}"
+               if args.llm_fallback and args.code_model != "claude" else "")
             + f"; Ollama timeout={args.ollama_timeout}s; "
             f"Claude timeout={args.claude_timeout}s; "
             f"Ollama cooldown={args.ollama_throttle:g}s, "
@@ -212,7 +217,13 @@ def build_pipeline(args, parser, settings, judge_settings, catalog, checker, pro
         progress.log(f"Code generation backend: Claude/{args.claude_model}")
     store = FileRunStore()
     pipeline = RunPipeline(
-        SolutionGenerationService(code_client, args.ac, args.wa, catalog, analysis_client=client, store=store),
+        SolutionGenerationService(
+            code_client, args.ac, args.wa, catalog,
+            analysis_client=client,
+            max_rounds=args.solution_generation_rounds,
+            retry_delay_seconds=args.solution_generation_retry_delay,
+            store=store,
+        ),
         CaseGenerationService(client, args.cases_per_round),
         judge, checker,
         oracle_source,

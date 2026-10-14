@@ -195,3 +195,27 @@ Các lệnh chạy thật vẫn cần statement/config, provider và judge khả
 - Một số rejection branch consensus/official-sample của implementation cũ không có `proposal_index`; refactor giữ nguyên report schema. Repair hiện chỉ tiêu thụ validator rejection và giữ identity của các item đó. Nếu cần identity cho mọi rejection, nên thay schema có version và test riêng.
 
 Các giới hạn trên là phần chưa xác minh/chưa mở rộng, không được diễn giải thành tính năng đã hoàn thành.
+
+
+## Cập nhật 14/10/2026 — Recovery cho pool mutant
+
+Theo yêu cầu mới, nếu vẫn thiếu pool tối thiểu sau các replacement rounds cấu hình,
+MutantPoolBuilder tự thử thêm tối đa 4 vòng. Với mặc định 4 replacement rounds,
+vòng bổ sung dùng số vòng 5–8 để giữ ID/artifact riêng, tránh ghi đè vòng cũ.
+Dừng ngay khi strict pool và verified sample fallback đủ minimum. Các mutant đã
+chứng nhận được giữ lại; mọi đề xuất mới vẫn phải compile và chứng nhận như trước.
+
+Lỗi transport/response/timeout/endpoint-busy ở lời gọi sinh mutant được ghi nhận
+và tiêu thụ một attempt; lỗi lập trình và lỗi judge không bị che. Nếu hết cả bốn
+vòng bổ sung vẫn thiếu minimum, stage lưu evidence và báo lỗi rõ số vòng đã thử.
+Không thể bảo đảm LLM luôn sinh thành công trong một số lượt hữu hạn.
+
+Chỉ khi recovery được dùng hoặc có generation failure, artifact mutant-certification
+thêm trường recovery chứa additional_rounds_allowed, additional_rounds_used,
+total_replacement_rounds_used và generation_failures. Các run đủ pool trong vòng
+thường giữ nguyên artifact và đã pass golden parity.
+
+Kiểm thử: tests/test_mutant_recovery.py, tests/test_pipeline.py và
+ tests/test_refactor_parity.py: 44 passed, 1 failed do fixture p00004/validator.py
+thiếu từ baseline. Log: tmp/mutant-recovery-tests.txt. Chưa chạy LLM thật hoặc
+chạy lại experiment repeated-runs trong thay đổi này.

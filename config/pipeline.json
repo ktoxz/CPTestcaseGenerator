@@ -1,7 +1,8 @@
 {
   "ollama_url": "http://127.0.0.1:11434",
   "ollama_model": "gemma4:31b-cloud",
-  "ollama_fallback_model": "nemotron-3-ultra:cloud",
+  "ollama_fallback_model": "gemma4:31b-cloud",
+  "llm_fallback_enabled": false,
   "llama_server_url": "http://localhost:8080",
   "llama_server_model": "ggml-org/gemma-4-26B-A4B-it-GGUF:Q4_0",
   "llama_server_max_tokens": 8192,
@@ -17,6 +18,8 @@
   "chatgpt_model": "gpt-5.6-sol",
   "correct_candidates": 3,
   "wrong_candidates": 5,
+  "solution_generation_rounds": 5,
+  "solution_generation_retry_delay_seconds": 10,
   "cases_per_round": 10,
   "min_iterations": 2,
   "min_total_cases": 18,

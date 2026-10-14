@@ -57,6 +57,12 @@ def main() -> None:
     parser.add_argument("--iterations", type=int, default=settings["iterations"], choices=(1, 2, 3))
     parser.add_argument("--ac", type=int, default=settings["correct_candidates"])
     parser.add_argument("--wa", type=int, default=settings["wrong_candidates"])
+    parser.add_argument("--solution-generation-rounds", type=int,
+                        default=settings.get("solution_generation_rounds", 5),
+                        help="Bounded rounds used to fill missing AC references and validator")
+    parser.add_argument("--solution-generation-retry-delay", type=float,
+                        default=settings.get("solution_generation_retry_delay_seconds", 10),
+                        help="Seconds to wait after a generation round makes no progress")
     parser.add_argument("--cases-per-round", type=int, default=settings["cases_per_round"])
     parser.add_argument("--min-iterations", type=int,
                         default=settings.get("min_iterations", 2), choices=(1, 2, 3),
@@ -73,7 +79,7 @@ def main() -> None:
     parser.add_argument("--mutant-replacement-rounds", type=int,
                         default=settings.get("mutant_replacement_rounds", 1),
                         choices=(0, 1, 2, 3, 4),
-                        help="Replace wrong candidates whose witness is not verified")
+                        help="Ordinary mutant replacement rounds; up to 4 extra recovery rounds run if the minimum pool is still missing")
     parser.add_argument("--mutant-replacement-oversampling", type=float,
                         default=settings.get("mutant_replacement_oversampling", 1.0),
                         help="Proposal multiplier used to fill the verified mutant pool (1..3)")
@@ -100,8 +106,14 @@ def main() -> None:
     )
     parser.add_argument(
         "--ollama-fallback-model",
-        default=settings.get("ollama_fallback_model", "nemotron-3-ultra:cloud"),
-        help="Second Ollama model tried after the primary model fails",
+        default=settings.get("ollama_fallback_model", "gemma4:31b-cloud"),
+        help="Second Ollama model used only when provider fallback is enabled",
+    )
+    parser.add_argument(
+        "--llm-fallback",
+        action=argparse.BooleanOptionalAction,
+        default=settings.get("llm_fallback_enabled", False),
+        help="Allow fallback from the primary Ollama model to another provider",
     )
     parser.add_argument(
         "--llama-server-url",
@@ -153,8 +165,9 @@ def main() -> None:
         help="Claude Code model alias/name when --model claude is selected",
     )
     parser.add_argument(
-        "--code-model", choices=("same", "claude"), default="same",
-        help="Backend for AC/WA code only; same uses --model. With claude, other tasks use Ollama without Claude fallback",
+        "--code-model", choices=("same", "claude"),
+        default=settings.get("code_model", "same"),
+        help="Backend for AC and WA mutant code; same uses --model. With claude, other tasks use Ollama without Claude fallback",
     )
     parser.add_argument(
         "--claude-effort",
@@ -197,6 +210,10 @@ def main() -> None:
         parser.error("--llm-timeout must be >= 1")
     if args.ollama_timeout < 1:
         parser.error("--ollama-timeout must be >= 1")
+    if not 1 <= args.solution_generation_rounds <= 10:
+        parser.error("--solution-generation-rounds must be between 1 and 10")
+    if not 0 <= args.solution_generation_retry_delay <= 300:
+        parser.error("--solution-generation-retry-delay must be between 0 and 300")
     if args.ollama_max_tokens < 256:
         parser.error("--ollama-max-tokens must be >= 256")
     if args.claude_max_tokens < 1:
@@ -275,6 +292,9 @@ def main() -> None:
             "ollama_fallback_model": (
                 args.ollama_fallback_model if args.model == "ollama" else None
             ),
+            "llm_fallback_enabled": (
+                args.llm_fallback if args.model == "ollama" else False
+            ),
             "ollama_think": False if args.model == "ollama" else None,
             "llama_server_url": (
                 args.llama_server_url if args.model == "llama-server" else None
@@ -292,15 +312,25 @@ def main() -> None:
             "ollama_post_request_cooldown_seconds": args.ollama_throttle,
             "ollama_timeout_cooldown_seconds": args.ollama_timeout_cooldown,
             "llm_fallback_chain": (
-                [args.ollama_model, args.ollama_fallback_model]
-                + ([args.claude_model] if args.code_model != "claude" else [])
+                [args.ollama_model]
+                + ([args.ollama_fallback_model]
+                   if args.llm_fallback and
+                   args.ollama_fallback_model != args.ollama_model else [])
+                + ([args.claude_model]
+                   if args.llm_fallback and args.code_model != "claude" else [])
                 if args.model == "ollama" else [
                     args.llama_server_model
                     if args.model == "llama-server" else args.model
                 ]
             ),
-            "claude_model": args.claude_model if args.model == "claude" else None,
-            "claude_effort": args.claude_effort if args.model == "claude" else None,
+            "claude_model": (
+                args.claude_model
+                if args.model == "claude" or args.code_model == "claude" else None
+            ),
+            "claude_effort": (
+                args.claude_effort
+                if args.model == "claude" or args.code_model == "claude" else None
+            ),
             "claude_max_tokens": args.claude_max_tokens,
             "claude_timeout_seconds": args.claude_timeout,
             "chatgpt_model": args.chatgpt_model if args.model == "chatgpt" else None,
@@ -315,6 +345,8 @@ def main() -> None:
             if args.oracle and (args.oracle_cache or problem_oracle_cache) else None,
             "correct_candidates": args.ac,
             "wrong_candidates": args.wa,
+            "solution_generation_rounds": args.solution_generation_rounds,
+            "solution_generation_retry_delay_seconds": args.solution_generation_retry_delay,
             "iterations": args.iterations,
             "cases_per_round": args.cases_per_round,
             "min_iterations": args.min_iterations,

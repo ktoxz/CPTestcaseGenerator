@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import statistics
 import subprocess
 import sys
@@ -79,6 +80,9 @@ def run(args: argparse.Namespace) -> None:
     if missing:
         raise SystemExit("Problems are not in the thesis report cohort: " + ", ".join(missing))
     args.output.mkdir(parents=True, exist_ok=True)
+    config_snapshot = args.output / "protocol-pipeline.json"
+    if not config_snapshot.is_file():
+        shutil.copy2(args.config, config_snapshot)
     write_json(args.output / "protocol.json", {
         "created_at": datetime.now().astimezone().isoformat(),
         "provenance": git_provenance(),
@@ -86,8 +90,12 @@ def run(args: argparse.Namespace) -> None:
         "problems": args.problems,
         "replicates": args.replicates,
         "judge": "local Docker",
-        "pipeline": "unchanged default full pipeline",
+        "pipeline": "full pipeline using an immutable experiment config snapshot",
+        "pipeline_config_source": str(args.config.resolve()),
+        "pipeline_config_snapshot": str(config_snapshot.resolve()),
         "oracle_per_label": args.oracle_limit,
+        "attempts_per_run": args.attempts_per_run,
+        "retry_delay_seconds": args.retry_delay,
         "execution_order": "replicate-major",
     })
     status_path = args.output / "status.json"
@@ -100,51 +108,78 @@ def run(args: argparse.Namespace) -> None:
                 print(f"[replicate {replicate}] {problem}: already complete", flush=True)
                 continue
             run_output.mkdir(parents=True, exist_ok=True)
-            log_path = run_output / "run.log"
             command = [
                 sys.executable, str(ROOT / "main.py"),
+                "--config", str(config_snapshot),
                 "--problem", problem,
                 "--oracle", "--oracle-limit", str(args.oracle_limit),
                 "--iterations", "2",
                 "--output", str(run_output),
             ]
-            print(f"[replicate {replicate}/{args.replicates}] {problem}: starting", flush=True)
-            started = time.monotonic()
-            with log_path.open("w", encoding="utf-8") as log:
-                completed = subprocess.run(
-                    command, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT,
-                    text=True, check=False,
+            for run_attempt in range(1, args.attempts_per_run + 1):
+                attempt_index = 1 + sum(
+                    row.get("replicate") == replicate and row.get("problem_id") == problem
+                    for row in status["attempts"]
                 )
-            root_resolved = ROOT.resolve()
-            attempt = {
-                "finished_at": datetime.now().astimezone().isoformat(),
-                "replicate": replicate,
-                "problem_id": problem,
-                "exit_code": completed.returncode,
-                "duration_seconds": round(time.monotonic() - started, 3),
-                "log": str(log_path.resolve().relative_to(root_resolved)),
-                "report": str(report_path.resolve().relative_to(root_resolved)) if report_path.is_file() else None,
-            }
-            status["attempts"].append(attempt)
-            write_json(status_path, status)
-            summarize(args.output, args.problems, args.replicates)
-            print(
-                f"[replicate {replicate}/{args.replicates}] {problem}: "
-                f"{'complete' if report_path.is_file() else 'failed'} "
-                f"({attempt['duration_seconds']:.1f}s)", flush=True,
-            )
+                log_path = run_output / f"run-attempt-{attempt_index}.log"
+                print(
+                    f"[replicate {replicate}/{args.replicates}] {problem}: "
+                    f"starting attempt {run_attempt}/{args.attempts_per_run}",
+                    flush=True,
+                )
+                started = time.monotonic()
+                with log_path.open("w", encoding="utf-8") as log:
+                    completed = subprocess.run(
+                        command, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT,
+                        text=True, check=False,
+                    )
+                root_resolved = ROOT.resolve()
+                attempt = {
+                    "finished_at": datetime.now().astimezone().isoformat(),
+                    "replicate": replicate,
+                    "problem_id": problem,
+                    "run_attempt": attempt_index,
+                    "exit_code": completed.returncode,
+                    "duration_seconds": round(time.monotonic() - started, 3),
+                    "log": str(log_path.resolve().relative_to(root_resolved)),
+                    "report": str(report_path.resolve().relative_to(root_resolved)) if report_path.is_file() else None,
+                }
+                status["attempts"].append(attempt)
+                write_json(status_path, status)
+                summarize(args.output, args.problems, args.replicates)
+                print(
+                    f"[replicate {replicate}/{args.replicates}] {problem}: "
+                    f"{'complete' if report_path.is_file() else 'failed'} "
+                    f"({attempt['duration_seconds']:.1f}s)", flush=True,
+                )
+                if report_path.is_file():
+                    break
+                if run_attempt < args.attempts_per_run:
+                    print(
+                        f"{problem}: isolated retry after {args.retry_delay:g}s; "
+                        "valid partial generation artifacts will be reused",
+                        flush=True,
+                    )
+                    time.sleep(args.retry_delay)
     print(json.dumps(summarize(args.output, args.problems, args.replicates), ensure_ascii=False, indent=2))
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=ROOT / "output" / "experiments" / "repeated-runs-20261013")
+    parser.add_argument("--config", type=Path, default=ROOT / "config" / "pipeline.json")
     parser.add_argument("--replicates", type=int, default=3)
     parser.add_argument("--oracle-limit", type=int, default=20)
+    parser.add_argument("--attempts-per-run", type=int, default=2)
+    parser.add_argument("--retry-delay", type=float, default=15)
     parser.add_argument("--problems", nargs="+", default=DEFAULT_PROBLEMS)
     args = parser.parse_args()
     if not 2 <= args.replicates <= 10:
         parser.error("--replicates must be 2..10")
+    if not 1 <= args.attempts_per_run <= 3:
+        parser.error("--attempts-per-run must be 1..3")
+    if not 0 <= args.retry_delay <= 300:
+        parser.error("--retry-delay must be 0..300")
     run(args)
 
 

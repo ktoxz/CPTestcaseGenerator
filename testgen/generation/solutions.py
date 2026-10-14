@@ -9,6 +9,7 @@ import json
 import math
 import re
 import sys
+import time
 import tokenize
 from collections import Counter
 from pathlib import Path
@@ -29,14 +30,17 @@ class SolutionGenerationService(SolutionGenerator):
         wa_count: int = 5,
         catalog: RuntimeCatalog | None = None,
         analysis_client: LLMClient | None = None,
-        max_rounds: int = 2,
+        max_rounds: int = 5,
+        retry_delay_seconds: float = 10.0,
         llm_workers: int = 1,
         store: RunStore | None = None,
     ):
         if ac_count < 1 or wa_count < 0:
             raise ValueError("ac_count must be >= 1 and wa_count >= 0")
-        if max_rounds < 1:
-            raise ValueError("max_rounds must be >= 1")
+        if not 1 <= max_rounds <= 10:
+            raise ValueError("max_rounds must be between 1 and 10")
+        if retry_delay_seconds < 0:
+            raise ValueError("retry_delay_seconds must be >= 0")
         if not 1 <= llm_workers <= 3:
             raise ValueError("llm_workers must be between 1 and 3")
 
@@ -47,6 +51,7 @@ class SolutionGenerationService(SolutionGenerator):
         self.wa_count = wa_count
         self.catalog = catalog or RuntimeCatalog()
         self.max_rounds = max_rounds
+        self.retry_delay_seconds = retry_delay_seconds
         self.llm_workers = llm_workers
 
     @staticmethod
@@ -428,6 +433,21 @@ class SolutionGenerationService(SolutionGenerator):
                 accepted_from_response += 1
             return batch_feedback
 
+        # A failed process may already have accepted part of the requested
+        # references or a valid validator. Recover those artifacts instead of
+        # paying for them again. They pass through the same normalization and
+        # source-quality checks as a fresh model response.
+        partial_path = output / "generation.json"
+        if partial_path.is_file():
+            try:
+                partial = self.store.read_json(partial_path)
+            except (OSError, ValueError, json.JSONDecodeError):
+                partial = None
+            if isinstance(partial, dict):
+                merge_batch(partial, 0, "resumed-partial", True)
+                merge_batch(partial, 0, "resumed-validator", False)
+                add_warnings(partial.get("warnings", []))
+
         generation_rounds = self.max_rounds
         strategies = analysis.get("correct_strategies", [])
 
@@ -481,15 +501,16 @@ class SolutionGenerationService(SolutionGenerator):
                 f"<problem>\n{statement}\n</problem>"
             )
 
-        # One prompt asks for every missing correct solution at once; a second,
-        # final request only covers whatever is still missing afterwards.
-        # Candidates that later fail compilation or official samples are
-        # topped up by the pipeline's own regenerate_correct, so this method no
-        # longer needs to loop per item or across many rounds itself.
-        for round_number in range(1, min(generation_rounds, 2) + 1):
+        # Each round requests only missing artifacts. A stalled round is kept
+        # isolated and followed by a bounded delay so an endpoint that timed
+        # out in an earlier stage can leave its cooldown before the next try.
+        for round_number in range(1, generation_rounds + 1):
             missing_ac = self.ac_count - len(payload["correct"])
             if missing_ac == 0 and payload["validator_python"].strip():
                 break
+
+            correct_before = len(payload["correct"])
+            validator_before = bool(payload["validator_python"].strip())
 
             round_feedback: list[str] = []
             if missing_ac > 0:
@@ -530,6 +551,25 @@ class SolutionGenerationService(SolutionGenerator):
                         batch, round_number, "validator", False
                     ))
             feedback = (feedback + round_feedback)[-20:]
+            self.store.write_json(output / "generation.json", payload)
+
+            complete = (
+                len(payload["correct"]) == self.ac_count
+                and bool(payload["validator_python"].strip())
+            )
+            made_progress = (
+                len(payload["correct"]) > correct_before
+                or bool(payload["validator_python"].strip()) > validator_before
+            )
+            if not complete and not made_progress and round_number < generation_rounds:
+                print(
+                    "Vòng sinh code không thu được artifact mới; "
+                    f"cách ly và chờ {self.retry_delay_seconds:g}s trước vòng "
+                    f"{round_number + 1}/{generation_rounds}",
+                    file=sys.stderr,
+                    flush=True,
+                )
+                time.sleep(self.retry_delay_seconds)
 
         # Save the merged result, including partial output on failure.
         self.store.write_json(output / "generation.json", payload)
@@ -608,6 +648,16 @@ class SolutionGenerationService(SolutionGenerator):
                 )
                 generated.extend(item)
             return generated
+        item_suffix = (
+            f"-item-{_item_index:02d}" if _item_index is not None else ""
+        )
+        artifact = output / (
+            f"reference-replacement-{round_number:02d}{item_suffix}.json"
+        )
+        validation_artifact = output / (
+            f"reference-replacement-{round_number:02d}{item_suffix}"
+            "-validation.json"
+        )
         languages = list(self.catalog.llm_languages())
         compact_rejections = []
         for row in rejected:
@@ -656,19 +706,48 @@ class SolutionGenerationService(SolutionGenerator):
             "</existing_references>\n"
             f"<problem>\n{statement}\n</problem>"
         )
-        result = ask_json(self.client, TaskType.REPLACE_REFERENCE,
-            prompt,
-            label=(f"sinh 1 AC thay thế vòng {round_number}"
-                   + (f" item {_item_index}/{_item_total}"
-                      if _item_index is not None else "")),
-        )
-        item_suffix = (
-            f"-item-{_item_index:02d}" if _item_index is not None else ""
-        )
-        artifact = output / (
-            f"reference-replacement-{round_number:02d}{item_suffix}.json"
-        )
-        self.store.write_json(artifact, result)
+        cached_result = None
+        if artifact.is_file() and validation_artifact.is_file():
+            try:
+                cached_validation = self.store.read_json(validation_artifact)
+                candidate = self.store.read_json(artifact)
+            except (OSError, ValueError, json.JSONDecodeError):
+                pass
+            else:
+                if (isinstance(cached_validation, dict)
+                        and cached_validation.get("accepted", 0) >= 1
+                        and isinstance(candidate, dict)):
+                    cached_result = candidate
+                    print(
+                        f"Tái sử dụng AC thay thế đã checkpoint: {artifact.name}",
+                        file=sys.stderr, flush=True,
+                    )
+
+        label = (f"sinh 1 AC thay thế vòng {round_number}"
+                 + (f" item {_item_index}/{_item_total}"
+                    if _item_index is not None else ""))
+        result = cached_result
+        if result is None:
+            last_error = None
+            for attempt in range(1, 4):
+                try:
+                    result = ask_json(
+                        self.client, TaskType.REPLACE_REFERENCE, prompt, label=label,
+                    )
+                    break
+                except (LLMTransportError, LLMResponseError, TimeoutError) as error:
+                    last_error = error
+                    if attempt == 3:
+                        raise
+                    print(
+                        f"{label}: lỗi {type(error).__name__}; cách ly và chờ "
+                        f"{self.retry_delay_seconds:g}s trước lần {attempt + 1}/3",
+                        file=sys.stderr, flush=True,
+                    )
+                    time.sleep(self.retry_delay_seconds)
+            if result is None:
+                raise last_error or RuntimeError(f"{label}: no response")
+            self.store.write_json(artifact, result)
         rows = result.get("correct", []) if isinstance(result, dict) else []
         if not isinstance(rows, list):
             return []
@@ -747,10 +826,7 @@ class SolutionGenerationService(SolutionGenerator):
                 "solution_id": name,
                 "issues": [],
             })
-        self.store.write_json(output / (
-            f"reference-replacement-{round_number:02d}{item_suffix}"
-            "-validation.json"
-        ), {
+        self.store.write_json(validation_artifact, {
                 "requested": count,
                 "received": len(rows),
                 "accepted": len(replacements),
@@ -849,6 +925,27 @@ class SolutionGenerationService(SolutionGenerator):
             "initial sample-preserving mutants" if round_number == 0
             else "sample-preserving replacement mutants"
         )
+        exact_edit_failed = any(
+            "source edit" in reason.casefold()
+            for reason in rejection_groups
+        )
+        mutation_payload = (
+            "source_code containing the complete mutated standalone program"
+            if exact_edit_failed else "code_edits"
+        )
+        mutation_instructions = (
+            "Earlier exact source edits did not match the supplied parent. "
+            "For this recovery request, return source_code with the complete "
+            "mutated program and do not return code_edits. Keep it concise and "
+            "change executable behavior in exactly one place."
+            if exact_edit_failed else
+            "code_edits must be an array of 1..4 objects with old and new "
+            "strings. Each old string must match EXACTLY ONCE in the parent source, "
+            "including whitespace; include enough surrounding text to be unique. "
+            "The pipeline applies replacements locally in order. Do not return "
+            "the full code or a unified diff. The edit MUST implement the mutation; "
+            "describing a planned edit without an exact replacement is invalid."
+        )
         prompt = (
             f"Generate {phase_label} for a programming-"
             "contest experiment. Each new program MUST be derived from exactly "
@@ -867,19 +964,15 @@ class SolutionGenerationService(SolutionGenerator):
             f"wrong, an array containing exactly {request_count} NEW items, each "
             "with a distinct mutation operator and target so no two items in "
             "this batch share the same edit. Each item must contain "
-            "language, code_edits, "
+            f"language, {mutation_payload}, "
             "strategy_id, approach, bug_class, bug_origin, failure_condition, "
             "witness_input, parent_ac_id, mutation_operator, target_behavior, and "
             "sample_preservation_reason. parent_ac_id must name one of the verified "
             "references and language must match that parent. bug_origin must be "
             "intentional, accidental, or "
             "near_correct. Every witness_input must be a complete valid stdin "
-            "payload. code_edits must be an array of 1..4 objects with old and new "
-            "strings. Each old string must match EXACTLY ONCE in the parent source, "
-            "including whitespace; include enough surrounding text to be unique. "
-            "The pipeline applies replacements locally in order. Do not return "
-            "the full code or a unified diff. The edit MUST implement the mutation; "
-            "describing a planned edit without an exact replacement is invalid. "
+            "payload. "
+            f"{mutation_instructions} "
             "Before returning, compare code against the parent and verify that at "
             "least one executable token changed, not only a comment. Before "
             "returning each item, check its mutated code on "

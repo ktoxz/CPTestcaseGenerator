@@ -5,6 +5,8 @@ import math
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, replace
 from pathlib import Path
+from ..llm_contract import LLMTransportError, LLMResponseError
+from ..throttle import EndpointBusyError
 from ..policies import split_mutant_pool
 from ..domain import Solution, Result, SolutionGenerator
 
@@ -16,6 +18,11 @@ class MutantPoolPolicy:
     mutant_witness_candidates: int
     minimum_verified_mutants: int
     holdout_fraction: float
+
+    @property
+    def recovery_rounds(self) -> int:
+        """Additional bounded attempts after ordinary replacement is exhausted."""
+        return 4
 
 @dataclass(frozen=True)
 class CandidatePool:
@@ -363,6 +370,27 @@ class MutantPoolBuilder:
                         f"Mutant {solution.id}: loại khỏi TNR — {evidence['reason']}"
                     )
 
+        generation_failures: list[dict] = []
+        replacement_rounds_used = 0
+
+        def generate_replacements(
+            problem_statement: str, artifact_dir: Path, count: int,
+            rejected: list[dict], existing: list[Solution], round_number: int,
+        ) -> list[Solution]:
+            try:
+                return self.solution_generator.regenerate_wrong(
+                    problem_statement, artifact_dir, count, rejected, existing, round_number,
+                )
+            except (LLMTransportError, LLMResponseError, TimeoutError, EndpointBusyError) as error:
+                generation_failures.append({
+                    "round": round_number, "error_type": type(error).__name__, "reason": str(error),
+                })
+                self.execution._log(
+                    f"Sinh mutant vòng {round_number} lỗi {type(error).__name__}: {error}; "
+                    "tiếp tục trong giới hạn retry"
+                )
+                return []
+
         if len(initial_wrong) < required_verified:
             # Seed enough diversity for the certified minimum. The
             # oversampling factor absorbs duplicates without multiplying the
@@ -375,7 +403,7 @@ class MutantPoolBuilder:
             with self.execution._waiting(
                 f"LLM sinh {proposal_count} mutant ban đầu từ AC đã xác nhận"
             ):
-                derived_initial = self.solution_generator.regenerate_wrong(
+                derived_initial = generate_replacements(
                     statement,
                     generated,
                     proposal_count,
@@ -390,7 +418,8 @@ class MutantPoolBuilder:
             )
 
         certify_batch(initial_wrong)
-        for replacement_round in range(1, self.policy.mutant_replacement_rounds + 1):
+        total_rounds = self.policy.mutant_replacement_rounds + self.policy.recovery_rounds
+        for replacement_round in range(1, total_rounds + 1):
             # Stop asking the LLM once the strict pool plus deterministically
             # verified sample-fallback reserve can cover the minimum. Trying
             # to fill the desirable five-item pool before this point wastes
@@ -407,6 +436,13 @@ class MutantPoolBuilder:
                         "dừng gọi LLM thay thế"
                     )
                 break
+            replacement_rounds_used = replacement_round
+            if replacement_round > self.policy.mutant_replacement_rounds:
+                recovery_round = replacement_round - self.policy.mutant_replacement_rounds
+                self.execution._log(
+                    f"Pool mutant còn thiếu {missing}; vòng bổ sung "
+                    f"{recovery_round}/{self.policy.recovery_rounds}"
+                )
             proposal_count = max(
                 missing,
                 math.ceil(missing * self.policy.mutant_replacement_oversampling),
@@ -420,7 +456,7 @@ class MutantPoolBuilder:
                     *(solution for solution in all_generated
                       if solution.label == "candidate_wa"),
                 ]
-                replacements = self.solution_generator.regenerate_wrong(
+                replacements = generate_replacements(
                     statement,
                     generated,
                     proposal_count,
@@ -531,12 +567,21 @@ class MutantPoolBuilder:
             "records": certification_records,
             "rejected": rejected_mutants,
         }
+        if replacement_rounds_used > self.policy.mutant_replacement_rounds or generation_failures:
+            certification_summary["recovery"] = {
+                "additional_rounds_allowed": self.policy.recovery_rounds,
+                "additional_rounds_used": max(
+                    0, replacement_rounds_used - self.policy.mutant_replacement_rounds),
+                "total_replacement_rounds_used": replacement_rounds_used,
+                "generation_failures": generation_failures,
+            }
         self.store.write_json(generated / "mutant-certification.json", certification_summary)
         if len(active_wrong) < required_verified:
             raise RuntimeError(
                 "Could not build the minimum verified wrong-candidate pool: "
                 f"validated {len(active_wrong)}/{requested_wrong}; minimum "
-                f"required {required_verified}; inspect "
+                f"required {required_verified}; exhausted {replacement_rounds_used} replacement "
+                f"rounds (including up to {self.policy.recovery_rounds} additional rounds); inspect "
                 f"{generated / 'mutant-certification.json'}"
             )
         if len(active_wrong) < requested_wrong:

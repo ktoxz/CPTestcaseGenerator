@@ -179,11 +179,25 @@ class RunPipeline:
                 "input/output pair could be parsed. Refusing to certify references "
                 "without official sample checks."
             )
-        with self._waiting("LLM xây test model độc lập từ đề bài"):
-            test_model = normalize_test_model(
-                self.case_generator.build_test_model(statement)
-            )
-        self.store.write_json(output / "test-model.json", test_model)
+        test_model_path = output / "test-model.json"
+        test_model = None
+        if test_model_path.is_file():
+            try:
+                cached_test_model = normalize_test_model(
+                    self.store.read_json(test_model_path)
+                )
+            except (OSError, TypeError, ValueError):
+                cached_test_model = None
+            if (cached_test_model is not None
+                    and cached_test_model.get("coverage_obligations")):
+                test_model = cached_test_model
+                self._log("Tái sử dụng test model đã checkpoint")
+        if test_model is None:
+            with self._waiting("LLM xây test model độc lập từ đề bài"):
+                test_model = normalize_test_model(
+                    self.case_generator.build_test_model(statement)
+                )
+            self.store.write_json(test_model_path, test_model)
         self._log(
             "Test model: "
             f"{len(test_model['coverage_obligations'])} coverage obligations"
