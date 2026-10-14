@@ -1,3 +1,4 @@
 {
-  "kind": "TOKEN"
+  "kind": "FLOAT",
+  "epsilon": 1e-6
 }
