@@ -38,6 +38,26 @@ class TestModelSpecTests(unittest.TestCase):
         self.assertEqual(model.checker.kind, "FLOAT")
         self.assertEqual(model.sandbox.memory_limit_mb, 1024)
 
+    def test_schema_keeps_float_checker_with_compact_variable_shapes(self):
+        base = {
+            "checker": {"kind": "FLOAT", "epsilon": 1e-6},
+            "input_grammar": "n followed by records",
+            "constraints": [], "relations": [], "output_partitions": [],
+            "sequences": [], "fault_model": [], "warnings": [],
+            "coverage_obligations": [{
+                "id": "minimum", "category": "boundary",
+                "description": "minimum valid input", "priority": "critical",
+                "required": True,
+            }],
+        }
+        for variables in (
+            ["n", "x"],
+            [{"name": "n", "type": "integer"}],
+        ):
+            model = TestModelResponse.model_validate({**base, "variables": variables})
+            self.assertEqual(model.checker.kind, "FLOAT")
+            self.assertEqual(model.variables[0].name, "n")
+
     def test_normalizer_bounds_untrusted_specs(self):
         normalized = normalize_test_model({
             "checker": {"kind": "FLOAT", "epsilon": "0.000001"},

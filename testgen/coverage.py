@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, StringConstraints
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints, field_validator
 
 from .domain import Case
 
@@ -44,7 +44,7 @@ class TestVariableModel(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     name: NonEmptyText = Field(description="Variable name used in the statement")
-    description: NonEmptyText = Field(description="Meaning of the variable")
+    description: str = Field(default="", description="Meaning of the variable")
     domain: NonEmptyText = Field(
         description="Allowed values, including explicit bounds when stated"
     )
@@ -141,6 +141,29 @@ class TestModelResponse(BaseModel):
         max_length=80,
         description="Concrete non-overlapping black-box coverage targets",
     )
+
+    @field_validator("variables", mode="before")
+    @classmethod
+    def normalize_variable_shapes(cls, value):
+        """Accept compact LLM variable forms without discarding the test model."""
+        if not isinstance(value, list):
+            return value
+        normalized = []
+        for item in value:
+            if isinstance(item, str):
+                normalized.append({
+                    "name": item,
+                    "description": "",
+                    "domain": "unspecified by model",
+                })
+            elif isinstance(item, dict):
+                normalized_item = dict(item)
+                if "domain" not in normalized_item and "type" in normalized_item:
+                    normalized_item["domain"] = normalized_item.pop("type")
+                normalized.append(normalized_item)
+            else:
+                normalized.append(item)
+        return normalized
 
 
 def _string_list(value) -> list[str]:
