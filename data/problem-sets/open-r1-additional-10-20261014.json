@@ -6,7 +6,7 @@
     "accepted_per_problem": 20,
     "wrong_answer_per_problem": 20,
     "compile_verified": true,
-    "checker": "TOKEN",
+    "checker": "pipeline_test_model",
     "excluded_problem_types": [
       "interactive",
       "multiple-valid-output-without-special-checker"
