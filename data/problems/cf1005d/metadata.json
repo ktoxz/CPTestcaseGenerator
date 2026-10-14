@@ -1,0 +1,27 @@
+{
+  "problem_id": "cf1005d",
+  "contest_id": 1005,
+  "index": "D",
+  "title": "D. Polycarp and Div 3",
+  "url": "https://codeforces.com/contest/1005/problem/D",
+  "time_limit_ms": 3000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "3121\n",
+      "output": "2\n"
+    },
+    {
+      "input": "6\n",
+      "output": "1\n"
+    },
+    {
+      "input": "1000000000000000000000000000000000\n",
+      "output": "33\n"
+    },
+    {
+      "input": "201920181\n",
+      "output": "4\n"
+    }
+  ]
+}

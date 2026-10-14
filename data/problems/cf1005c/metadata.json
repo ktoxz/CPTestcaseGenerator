@@ -1,0 +1,27 @@
+{
+  "problem_id": "cf1005c",
+  "contest_id": 1005,
+  "index": "C",
+  "title": "C. Summarize to the Power of Two",
+  "url": "https://codeforces.com/contest/1005/problem/C",
+  "time_limit_ms": 3000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "6\n4 7 1 5 4 9\n",
+      "output": "1\n"
+    },
+    {
+      "input": "5\n1 2 3 4 5\n",
+      "output": "2\n"
+    },
+    {
+      "input": "1\n16\n",
+      "output": "1\n"
+    },
+    {
+      "input": "4\n1 1 1 1023\n",
+      "output": "0\n"
+    }
+  ]
+}

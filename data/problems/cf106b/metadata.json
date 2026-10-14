@@ -1,0 +1,15 @@
+{
+  "problem_id": "cf106b",
+  "contest_id": 106,
+  "index": "B",
+  "title": "B. Choosing Laptop",
+  "url": "https://codeforces.com/contest/106/problem/B",
+  "time_limit_ms": 2000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "5\n2100 512 150 200\n2000 2048 240 350\n2300 1024 200 320\n2500 2048 80 300\n2000 512 180 150\n",
+      "output": "4\n"
+    }
+  ]
+}

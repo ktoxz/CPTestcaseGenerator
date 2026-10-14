@@ -1,0 +1,15 @@
+{
+  "problem_id": "cf105a",
+  "contest_id": 105,
+  "index": "A",
+  "title": "A. Transmigration",
+  "url": "https://codeforces.com/contest/105/problem/A",
+  "time_limit_ms": 2000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "5 4 0.75\naxe 350\nimpaler 300\nionize 80\nmegafire 120\nmagicboost 220\nheal\nmegafire\nshield\nmagicboost\n",
+      "output": "6\naxe 262\nheal 0\nimpaler 225\nmagicboost 165\nmegafire 0\nshield 0\n"
+    }
+  ]
+}

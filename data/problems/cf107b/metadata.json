@@ -1,0 +1,23 @@
+{
+  "problem_id": "cf107b",
+  "contest_id": 107,
+  "index": "B",
+  "title": "B. Basketball Team",
+  "url": "https://codeforces.com/contest/107/problem/B",
+  "time_limit_ms": 1000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "3 2 1\n2 1\n",
+      "output": "1\n"
+    },
+    {
+      "input": "3 2 1\n1 1\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "3 2 1\n2 2\n",
+      "output": "0.666667\n"
+    }
+  ]
+}

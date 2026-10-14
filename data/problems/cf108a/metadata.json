@@ -1,0 +1,19 @@
+{
+  "problem_id": "cf108a",
+  "contest_id": 108,
+  "index": "A",
+  "title": "A. Palindromic Times",
+  "url": "https://codeforces.com/contest/108/problem/A",
+  "time_limit_ms": 2000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "12:21\n",
+      "output": "13:31\n"
+    },
+    {
+      "input": "23:59\n",
+      "output": "00:00\n"
+    }
+  ]
+}

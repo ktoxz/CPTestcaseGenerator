@@ -1,0 +1,23 @@
+{
+  "problem_id": "cf1010a",
+  "contest_id": 1010,
+  "index": "A",
+  "title": "A. Fly",
+  "url": "https://codeforces.com/contest/1010/problem/A",
+  "time_limit_ms": 1000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "2\n12\n11 8\n7 5\n",
+      "output": "10.0000000000\n"
+    },
+    {
+      "input": "3\n1\n1 4 1\n2 5 3\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "6\n2\n4 6 3 3 5 6\n2 6 3 6 5 3\n",
+      "output": "85.4800000000\n"
+    }
+  ]
+}

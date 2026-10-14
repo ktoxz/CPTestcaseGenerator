@@ -1,0 +1,23 @@
+{
+  "problem_id": "cf104a",
+  "contest_id": 104,
+  "index": "A",
+  "title": "A. Blackjack",
+  "url": "https://codeforces.com/contest/104/problem/A",
+  "time_limit_ms": 2000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "12\n",
+      "output": "4\n"
+    },
+    {
+      "input": "20\n",
+      "output": "15\n"
+    },
+    {
+      "input": "10\n",
+      "output": "0\n"
+    }
+  ]
+}

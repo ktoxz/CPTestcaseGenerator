@@ -1,0 +1,19 @@
+{
+  "problem_id": "cf109a",
+  "contest_id": 109,
+  "index": "A",
+  "title": "A. Lucky Sum of Digits",
+  "url": "https://codeforces.com/contest/109/problem/A",
+  "time_limit_ms": 2000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "11\n",
+      "output": "47\n"
+    },
+    {
+      "input": "10\n",
+      "output": "-1\n"
+    }
+  ]
+}

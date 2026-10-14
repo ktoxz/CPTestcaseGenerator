@@ -1,0 +1,23 @@
+{
+  "problem_id": "cf106a",
+  "contest_id": 106,
+  "index": "A",
+  "title": "A. Card Game",
+  "url": "https://codeforces.com/contest/106/problem/A",
+  "time_limit_ms": 2000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "H\nQH 9S\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "S\n8D 6D\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "C\n7H AS\n",
+      "output": "NO\n"
+    }
+  ]
+}

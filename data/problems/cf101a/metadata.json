@@ -1,0 +1,23 @@
+{
+  "problem_id": "cf101a",
+  "contest_id": 101,
+  "index": "A",
+  "title": "A. Homework",
+  "url": "https://codeforces.com/contest/101/problem/A",
+  "time_limit_ms": 2000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "aaaaa\n4\n",
+      "output": "1\naaaaa\n"
+    },
+    {
+      "input": "abacaba\n4\n",
+      "output": "1\naaaa\n"
+    },
+    {
+      "input": "abcdefgh\n10\n",
+      "output": "0\n"
+    }
+  ]
+}

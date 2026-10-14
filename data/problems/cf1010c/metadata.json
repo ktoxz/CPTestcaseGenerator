@@ -1,0 +1,19 @@
+{
+  "problem_id": "cf1010c",
+  "contest_id": 1010,
+  "index": "C",
+  "title": "C. Border",
+  "url": "https://codeforces.com/contest/1010/problem/C",
+  "time_limit_ms": 1000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "2 8\n12 20\n",
+      "output": "2\n0 4\n"
+    },
+    {
+      "input": "3 10\n10 20 30\n",
+      "output": "1\n0\n"
+    }
+  ]
+}

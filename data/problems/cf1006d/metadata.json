@@ -1,0 +1,19 @@
+{
+  "problem_id": "cf1006d",
+  "contest_id": 1006,
+  "index": "D",
+  "title": "D. Two Strings Swaps",
+  "url": "https://codeforces.com/contest/1006/problem/D",
+  "time_limit_ms": 2000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "7\nabacaba\nbacabaa\n",
+      "output": "4\n"
+    },
+    {
+      "input": "5\nzcabd\ndbacz\n",
+      "output": "0\n"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "source": "open-r1/codeforces-submissions",
+  "source_url": "https://huggingface.co/datasets/open-r1/codeforces-submissions",
+  "selected_on": "2026-10-14",
+  "selection": {
+    "accepted_per_problem": 20,
+    "wrong_answer_per_problem": 20,
+    "compile_verified": true,
+    "excluded_problem_types": [
+      "interactive",
+      "multiple-valid-output-without-special-checker"
+    ]
+  },
+  "problems": [
+    "cf1005c",
+    "cf1005d",
+    "cf1006d",
+    "cf1009c",
+    "cf1010a",
+    "cf1010c",
+    "cf10a",
+    "cf10b",
+    "cf101a",
+    "cf102b",
+    "cf103a",
+    "cf103b",
+    "cf104a",
+    "cf105a",
+    "cf106a",
+    "cf106b",
+    "cf107a",
+    "cf107b",
+    "cf108a",
+    "cf109a"
+  ]
+}
