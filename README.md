@@ -90,7 +90,7 @@ Validator kiểm tra hết các đề xuất trong batch trước. Mọi input b
 
 Mặc định không dừng chỉ vì TPR/TNR ≥0.90. Dừng sớm cần đồng thời: ít nhất 2 vòng, ít nhất 18 testcase, 100% critical obligations, 90% normal obligations, TPR/TNR development ≥0.90 và không còn survivor hoặc hai vòng không có coverage/kill mới. Có thể đổi sàn bằng `--min-iterations`, `--min-total-cases`, và số top-up bằng `--top-up-rounds`. Tối đa vẫn là `--iterations`.
 
-Không truyền `--model` thì mọi tác vụ dùng `gemma4:31b-cloud` và không chuyển sang Nemotron hay Claude. Mỗi request Ollama có hard-timeout riêng 60 giây theo cấu hình hiện tại, đổi bằng `--ollama-timeout`; khi Gemma lỗi, tác vụ tùy chọn được bỏ qua còn tác vụ bắt buộc để sinh AC/WA hoặc validator dừng rõ ràng. Có thể chủ động bật lại chuỗi provider bằng `--llm-fallback` và chọn model Ollama thứ hai qua `--ollama-fallback-model`; Claude chỉ được thêm vào cuối chuỗi khi code backend không được tách riêng bằng `--code-model claude`. Request timeout không được gửi lại ngay trên cùng endpoint. Sau mỗi response Ollama hoàn tất, pipeline chờ 1 giây trước request Ollama kế tiếp (`--ollama-throttle`); sau timeout endpoint được cách ly theo `--ollama-timeout-cooldown`. Pipeline không tạo worker LLM: một prompt đảm nhiệm trọn một nhiệm vụ và trả về mảng kết quả của nhiệm vụ đó.
+Không truyền `--model` thì mọi tác vụ dùng `gemma4:31b-cloud` và không chuyển sang Nemotron hay Claude. Mỗi request Ollama có hard-timeout riêng 120 giây theo cấu hình hiện tại, đổi bằng `--ollama-timeout`; khi Gemma lỗi, tác vụ tùy chọn được bỏ qua còn tác vụ bắt buộc để sinh AC/WA hoặc validator dừng rõ ràng. Có thể chủ động bật lại chuỗi provider bằng `--llm-fallback` và chọn model Ollama thứ hai qua `--ollama-fallback-model`; Claude chỉ được thêm vào cuối chuỗi khi code backend không được tách riêng bằng `--code-model claude`. Request timeout không được gửi lại ngay trên cùng endpoint. Sau mỗi response Ollama hoàn tất, pipeline chờ 1 giây trước request Ollama kế tiếp (`--ollama-throttle`); sau timeout endpoint được cách ly theo `--ollama-timeout-cooldown`. Pipeline không tạo worker LLM: một prompt đảm nhiệm trọn một nhiệm vụ và trả về mảng kết quả của nhiệm vụ đó.
 
 Dùng `--model claude` để chỉ gọi Claude Code CLI bằng phiên đăng nhập hiện có, hoặc `--model chatgpt` để chỉ gọi Codex CLI qua phiên ChatGPT hiện có; hai chế độ chọn trực tiếp này không chạy chuỗi fallback Ollama. Claude được ghim mặc định ở `fable` với `--claude-effort low`, tránh để CLI tự chọn model suy luận lâu. `--claude-model sonnet` đổi sang model mạnh hơn khi ưu tiên chất lượng hơn thời gian; `--claude-effort low|medium|high|xhigh|max` điều chỉnh thời gian suy luận. Ngoài ra có thể chọn `--ac`, `--wa`, `--cases-per-round`, `--min-iterations`, `--min-total-cases`, `--top-up-rounds`, `--input-repair-attempts`, `--mutant-replacement-rounds`, `--ollama-url`, `--statement` và `--output`. `--judge local|remote|auto` chọn nơi chấm; `--judge-host` ghi đè SSH host fallback KHOI. Hai đề mẫu tải từ VPS nằm ở `data/problems/p00004` và `data/problems/p00005`. Nếu đề khác, đặt `data/problems/pNNNNN/statement.md` và (khuyến nghị) `checker.json` trước khi chạy.
 
@@ -165,8 +165,8 @@ case đã chứng nhận và đánh giá holdout, trước bước oracle ngoài
 `report.json` ghi `generation_latency.elapsed_seconds`, `target_met` và
 `quality_criteria_met` riêng: nhanh không đồng nghĩa đạt đủ chất lượng.
 
-Ollama mặc định timeout 30 giây/request, cooldown thành công 1 giây, cooldown
-sau timeout 60 giây, tối đa 16384 token (`--ollama-max-tokens`). Cleanup HTTP
+Gemma4 mặc định timeout 120 giây/request, cooldown thành công 1 giây, cooldown
+sau timeout 10 giây, tối đa 16384 token (`--ollama-max-tokens`). Cleanup HTTP
 không chặn luồng timeout. Test lớn dùng `input_parts` (literal, lặp hoặc dãy số)
 được mở rộng có giới hạn tại máy; không chạy mã từ recipe. Mutant dùng
 `code_edits` thay thế chuỗi duy nhất trên AC đã xác nhận; vẫn phải qua biên dịch,
