@@ -7,12 +7,26 @@ from testgen.checker import checker_from_profile
 from testgen.coverage import TestModelResponse, normalize_test_model
 from testgen.docker_judge import DockerJudge
 from testgen.fallback import neutral_result
-from testgen.llm_contract import TaskType
-from testgen.generation.test_model import _statement_sandbox_limits
+from testgen.llm_contract import FailurePolicy, TaskType
+from testgen.generation.test_model import build_test_model, _statement_sandbox_limits
 from testgen.retrying_judge import RetryingJudge
 
 
 class TestModelSpecTests(unittest.TestCase):
+    def test_test_model_generation_is_required(self):
+        class Client:
+            request = None
+
+            def ask(self, request):
+                self.request = request
+                raise RuntimeError("stop after observing request")
+
+        client = Client()
+        with self.assertRaisesRegex(RuntimeError, "observing request"):
+            build_test_model(client, "statement")
+        self.assertEqual(client.request.task_type, TaskType.BUILD_TEST_MODEL)
+        self.assertEqual(client.request.failure_policy, FailurePolicy.REQUIRED)
+
     def test_explicit_statement_limits_are_parsed_without_llm_guessing(self):
         self.assertEqual(
             _statement_sandbox_limits(

@@ -2,7 +2,7 @@
 import re
 
 from ..coverage import normalize_test_model, TestModelResponse
-from ..llm_contract import LLMClient, TaskType, ask_json
+from ..llm_contract import FailurePolicy, LLMClient, TaskType, ask_json
 
 def _statement_sandbox_limits(statement: str) -> dict:
     """Extract explicit contest limits so LLM defaults cannot overwrite metadata."""
@@ -64,7 +64,14 @@ def build_test_model(client: LLMClient, statement: str) -> dict:
         "their behavior. Do not invent constraints. Return JSON only.\n"
         f"<problem>\n{statement}\n</problem>"
     )
-    result = ask_json(client, TaskType.BUILD_TEST_MODEL, prompt, label="xây test model độc lập", response_model=TestModelResponse)
+    result = ask_json(
+        client,
+        TaskType.BUILD_TEST_MODEL,
+        prompt,
+        label="xây test model độc lập",
+        response_model=TestModelResponse,
+        failure_policy=FailurePolicy.REQUIRED,
+    )
     normalized = normalize_test_model(result)
     explicit_limits = _statement_sandbox_limits(statement)
     if explicit_limits:
