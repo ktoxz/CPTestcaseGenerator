@@ -1,6 +1,35 @@
 """Specification-only test model generation, independent of case and solution history."""
+import re
+
 from ..coverage import normalize_test_model, TestModelResponse
 from ..llm_contract import LLMClient, TaskType, ask_json
+
+def _statement_sandbox_limits(statement: str) -> dict:
+    """Extract explicit contest limits so LLM defaults cannot overwrite metadata."""
+    result = {}
+    time_match = re.search(
+        r"time\s*limit(?:\s*per\s*test)?\s*[:：]\s*`?\s*([0-9]+(?:\.[0-9]+)?)\s*(ms|milliseconds?|s|sec(?:onds?)?)",
+        statement, re.IGNORECASE,
+    )
+    if time_match:
+        value = float(time_match.group(1))
+        if time_match.group(2).lower().startswith("m"):
+            value /= 1000
+        result["time_limit_seconds"] = min(60.0, max(0.1, value))
+    memory_match = re.search(
+        r"memory\s*limit(?:\s*per\s*test)?\s*[:：]\s*`?\s*([0-9]+(?:\.[0-9]+)?)\s*(kb|mb|gb|kib|mib|gib)",
+        statement, re.IGNORECASE,
+    )
+    if memory_match:
+        value = float(memory_match.group(1))
+        unit = memory_match.group(2).lower()
+        if unit in {"kb", "kib"}:
+            value /= 1024
+        elif unit in {"gb", "gib"}:
+            value *= 1024
+        result["memory_limit_mb"] = min(4096, max(32, round(value)))
+    return result
+
 
 def build_test_model(client: LLMClient, statement: str) -> dict:
     prompt = (
@@ -35,5 +64,10 @@ def build_test_model(client: LLMClient, statement: str) -> dict:
         f"<problem>\n{statement}\n</problem>"
     )
     result = ask_json(client, TaskType.BUILD_TEST_MODEL, prompt, label="xây test model độc lập", response_model=TestModelResponse)
-    return normalize_test_model(result)
+    normalized = normalize_test_model(result)
+    explicit_limits = _statement_sandbox_limits(statement)
+    if explicit_limits:
+        normalized["sandbox"].update(explicit_limits)
+        normalized["sandbox"]["reasoning"] = "Parsed from explicit statement metadata"
+    return normalized
 

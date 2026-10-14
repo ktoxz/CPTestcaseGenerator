@@ -8,10 +8,18 @@ from testgen.coverage import TestModelResponse, normalize_test_model
 from testgen.docker_judge import DockerJudge
 from testgen.fallback import neutral_result
 from testgen.llm_contract import TaskType
+from testgen.generation.test_model import _statement_sandbox_limits
 from testgen.retrying_judge import RetryingJudge
 
 
 class TestModelSpecTests(unittest.TestCase):
+    def test_explicit_statement_limits_are_parsed_without_llm_guessing(self):
+        self.assertEqual(
+            _statement_sandbox_limits(
+                "- Time limit: `3000 ms`\n- Memory limit: `1048576 KB`"
+            ),
+            {"time_limit_seconds": 3.0, "memory_limit_mb": 1024},
+        )
     def test_schema_accepts_checker_and_sandbox(self):
         payload = {
             "checker": {"kind": "FLOAT", "epsilon": 1e-6},
