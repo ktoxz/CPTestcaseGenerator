@@ -43,8 +43,8 @@ class DockerJudge(Judge):
             "sh", "-lc", command,
         ]
         try:
-            proc = subprocess.run(args, input=input_text, text=True, encoding="utf-8",
-                                  errors="replace", stdout=subprocess.PIPE,
+            proc = subprocess.run(args, input=input_text.encode("utf-8"),
+                                  stdout=subprocess.PIPE,
                                   stderr=subprocess.PIPE,
                                   timeout=timeout + self.limits["docker_startup_grace_seconds"],
                                   check=False)
@@ -60,9 +60,11 @@ class DockerJudge(Judge):
                     f"cleanup {container_name}: {detail}", False)
         except OSError as exc:
             return 125, "", str(exc), False
+        stdout = proc.stdout.decode("utf-8", errors="replace")
+        stderr = proc.stderr.decode("utf-8", errors="replace")
         return (proc.returncode,
-                proc.stdout[:self.limits["stdout_limit_bytes"]],
-                proc.stderr[:self.limits["stderr_limit_bytes"]], proc.returncode == 124)
+                stdout[:self.limits["stdout_limit_bytes"]],
+                stderr[:self.limits["stderr_limit_bytes"]], proc.returncode == 124)
 
     def compile(self, solution: Solution) -> Result:
         digest = hashlib.sha256(solution.source.read_bytes()).hexdigest()[:16]

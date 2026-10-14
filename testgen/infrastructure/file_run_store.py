@@ -14,7 +14,7 @@ class FileRunStore:
         path.parent.mkdir(parents=True, exist_ok=True)
         fd, temporary = tempfile.mkstemp(prefix="." + path.name + ".", suffix=".tmp", dir=path.parent)
         try:
-            with os.fdopen(fd, "w", encoding=encoding, newline=None) as stream:
+            with os.fdopen(fd, "w", encoding=encoding, newline="\n") as stream:
                 count = stream.write(text)
                 stream.flush()
                 os.fsync(stream.fileno())

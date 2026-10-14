@@ -8,6 +8,7 @@ from tempfile import TemporaryDirectory
 
 from testgen.docker_judge import DockerJudge
 from testgen.domain import Judge, Result, Solution
+from testgen.infrastructure.file_run_store import FileRunStore
 from testgen.retrying_judge import InfrastructureError, RetryingJudge, retry_setup
 
 
@@ -114,3 +115,29 @@ class RetryTests(TestCase):
             self.assertFalse(timed_out)
             self.assertIn("not code TLE", err)
             self.assertEqual(calls[0][calls[0].index("--name") + 1], calls[1][3])
+
+    def test_local_docker_stdin_uses_exact_utf8_bytes(self):
+        with TemporaryDirectory() as directory:
+            judge = DockerJudge(Path(directory))
+            captured = {}
+
+            def fake_run(args, **kwargs):
+                captured.update(kwargs)
+                return subprocess.CompletedProcess(args, 0, b"k\n", b"")
+
+            with patch("testgen.docker_judge.subprocess.run", side_effect=fake_run):
+                code, out, err, timed_out = judge._run(
+                    "test:local", Path(directory), Path(directory), "cat",
+                    input_text="k\n", timeout=5,
+                )
+
+            self.assertEqual(captured["input"], b"k\n")
+            self.assertNotIn("text", captured)
+            self.assertNotIn("encoding", captured)
+            self.assertEqual((code, out, err, timed_out), (0, "k\n", "", False))
+
+    def test_file_store_preserves_lf_on_windows(self):
+        with TemporaryDirectory() as directory:
+            target = Path(directory) / "case.in"
+            FileRunStore().write_text(target, "first\nsecond\n")
+            self.assertEqual(target.read_bytes(), b"first\nsecond\n")
