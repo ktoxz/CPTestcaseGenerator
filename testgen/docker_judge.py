@@ -24,6 +24,13 @@ class DockerJudge(Judge):
         self.limits = json.loads(config_path.read_text(encoding="utf-8"))
         self._compiled: dict[str, tuple[Path, str, str]] = {}
 
+    def apply_sandbox_spec(self, spec: dict) -> None:
+        """Apply bounded per-problem limits extracted before any compilation."""
+        time_limit = min(60.0, max(0.1, float(spec["time_limit_seconds"])))
+        memory_limit = min(4096, max(32, int(spec["memory_limit_mb"])))
+        self.limits["run_timeout_seconds"] = max(1, int(time_limit * 1.5 + 0.999))
+        self.limits["memory"] = f"{memory_limit}m"
+
     def _run(self, image: str, source: Path, work: Path, command: str,
              input_text: str = "", *, timeout: int) -> tuple[int, str, str, bool]:
         container_name = f"tg-{self.run_id[:10]}-{uuid.uuid4().hex[:12]}"

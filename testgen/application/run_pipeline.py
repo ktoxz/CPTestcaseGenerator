@@ -15,7 +15,7 @@ from ..evaluation.external import ExternalEvaluator
 from ..application.resume_run import ResumeRun
 from ..certification.reference_pool import ReferencePoolBuilder
 from ..reporting.report_builder import build_report
-from ..checker import Checker
+from ..checker import Checker, checker_from_profile
 from ..coverage import normalize_test_model
 from ..domain import CaseGenerator, Judge, OracleSource, Solution, SolutionGenerator
 from ..progress import ConsoleProgress
@@ -47,7 +47,8 @@ class RunPipeline:
                  normal_coverage_target: float = 0.9,
                  stall_rounds_to_stop: int = 2,
                  holdout_fraction: float = 0.2,
-                 minimum_verified_mutants: int = 3, store: RunStore | None = None):
+                 minimum_verified_mutants: int = 3, store: RunStore | None = None,
+                 auto_checker: bool = False, auto_sandbox: bool = False):
         if not 1 <= batch_size <= 32:
             raise ValueError("batch_size must be 1..32")
         if not 1 <= judge_workers <= 32:
@@ -99,6 +100,8 @@ class RunPipeline:
         self.stall_rounds_to_stop = stall_rounds_to_stop
         self.holdout_fraction = holdout_fraction
         self.minimum_verified_mutants = minimum_verified_mutants
+        self.auto_checker = auto_checker
+        self.auto_sandbox = auto_sandbox
         self.base_cases_per_round = getattr(case_generator, "cases_per_round", 10)
         if self.base_cases_per_round < 1:
             raise ValueError("case generator base quota must be >= 1")
@@ -106,6 +109,36 @@ class RunPipeline:
                                           judge_workers, compile_workers)
         self.references = ReferenceCertification(self.execution, checker)
         self.mutants = MutantCertification(self.execution, self.references, checker)
+
+    def _apply_test_model_specs(self, test_model: dict) -> None:
+        if self.auto_checker:
+            spec = test_model["checker"]
+            if spec.get("multiple_valid_answers") or spec.get("kind") == "PYTHON_SCRIPT":
+                raise RuntimeError(
+                    "The generated test model requires an input-aware special checker. "
+                    "Add an audited problem-local checker.json and checker script."
+                )
+            kind = spec.get("kind", "TOKEN")
+            if kind == "TOKEN" and not spec.get("case_sensitive", True):
+                kind = "CASE_INSENSITIVE_TOKEN"
+            profile = {"kind": kind}
+            if kind == "FLOAT":
+                profile["epsilon"] = spec.get("epsilon") or 1e-6
+            checker = checker_from_profile(profile)
+            self.checker = checker
+            self.execution.checker = checker
+            self.references.checker = checker
+            self.mutants.checker = checker
+            self._log(f"Áp dụng checker từ test model: {checker.profile()}")
+        if self.auto_sandbox:
+            configure = getattr(self.judge, "apply_sandbox_spec", None)
+            if configure is not None:
+                configure(test_model["sandbox"])
+                spec = test_model["sandbox"]
+                self._log(
+                    "Áp dụng sandbox từ test model: "
+                    f"time={spec['time_limit_seconds']}s, memory={spec['memory_limit_mb']}MB"
+                )
 
     @property
     def _execution_log(self):
@@ -164,12 +197,6 @@ class RunPipeline:
         generation_started = time.monotonic() if started_at is None else started_at
         if not 1 <= iterations <= 3:
             raise ValueError("iterations must be 1..3")
-        if requires_input_aware_checker(statement) and not self.checker.input_aware:
-            raise RuntimeError(
-                "Problem statement appears to allow multiple valid outputs, but "
-                f"checker {self.checker.kind} compares against one expected output. "
-                "Configure an input-aware special checker in checker.json."
-            )
         output.mkdir(parents=True, exist_ok=True)
         self._execution_log = output / "executions-llm.jsonl"
         official_samples = samples(statement)
@@ -198,6 +225,13 @@ class RunPipeline:
                     self.case_generator.build_test_model(statement)
                 )
             self.store.write_json(test_model_path, test_model)
+        self._apply_test_model_specs(test_model)
+        if requires_input_aware_checker(statement) and not self.checker.input_aware:
+            raise RuntimeError(
+                "Problem statement appears to allow multiple valid outputs, but "
+                f"checker {self.checker.kind} compares against one expected output. "
+                "Configure an input-aware special checker in checker.json."
+            )
         self._log(
             "Test model: "
             f"{len(test_model['coverage_obligations'])} coverage obligations"

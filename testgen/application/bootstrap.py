@@ -27,7 +27,8 @@ def ensure_image(tag: str, dockerfile: Path, root: Path) -> None:
 
 
 def build_pipeline(args, parser, settings, judge_settings, catalog, checker, progress,
-                   output, problem_oracle_cache, oracle_settings_path, root):
+                   output, problem_oracle_cache, oracle_settings_path, root,
+                   *, auto_checker=False, auto_sandbox=False):
     ROOT = root
     local_error = None
     if args.judge == "native":
@@ -246,5 +247,7 @@ def build_pipeline(args, parser, settings, judge_settings, catalog, checker, pro
         holdout_fraction=settings.get("holdout_fraction", 0.2),
         minimum_verified_mutants=settings.get("minimum_verified_mutants", 3),
         store=store,
+        auto_checker=auto_checker,
+        auto_sandbox=auto_sandbox,
     )
     return pipeline

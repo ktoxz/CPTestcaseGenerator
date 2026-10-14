@@ -87,10 +87,18 @@ class NativeJudge(Judge):
             )
         self._compiled: dict[str, _NativeArtifact] = {}
 
+    def apply_sandbox_spec(self, spec: dict) -> None:
+        time_limit = min(60.0, max(0.1, float(spec["time_limit_seconds"])))
+        memory_limit = min(4096, max(32, int(spec["memory_limit_mb"])))
+        self.limits["run_timeout_seconds"] = max(1, int(time_limit * 1.5 + 0.999))
+        self.limits["memory"] = f"{memory_limit}m"
+        self.memory_bytes = memory_limit * 1024**2
+
     @staticmethod
     def _tool(runtime: RuntimeSpec) -> str:
         return {
             "c": "gcc",
+            "cpp20": "g++",
             "cpp17": "g++",
             "cpp14": "g++",
             "cpp11": "g++",
@@ -106,6 +114,7 @@ class NativeJudge(Judge):
             return ["gcc", "-std=gnu11", "-O2", str(source), "-lm", "-o", str(work / "main")]
         if runtime.id.startswith("cpp"):
             standard = {
+                "cpp20": "gnu++20",
                 "cpp17": "gnu++17",
                 "cpp14": "gnu++14",
                 "cpp11": "gnu++11",

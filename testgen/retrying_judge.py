@@ -51,6 +51,11 @@ class RetryingJudge(Judge):
         self.delay_seconds = delay_seconds
         self.progress = progress
 
+    def apply_sandbox_spec(self, spec: dict) -> None:
+        configure = getattr(self.judge, "apply_sandbox_spec", None)
+        if configure is not None:
+            configure(spec)
+
     def _attempt(self, label: str, operation: Callable[[], Result]) -> Result:
         for attempt in range(1, self.max_attempts + 1):
             result = operation()

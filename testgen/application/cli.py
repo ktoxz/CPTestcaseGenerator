@@ -362,8 +362,12 @@ def main() -> None:
             "batch_size": judge_settings["batch_size"],
         })
 
-    pipeline = build_pipeline(args, parser, settings, judge_settings, catalog, checker,
-                              progress, output, problem_oracle_cache, oracle_settings_path, ROOT)
+    pipeline = build_pipeline(
+        args, parser, settings, judge_settings, catalog, checker,
+        progress, output, problem_oracle_cache, oracle_settings_path, ROOT,
+        auto_checker=not profile_path.exists(),
+        auto_sandbox=args.sandbox_config.resolve() == (ROOT / "config" / "sandbox.json").resolve(),
+    )
     try:
         with progress.waiting(
             "Toàn bộ pipeline", component="pipeline.total",
