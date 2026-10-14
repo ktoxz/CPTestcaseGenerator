@@ -12,7 +12,7 @@
     {"id": "cpp11", "language": "C++", "dialects": ["C++11"], "extension": ".cpp", "source_file": "main.cpp", "image": "main", "compile": "g++ -std=gnu++11 -O2 /src/main.cpp -o /work/main", "execute": "/work/main"},
     {"id": "cpp98", "language": "C++", "dialects": ["C++"], "extension": ".cpp", "source_file": "main.cpp", "image": "main", "compile": "g++ -std=gnu++98 -O2 /src/main.cpp -o /work/main", "execute": "/work/main"},
     {"id": "java", "language": "Java", "dialects": ["", "Java", "JAVA"], "extension": ".java", "source_file": "Main.java", "image": "main", "compile": "javac -encoding UTF-8 -d /work /src/Main.java", "execute": "java -XX:MaxRAMPercentage=75.0 -cp /work Main", "llm": true},
-    {"id": "python3", "language": "Python", "dialects": ["", "Python3"], "extension": ".py", "source_file": "main.py", "image": "main", "compile": "cp /src/main.py /work/main.py && python3 -m py_compile /work/main.py && if grep -q 'numba.pycc' /work/main.py; then cd /work && python3 /work/main.py ONLINE_JUDGE; fi", "execute": "python3 -I /work/main.py", "llm": true},
+    {"id": "python3", "language": "Python", "dialects": ["", "Python3"], "extension": ".py", "source_file": "main.py", "image": "main", "compile": "cp /src/main.py /work/main.py && python3 -m py_compile /work/main.py && if grep -q 'numba.pycc' /work/main.py; then cd /work && python3 /work/main.py ONLINE_JUDGE; fi", "execute": "cd /work && python3 -s main.py", "llm": true},
     {"id": "python2", "language": "Python", "dialects": ["Python"], "extension": ".py", "source_file": "main.py", "image": "python2", "compile": "cp /src/main.py /work/main.py && python -m py_compile /work/main.py", "execute": "python /work/main.py"}
   ]
 }

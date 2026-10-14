@@ -22,6 +22,7 @@ class RuntimeEnvironmentTests(unittest.TestCase):
         self.assertNotIn("-Xmx192m", runtimes["java"]["execute"])
         self.assertIn("numba.pycc", runtimes["python3"]["compile"])
         self.assertIn("ONLINE_JUDGE", runtimes["python3"]["compile"])
+        self.assertEqual(runtimes["python3"]["execute"], "cd /work && python3 -s main.py")
 
 
 if __name__ == "__main__":
