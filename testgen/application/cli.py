@@ -25,7 +25,7 @@ SAFE_PROBLEM_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]{0,63}")
 def main() -> None:
     store = FileRunStore()
     invocation_started = time.monotonic()
-    bootstrap = argparse.ArgumentParser(add_help=False)
+    bootstrap = argparse.ArgumentParser(add_help=False, allow_abbrev=False)
     bootstrap.add_argument("--config", type=Path, default=ROOT / "config" / "pipeline.json")
     bootstrap.add_argument(
         "--judge-config", type=Path, default=ROOT / "config" / "judge.json"
@@ -35,7 +35,9 @@ def main() -> None:
     oracle_settings_path = ROOT / "config" / "oracle.json"
     oracle_settings = json.loads(oracle_settings_path.read_text(encoding="utf-8"))
     judge_settings = json.loads(initial.judge_config.read_text(encoding="utf-8"))
-    parser = argparse.ArgumentParser(description=__doc__, parents=[bootstrap])
+    parser = argparse.ArgumentParser(
+        description=__doc__, parents=[bootstrap], allow_abbrev=False
+    )
     selection = parser.add_mutually_exclusive_group(required=True)
     selection.add_argument("--problem", help="Run one safe problem ID, e.g. p00004")
     selection.add_argument(
