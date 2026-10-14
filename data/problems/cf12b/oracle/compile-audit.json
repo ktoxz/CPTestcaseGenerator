@@ -1,0 +1,59 @@
+{
+  "problem_id": "cf12b",
+  "dataset_problem_id": "12/B",
+  "dataset": "open-r1/codeforces-submissions",
+  "parquet": "D:\\KLTN\\Final_TestcaseGenerator\\data\\cache_hf\\0002.parquet",
+  "policy": {
+    "per_label": 20,
+    "total": 40,
+    "verdicts": [
+      "OK",
+      "WRONG_ANSWER"
+    ],
+    "formatting_deduplication": true,
+    "diversity": "round-robin by runtime and source-size band",
+    "compile_verified": true
+  },
+  "labels": {
+    "OK": {
+      "input_candidates": 309,
+      "unique_candidates": 305,
+      "compile_attempts": 32,
+      "compile_rejections": 1,
+      "rejected_examples": [
+        {
+          "submission_id": "51023",
+          "dataset_language": "GNU C",
+          "diagnostic": "D:\\KLTN\\Final_TestcaseGenerator\\output\\output\\.hf-oracle-compile\\candidate-c4pr6_e7\\main.c:5:1: error: return type defaults to 'int' [-Wimplicit-int]\n    5 | main()\n      | ^~~~"
+        }
+      ],
+      "selected": 20,
+      "languages": {
+        "C++/C++11": 5,
+        "C++/C++": 5,
+        "Python/Python3": 5,
+        "C++/C++14": 3,
+        "C/C": 2
+      },
+      "source_bytes": {
+        "min": 125,
+        "max": 21009
+      }
+    },
+    "WRONG_ANSWER": {
+      "input_candidates": 172,
+      "unique_candidates": 172,
+      "compile_attempts": 32,
+      "compile_rejections": 0,
+      "rejected_examples": [],
+      "selected": 20,
+      "languages": {
+        "Python/Python3": 20
+      },
+      "source_bytes": {
+        "min": 60,
+        "max": 3061
+      }
+    }
+  }
+}

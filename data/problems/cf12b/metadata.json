@@ -1,0 +1,19 @@
+{
+  "problem_id": "cf12b",
+  "contest_id": 12,
+  "index": "B",
+  "title": "B. Correct Solution?",
+  "url": "https://codeforces.com/contest/12/problem/B",
+  "time_limit_ms": 2000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "3310\n1033\n",
+      "output": "OK\n"
+    },
+    {
+      "input": "4\n5\n",
+      "output": "WRONG_ANSWER\n"
+    }
+  ]
+}

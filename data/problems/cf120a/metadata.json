@@ -1,0 +1,15 @@
+{
+  "problem_id": "cf120a",
+  "contest_id": 120,
+  "index": "A",
+  "title": "A. Elevator",
+  "url": "https://codeforces.com/contest/120/problem/A",
+  "time_limit_ms": 1000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "front\n1\n",
+      "output": "L\n"
+    }
+  ]
+}

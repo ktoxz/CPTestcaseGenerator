@@ -1,0 +1,5 @@
+a=input()
+a=a.split()
+b=input()
+b=b.split()
+print(int(a[0])-1)

@@ -1,0 +1,27 @@
+{
+  "source": "open-r1/codeforces-submissions",
+  "source_url": "https://huggingface.co/datasets/open-r1/codeforces-submissions",
+  "selected_on": "2026-10-14",
+  "selection": {
+    "accepted_per_problem": 20,
+    "wrong_answer_per_problem": 20,
+    "compile_verified": true,
+    "checker": "TOKEN",
+    "excluded_problem_types": [
+      "interactive",
+      "multiple-valid-output-without-special-checker"
+    ]
+  },
+  "problems": [
+    "cf113a",
+    "cf114a",
+    "cf11a",
+    "cf11b",
+    "cf115a",
+    "cf119a",
+    "cf120a",
+    "cf12a",
+    "cf12b",
+    "cf12c"
+  ]
+}

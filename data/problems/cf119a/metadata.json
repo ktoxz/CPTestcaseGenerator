@@ -1,0 +1,19 @@
+{
+  "problem_id": "cf119a",
+  "contest_id": 119,
+  "index": "A",
+  "title": "A. Epic Game",
+  "url": "https://codeforces.com/contest/119/problem/A",
+  "time_limit_ms": 2000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "3 5 9\n",
+      "output": "0\n"
+    },
+    {
+      "input": "1 1 100\n",
+      "output": "1\n"
+    }
+  ]
+}

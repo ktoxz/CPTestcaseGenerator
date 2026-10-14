@@ -1,0 +1,15 @@
+{
+  "problem_id": "cf115a",
+  "contest_id": 115,
+  "index": "A",
+  "title": "A. Party",
+  "url": "https://codeforces.com/contest/115/problem/A",
+  "time_limit_ms": 3000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "5\n-1\n1\n2\n1\n-1\n",
+      "output": "3\n"
+    }
+  ]
+}

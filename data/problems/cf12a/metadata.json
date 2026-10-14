@@ -1,0 +1,19 @@
+{
+  "problem_id": "cf12a",
+  "contest_id": 12,
+  "index": "A",
+  "title": "A. Super Agent",
+  "url": "https://codeforces.com/contest/12/problem/A",
+  "time_limit_ms": 2000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "XX.\n...\n.XX\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "X.X\nX..\n...\n",
+      "output": "NO\n"
+    }
+  ]
+}

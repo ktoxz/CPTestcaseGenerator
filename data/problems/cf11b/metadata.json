@@ -1,0 +1,23 @@
+{
+  "problem_id": "cf11b",
+  "contest_id": 11,
+  "index": "B",
+  "title": "B. Jumping Jack",
+  "url": "https://codeforces.com/contest/11/problem/B",
+  "time_limit_ms": 1000,
+  "memory_limit_mb": 64,
+  "samples": [
+    {
+      "input": "2\n",
+      "output": "3\n"
+    },
+    {
+      "input": "6\n",
+      "output": "3\n"
+    },
+    {
+      "input": "0\n",
+      "output": "0\n"
+    }
+  ]
+}

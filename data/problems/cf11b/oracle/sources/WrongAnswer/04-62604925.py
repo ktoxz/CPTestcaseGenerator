@@ -1,0 +1,9 @@
+n=int(input())
+if(n==2):
+    print(3)
+else:
+    c=1
+    while(n>0):
+        c+=1
+        n=n-c
+    print(c-1)

@@ -1,0 +1,19 @@
+{
+  "problem_id": "cf114a",
+  "contest_id": 114,
+  "index": "A",
+  "title": "A. Cifera",
+  "url": "https://codeforces.com/contest/114/problem/A",
+  "time_limit_ms": 2000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "5\n25\n",
+      "output": "YES\n1\n"
+    },
+    {
+      "input": "3\n8\n",
+      "output": "NO\n"
+    }
+  ]
+}

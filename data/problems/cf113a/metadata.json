@@ -1,0 +1,23 @@
+{
+  "problem_id": "cf113a",
+  "contest_id": 113,
+  "index": "A",
+  "title": "A. Grammar Lessons",
+  "url": "https://codeforces.com/contest/113/problem/A",
+  "time_limit_ms": 5000,
+  "memory_limit_mb": 256,
+  "samples": [
+    {
+      "input": "petr\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "etis atis animatis etis atis amatis\n",
+      "output": "NO\n"
+    },
+    {
+      "input": "nataliala kataliala vetra feinites\n",
+      "output": "YES\n"
+    }
+  ]
+}

@@ -1,0 +1,642 @@
+[
+  {
+    "id": "cf11a-ac-19221939",
+    "problem_id": "cf11a",
+    "label": "Accepted",
+    "language": "C++",
+    "dialect": "C++11",
+    "source": "sources/Accepted/01-19221939.cpp",
+    "sha256": "6198f3e1a753f1b3a322062fd7c199f5af47cfb89d1f55291a859b373832629e",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "19221939",
+      "programming_language": "GNU C++11",
+      "verdict": "OK",
+      "passed_test_count": 25
+    }
+  },
+  {
+    "id": "cf11a-ac-46844",
+    "problem_id": "cf11a",
+    "label": "Accepted",
+    "language": "C++",
+    "dialect": "C++",
+    "source": "sources/Accepted/02-46844.cpp",
+    "sha256": "2091a5399cdba8da4cb081b9d98921d53a298895a8bb046553422057d107ff58",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "46844",
+      "programming_language": "GNU C++",
+      "verdict": "OK",
+      "passed_test_count": 25
+    }
+  },
+  {
+    "id": "cf11a-ac-82581081",
+    "problem_id": "cf11a",
+    "label": "Accepted",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/Accepted/03-82581081.py",
+    "sha256": "5e801e2af0f328185666a0757764f8ed569d67d7072e592d097fccaef2626347",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "82581081",
+      "programming_language": "Python 3",
+      "verdict": "OK",
+      "passed_test_count": 25
+    }
+  },
+  {
+    "id": "cf11a-ac-20484554",
+    "problem_id": "cf11a",
+    "label": "Accepted",
+    "language": "C++",
+    "dialect": "C++14",
+    "source": "sources/Accepted/04-20484554.cpp",
+    "sha256": "2c6ae0b2940cbadc648148d3550ba829395a8fdebe0b5c1648ba5623c778dd48",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "20484554",
+      "programming_language": "C++14 (GCC 6-32)",
+      "verdict": "OK",
+      "passed_test_count": 25
+    }
+  },
+  {
+    "id": "cf11a-ac-47262",
+    "problem_id": "cf11a",
+    "label": "Accepted",
+    "language": "C",
+    "dialect": "C",
+    "source": "sources/Accepted/05-47262.c",
+    "sha256": "691cd8feca817da822ac41a587a2972a1f3cf5050037db2305a2ff861fdf3053",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "47262",
+      "programming_language": "GNU C",
+      "verdict": "OK",
+      "passed_test_count": 25
+    }
+  },
+  {
+    "id": "cf11a-ac-20723475",
+    "problem_id": "cf11a",
+    "label": "Accepted",
+    "language": "C",
+    "dialect": "C",
+    "source": "sources/Accepted/06-20723475.c",
+    "sha256": "e4b5004fc1de8c0bb1d3589ac1f42e7528f2bd5a755befa57e897c88028877c2",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "20723475",
+      "programming_language": "GNU C",
+      "verdict": "OK",
+      "passed_test_count": 25
+    }
+  },
+  {
+    "id": "cf11a-ac-92423658",
+    "problem_id": "cf11a",
+    "label": "Accepted",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/Accepted/07-92423658.py",
+    "sha256": "ddb85cac34c208a3c344f00d7e74c50ad06fb7208e1a4f3f1f054de3cfa253e6",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "92423658",
+      "programming_language": "PyPy 3",
+      "verdict": "OK",
+      "passed_test_count": 25
+    }
+  },
+  {
+    "id": "cf11a-ac-46736",
+    "problem_id": "cf11a",
+    "label": "Accepted",
+    "language": "C++",
+    "dialect": "C++",
+    "source": "sources/Accepted/08-46736.cpp",
+    "sha256": "0f41745afb95e90b8a1bf6b62fc0307e62d666368d66ff2c5ff94c296fbdcff3",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "46736",
+      "programming_language": "GNU C++",
+      "verdict": "OK",
+      "passed_test_count": 25
+    }
+  },
+  {
+    "id": "cf11a-ac-221809133",
+    "problem_id": "cf11a",
+    "label": "Accepted",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/Accepted/09-221809133.py",
+    "sha256": "90f75a048a94651f4a11bc861d3ec8374d13f6a0dd8e392f1a804d1dc45bdb1e",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "221809133",
+      "programming_language": "Python 3",
+      "verdict": "OK",
+      "passed_test_count": 25
+    }
+  },
+  {
+    "id": "cf11a-ac-20305114",
+    "problem_id": "cf11a",
+    "label": "Accepted",
+    "language": "C++",
+    "dialect": "C++11",
+    "source": "sources/Accepted/10-20305114.cpp",
+    "sha256": "71f4114166cd56c52fc0e16efe3ff3cb266c1540fcc8d91928898ff43f5b2afb",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "20305114",
+      "programming_language": "GNU C++11",
+      "verdict": "OK",
+      "passed_test_count": 25
+    }
+  },
+  {
+    "id": "cf11a-ac-20419555",
+    "problem_id": "cf11a",
+    "label": "Accepted",
+    "language": "C++",
+    "dialect": "C++11",
+    "source": "sources/Accepted/11-20419555.cpp",
+    "sha256": "14807619adc8976aeb937df0991793ffa78fa788d9d8fbc60fb2ec50b9c53fbe",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "20419555",
+      "programming_language": "GNU C++11",
+      "verdict": "OK",
+      "passed_test_count": 25
+    }
+  },
+  {
+    "id": "cf11a-ac-20993980",
+    "problem_id": "cf11a",
+    "label": "Accepted",
+    "language": "C++",
+    "dialect": "C++14",
+    "source": "sources/Accepted/12-20993980.cpp",
+    "sha256": "0d0335ce47d1cc69dc4d0bb8bc14a30f4c4e86b9a4629998b057a4625b3a6429",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "20993980",
+      "programming_language": "C++14 (GCC 6-32)",
+      "verdict": "OK",
+      "passed_test_count": 25
+    }
+  },
+  {
+    "id": "cf11a-ac-46783",
+    "problem_id": "cf11a",
+    "label": "Accepted",
+    "language": "C++",
+    "dialect": "C++",
+    "source": "sources/Accepted/13-46783.cpp",
+    "sha256": "7e5838adcc41975c11c3a5cbf4e930e0457deb7039650d636f4b2b2a280670f3",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "46783",
+      "programming_language": "GNU C++",
+      "verdict": "OK",
+      "passed_test_count": 25
+    }
+  },
+  {
+    "id": "cf11a-ac-127217023",
+    "problem_id": "cf11a",
+    "label": "Accepted",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/Accepted/14-127217023.py",
+    "sha256": "cfa358fab1ffc2dc8fbc9c4943d76c6d32730ba3d6135b5fb92273e62b4e5036",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "127217023",
+      "programming_language": "PyPy 3",
+      "verdict": "OK",
+      "passed_test_count": 25
+    }
+  },
+  {
+    "id": "cf11a-ac-46484",
+    "problem_id": "cf11a",
+    "label": "Accepted",
+    "language": "C++",
+    "dialect": "C++",
+    "source": "sources/Accepted/15-46484.cpp",
+    "sha256": "122715fe6ba12de7675d9f3f50fc60ece710aa60274f554f3f87ae3af24b2741",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "46484",
+      "programming_language": "GNU C++",
+      "verdict": "OK",
+      "passed_test_count": 25
+    }
+  },
+  {
+    "id": "cf11a-ac-19421268",
+    "problem_id": "cf11a",
+    "label": "Accepted",
+    "language": "C++",
+    "dialect": "C++",
+    "source": "sources/Accepted/16-19421268.cpp",
+    "sha256": "030edcea986962c660ea866b19ae4ff3e4f361c378a338075bcffbdf9d46b40c",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "19421268",
+      "programming_language": "GNU C++",
+      "verdict": "OK",
+      "passed_test_count": 25
+    }
+  },
+  {
+    "id": "cf11a-ac-19580509",
+    "problem_id": "cf11a",
+    "label": "Accepted",
+    "language": "C++",
+    "dialect": "C++11",
+    "source": "sources/Accepted/17-19580509.cpp",
+    "sha256": "a1c9720b0bfedbf3a560c4d4130405080bfeff3a2580673e71ef7324065b760b",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "19580509",
+      "programming_language": "GNU C++11",
+      "verdict": "OK",
+      "passed_test_count": 25
+    }
+  },
+  {
+    "id": "cf11a-ac-21880575",
+    "problem_id": "cf11a",
+    "label": "Accepted",
+    "language": "C++",
+    "dialect": "C++14",
+    "source": "sources/Accepted/18-21880575.cpp",
+    "sha256": "b0e71b68c4b5e55856b9961a67e8750f3eb788edb8f3b048e4eb68955fba6209",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "21880575",
+      "programming_language": "C++14 (GCC 6-32)",
+      "verdict": "OK",
+      "passed_test_count": 25
+    }
+  },
+  {
+    "id": "cf11a-ac-18224442",
+    "problem_id": "cf11a",
+    "label": "Accepted",
+    "language": "C++",
+    "dialect": "C++11",
+    "source": "sources/Accepted/19-18224442.cpp",
+    "sha256": "62efde0474f18dd20e212911652bd7576cab4f4f24ba75efb31141c2e4a9f8aa",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "18224442",
+      "programming_language": "GNU C++11",
+      "verdict": "OK",
+      "passed_test_count": 25
+    }
+  },
+  {
+    "id": "cf11a-ac-19916103",
+    "problem_id": "cf11a",
+    "label": "Accepted",
+    "language": "C",
+    "dialect": "C",
+    "source": "sources/Accepted/20-19916103.c",
+    "sha256": "452936fa9e59435d9541b39dbbcad83bd9a7e78c0c0e4dab3c667c066565db5f",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "19916103",
+      "programming_language": "GNU C",
+      "verdict": "OK",
+      "passed_test_count": 25
+    }
+  },
+  {
+    "id": "cf11a-wa-161550676",
+    "problem_id": "cf11a",
+    "label": "Wrong Answer",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/WrongAnswer/01-161550676.py",
+    "sha256": "008d3126d5f6a80f33613c50b7af124ad43b936837793a4f0e555643cd954042",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "161550676",
+      "programming_language": "PyPy 3",
+      "verdict": "WRONG_ANSWER",
+      "passed_test_count": 1
+    }
+  },
+  {
+    "id": "cf11a-wa-27332544",
+    "problem_id": "cf11a",
+    "label": "Wrong Answer",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/WrongAnswer/02-27332544.py",
+    "sha256": "a4e9fe3b75a68baa0766736a06a9753cf3d0d159e34b4f6a6e7c8c0005533103",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "27332544",
+      "programming_language": "Python 3",
+      "verdict": "WRONG_ANSWER",
+      "passed_test_count": 7
+    }
+  },
+  {
+    "id": "cf11a-wa-214510157",
+    "problem_id": "cf11a",
+    "label": "Wrong Answer",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/WrongAnswer/03-214510157.py",
+    "sha256": "b3d5f2397dbd39397f6d69a3b01cf1106891938e36e88ab21397384200aeec53",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "214510157",
+      "programming_language": "PyPy 3-64",
+      "verdict": "WRONG_ANSWER",
+      "passed_test_count": 2
+    }
+  },
+  {
+    "id": "cf11a-wa-193845686",
+    "problem_id": "cf11a",
+    "label": "Wrong Answer",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/WrongAnswer/04-193845686.py",
+    "sha256": "f133a6af4ef6bcef789cdad8249a89c13f103e9c2cf7df90219a8a11e88ed608",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "193845686",
+      "programming_language": "Python 3",
+      "verdict": "WRONG_ANSWER",
+      "passed_test_count": 0
+    }
+  },
+  {
+    "id": "cf11a-wa-85622334",
+    "problem_id": "cf11a",
+    "label": "Wrong Answer",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/WrongAnswer/05-85622334.py",
+    "sha256": "8b7dffb53589bbfaa9842eaf8028fb073938565498f0168980070ff86ee1ffd9",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "85622334",
+      "programming_language": "Python 3",
+      "verdict": "WRONG_ANSWER",
+      "passed_test_count": 0
+    }
+  },
+  {
+    "id": "cf11a-wa-95657006",
+    "problem_id": "cf11a",
+    "label": "Wrong Answer",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/WrongAnswer/06-95657006.py",
+    "sha256": "f1d082e0f204d873fe682103e47e141e1ae4fad57272aaa5721ad2d24cbe490c",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "95657006",
+      "programming_language": "Python 3",
+      "verdict": "WRONG_ANSWER",
+      "passed_test_count": 10
+    }
+  },
+  {
+    "id": "cf11a-wa-74381881",
+    "problem_id": "cf11a",
+    "label": "Wrong Answer",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/WrongAnswer/07-74381881.py",
+    "sha256": "9a50615b91b1d8f82399862a4ec9cc4aa35ec041382dd05d1b6a6c80baf56ed6",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "74381881",
+      "programming_language": "Python 3",
+      "verdict": "WRONG_ANSWER",
+      "passed_test_count": 12
+    }
+  },
+  {
+    "id": "cf11a-wa-113455811",
+    "problem_id": "cf11a",
+    "label": "Wrong Answer",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/WrongAnswer/08-113455811.py",
+    "sha256": "1dbf921b2c060cfa3254cf7e90edec425dae7235f934e3d92f060d1efd3e3722",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "113455811",
+      "programming_language": "Python 3",
+      "verdict": "WRONG_ANSWER",
+      "passed_test_count": 10
+    }
+  },
+  {
+    "id": "cf11a-wa-130273974",
+    "problem_id": "cf11a",
+    "label": "Wrong Answer",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/WrongAnswer/09-130273974.py",
+    "sha256": "fc4a1ac18efe862142c3fc205d8a2b321824697db8c226746b92de1f8a2c2d4d",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "130273974",
+      "programming_language": "Python 3",
+      "verdict": "WRONG_ANSWER",
+      "passed_test_count": 0
+    }
+  },
+  {
+    "id": "cf11a-wa-99982921",
+    "problem_id": "cf11a",
+    "label": "Wrong Answer",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/WrongAnswer/10-99982921.py",
+    "sha256": "7a4c0f157ce4a9f22f3499d229aa4bb4dc4294180a35d13594a5e9a8f4bd7a12",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "99982921",
+      "programming_language": "PyPy 3",
+      "verdict": "WRONG_ANSWER",
+      "passed_test_count": 7
+    }
+  },
+  {
+    "id": "cf11a-wa-36285561",
+    "problem_id": "cf11a",
+    "label": "Wrong Answer",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/WrongAnswer/11-36285561.py",
+    "sha256": "a137ebf5ebde8479afc9e280b44f9979d5eb0dceb35d58910dd28707916d4b6e",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "36285561",
+      "programming_language": "Python 3",
+      "verdict": "WRONG_ANSWER",
+      "passed_test_count": 7
+    }
+  },
+  {
+    "id": "cf11a-wa-26991310",
+    "problem_id": "cf11a",
+    "label": "Wrong Answer",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/WrongAnswer/12-26991310.py",
+    "sha256": "6fb9ab084af2a103c02a2f695a8b2237046eaf4adc8afb393a5b32069b521a8d",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "26991310",
+      "programming_language": "Python 3",
+      "verdict": "WRONG_ANSWER",
+      "passed_test_count": 24
+    }
+  },
+  {
+    "id": "cf11a-wa-101667041",
+    "problem_id": "cf11a",
+    "label": "Wrong Answer",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/WrongAnswer/13-101667041.py",
+    "sha256": "18ea601ea9ec41ee9fe5cc5cf34aeea6511b13f54108e036b22da162c6c6bcc4",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "101667041",
+      "programming_language": "Python 3",
+      "verdict": "WRONG_ANSWER",
+      "passed_test_count": 3
+    }
+  },
+  {
+    "id": "cf11a-wa-117136898",
+    "problem_id": "cf11a",
+    "label": "Wrong Answer",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/WrongAnswer/14-117136898.py",
+    "sha256": "122d8ccb7ece5c4f5313be6bb39be4af18791c7ad497d35e73fb230bc2c62d62",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "117136898",
+      "programming_language": "Python 3",
+      "verdict": "WRONG_ANSWER",
+      "passed_test_count": 0
+    }
+  },
+  {
+    "id": "cf11a-wa-133230533",
+    "problem_id": "cf11a",
+    "label": "Wrong Answer",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/WrongAnswer/15-133230533.py",
+    "sha256": "fd450985a43f7a929e56715e010c3fab882021f8f70c5fdd53b1795ef02a4cd3",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "133230533",
+      "programming_language": "PyPy 3",
+      "verdict": "WRONG_ANSWER",
+      "passed_test_count": 7
+    }
+  },
+  {
+    "id": "cf11a-wa-166448736",
+    "problem_id": "cf11a",
+    "label": "Wrong Answer",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/WrongAnswer/16-166448736.py",
+    "sha256": "0880b2d6be006b5371f2722eefdc53e944c859f08fcad33d16db506442cf64cf",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "166448736",
+      "programming_language": "Python 3",
+      "verdict": "WRONG_ANSWER",
+      "passed_test_count": 0
+    }
+  },
+  {
+    "id": "cf11a-wa-26954310",
+    "problem_id": "cf11a",
+    "label": "Wrong Answer",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/WrongAnswer/17-26954310.py",
+    "sha256": "00b8f569750eeb2a50f8fd7b3feebdca74fed0cf23586b5c62725647b4c2abc4",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "26954310",
+      "programming_language": "Python 3",
+      "verdict": "WRONG_ANSWER",
+      "passed_test_count": 2
+    }
+  },
+  {
+    "id": "cf11a-wa-73986788",
+    "problem_id": "cf11a",
+    "label": "Wrong Answer",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/WrongAnswer/18-73986788.py",
+    "sha256": "00da61db89038015b2f78c94bce0e78cf1bbc21907e0f934f69d61eda3087acd",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "73986788",
+      "programming_language": "Python 3",
+      "verdict": "WRONG_ANSWER",
+      "passed_test_count": 0
+    }
+  },
+  {
+    "id": "cf11a-wa-113017624",
+    "problem_id": "cf11a",
+    "label": "Wrong Answer",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/WrongAnswer/19-113017624.py",
+    "sha256": "7faf992c22baf584c170f2487dc2959767031e3ecdd2130a58002826f3d34a4c",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "113017624",
+      "programming_language": "PyPy 3",
+      "verdict": "WRONG_ANSWER",
+      "passed_test_count": 1
+    }
+  },
+  {
+    "id": "cf11a-wa-107105472",
+    "problem_id": "cf11a",
+    "label": "Wrong Answer",
+    "language": "Python",
+    "dialect": "Python3",
+    "source": "sources/WrongAnswer/20-107105472.py",
+    "sha256": "23718177b7fd88ff875a1798711646371a2ae959e5e9637718c3cde52206d780",
+    "origin": {
+      "dataset": "open-r1/codeforces-submissions",
+      "submission_id": "107105472",
+      "programming_language": "PyPy 3",
+      "verdict": "WRONG_ANSWER",
+      "passed_test_count": 7
+    }
+  }
+]
