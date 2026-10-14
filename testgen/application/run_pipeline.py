@@ -17,6 +17,7 @@ from ..certification.reference_pool import ReferencePoolBuilder
 from ..reporting.report_builder import build_report
 from ..checker import Checker, checker_from_profile
 from ..coverage import normalize_test_model
+from ..generation.test_model import _statement_sandbox_limits
 from ..domain import CaseGenerator, Judge, OracleSource, Solution, SolutionGenerator
 from ..progress import ConsoleProgress
 
@@ -186,7 +187,14 @@ class RunPipeline:
             result, problem_id, output, cases, oracle_limit)
 
 
-    def resume_oracle(self, problem_id: str, output: Path, oracle_limit: int) -> dict:
+    def resume_oracle(self, problem_id: str, output: Path, oracle_limit: int,
+                      statement: str | None = None) -> dict:
+        if statement is not None:
+            model_path = output / "test-model.json"
+            raw_model = self.store.read_json(model_path) if model_path.is_file() else {}
+            model = normalize_test_model(raw_model)
+            model["sandbox"].update(_statement_sandbox_limits(statement))
+            self._apply_test_model_specs(model)
         return ResumeRun(self.store, self.execution,
                          ExternalEvaluator(self.oracle, self.execution)).run(
                              problem_id, output, oracle_limit)

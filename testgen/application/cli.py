@@ -375,9 +375,11 @@ def main() -> None:
             "Toàn bộ pipeline", component="pipeline.total",
             problem_id=args.problem, resume_oracle=bool(args.resume_oracle),
         ):
-            report = (pipeline.resume_oracle(args.problem, output, args.oracle_limit)
+            statement_text = statement_path.read_text(encoding="utf-8")
+            report = (pipeline.resume_oracle(
+                          args.problem, output, args.oracle_limit, statement_text)
                       if args.resume_oracle else
-                      pipeline.run(args.problem, statement_path.read_text(encoding="utf-8"),
+                      pipeline.run(args.problem, statement_text,
                                    output, iterations=args.iterations,
                                    oracle_limit=args.oracle_limit, use_oracle=args.oracle,
                                    started_at=invocation_started))
