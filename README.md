@@ -8,7 +8,7 @@ Một lệnh Python xử lý **một bài**: backend LLM được chọn sinh co
 git clone https://github.com/ktoxz/CPTestcaseGenerator.git
 cd CPTestcaseGenerator
 py -3.12 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
 .\.venv\Scripts\python.exe -m pytest -q
 ```
 
