@@ -2,6 +2,38 @@
 
 Một lệnh Python xử lý **một bài**: backend LLM được chọn sinh code AC/WA ứng viên và input, hai reference độc lập kiểm tra expected output, Docker chấm các ứng viên; thêm `--oracle` để trích tối đa 100 CodeNet Accepted + 100 Wrong Answer từ VPS rồi chấm bằng cùng bộ test. Mỗi vòng ghi báo cáo riêng vào `output/` (tối đa 3 vòng). CodeNet/LLM labels là nhãn ban đầu, không mặc nhiên là chân lý.
 
+## Cài nhanh
+
+```powershell
+git clone https://github.com/ktoxz/CPTestcaseGenerator.git
+cd CPTestcaseGenerator
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m pytest -q
+```
+
+Trên Windows cần Docker Desktop chạy Linux containers. Với Ollama, khởi động
+server và tải model ghi trong `config/pipeline.json` trước khi sinh test. Không
+commit API key, token, output chạy hoặc virtual environment; các đường dẫn này
+đã được loại qua `.gitignore`.
+
+## Batch 50 bài trên máy KHOI
+
+Script [`scripts/run_khoi_50.ps1`](scripts/run_khoi_50.ps1) chạy cohort cố định
+gồm 25 bài Codeforces và 25 bài CodeNet có statement cùng oracle bundle. Sau khi
+clone/pull repository và chép các thư mục `oracle` (chúng không được lưu trên
+Git), chạy:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+powershell -ExecutionPolicy Bypass -File scripts\run_khoi_50.ps1
+```
+
+Có thể giảm chi phí cho lần thử đầu bằng
+`-Iterations 1 -CasesPerRound 5 -OracleLimit 10`, hoặc truyền cờ CLI bổ sung ở
+cuối lệnh, ví dụ `--ollama-timeout 300`. Kết quả từng bài nằm trong `output/`,
+còn báo cáo tổng batch nằm trong `output/batches/<timestamp>/batch-report.json`.
+
 ## Yêu cầu
 
 - Python ≥ 3.12 trên máy chạy lệnh; cài dependency bằng

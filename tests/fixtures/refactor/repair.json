@@ -89,7 +89,19 @@
       "coverage_obligations": [],
       "warnings": [
         "Test-model generation is unsupported by this generator."
-      ]
+      ],
+      "checker": {
+        "kind": "TOKEN",
+        "epsilon": null,
+        "case_sensitive": true,
+        "multiple_valid_answers": false,
+        "reasoning": ""
+      },
+      "sandbox": {
+        "time_limit_seconds": 5.0,
+        "memory_limit_mb": 512,
+        "reasoning": ""
+      }
     },
     "coverage": {
       "obligations": 0,
@@ -732,7 +744,19 @@
         "coverage_obligations": [],
         "warnings": [
           "Test-model generation is unsupported by this generator."
-        ]
+        ],
+        "checker": {
+          "kind": "TOKEN",
+          "epsilon": null,
+          "case_sensitive": true,
+          "multiple_valid_answers": false,
+          "reasoning": ""
+        },
+        "sandbox": {
+          "time_limit_seconds": 5.0,
+          "memory_limit_mb": 512,
+          "reasoning": ""
+        }
       },
       "coverage": {
         "obligations": 0,
@@ -912,7 +936,19 @@
         "coverage_obligations": [],
         "warnings": [
           "Test-model generation is unsupported by this generator."
-        ]
+        ],
+        "checker": {
+          "kind": "TOKEN",
+          "epsilon": null,
+          "case_sensitive": true,
+          "multiple_valid_answers": false,
+          "reasoning": ""
+        },
+        "sandbox": {
+          "time_limit_seconds": 5.0,
+          "memory_limit_mb": 512,
+          "reasoning": ""
+        }
       },
       "coverage": {
         "obligations": 0,
@@ -1175,7 +1211,19 @@
       "coverage_obligations": [],
       "warnings": [
         "Test-model generation is unsupported by this generator."
-      ]
+      ],
+      "checker": {
+        "kind": "TOKEN",
+        "epsilon": null,
+        "case_sensitive": true,
+        "multiple_valid_answers": false,
+        "reasoning": ""
+      },
+      "sandbox": {
+        "time_limit_seconds": 5.0,
+        "memory_limit_mb": 512,
+        "reasoning": ""
+      }
     },
     "test-suite.lock.json": {
       "sha256": "61ce92f3de03d17d1e07061a820f979aa3f47acb7257bbb62f6702b09734a16b",

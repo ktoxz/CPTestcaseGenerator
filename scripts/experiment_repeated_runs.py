@@ -19,11 +19,9 @@ if str(SCRIPT_ROOT) not in sys.path:
 from experiment_existing_baselines import ROOT, git_provenance, read_json, selected_reports
 
 
-# Registered before execution: six Codeforces/open-r1 and six CodeNet problems,
-# spanning strong results, low TPR, low TNR, and known run-to-run instability.
+# Focused ten-problem Codeforces replication cohort.
 DEFAULT_PROBLEMS = [
-    "cf1003a", "cf1003c", "cf1005a", "cf1008a", "cf1008b", "cf1949b",
-    "p02548", "p02585", "p02586", "p02623", "p02986", "p03274",
+    "cf113a", "cf114a", "cf11a", "cf11b", "cf115a", "cf119a", "cf120a", "cf12a", "cf12b", "cf12c"
 ]
 
 
