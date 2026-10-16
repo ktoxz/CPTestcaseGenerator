@@ -8,7 +8,8 @@ data/problems/*/oracle/
 .venv/
 .pytest_cache/
 .test-tmp/
-tmp/
+tmp/*
+!tmp/.gitkeep
 data/cache_hf/
 .codenet-descriptions.parquet
 
