@@ -4,6 +4,7 @@ param(
     [int]$CasesPerRound = 10,
     [int]$OracleLimit = 20,
     [string]$Model = "ollama",
+    [string]$OllamaModel = "nemotron-3-nano:30b-cloud",
     [Parameter(ValueFromRemainingArguments = $true)]
     [string[]]$ExtraArgs
 )
@@ -32,7 +33,8 @@ Push-Location $root
 try {
     & py -3.12 main.py --problems @problems --oracle `
         --oracle-limit $OracleLimit --iterations $Iterations `
-        --cases-per-round $CasesPerRound --model $Model --judge local @ExtraArgs
+        --cases-per-round $CasesPerRound --model $Model `
+        --ollama-model $OllamaModel --judge local @ExtraArgs
     exit $LASTEXITCODE
 }
 finally {
