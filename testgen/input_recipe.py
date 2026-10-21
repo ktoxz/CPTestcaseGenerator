@@ -3,6 +3,8 @@
 MAX_INPUT_CHARS = 2_000_000
 MAX_ITEMS = 200_000
 MAX_LITERAL_INPUT_CHARS = 2_000
+MAX_PREDICTED_OUTPUT_CHARS = 256
+MAX_CASE_EXPLANATION_CHARS = 500
 
 INPUT_RECIPE_INSTRUCTION = (
     f" Keep each literal input at most {MAX_LITERAL_INPUT_CHARS} characters. "
@@ -15,7 +17,12 @@ INPUT_RECIPE_INSTRUCTION = (
     "\"count\":100000,\"separator\":\" \"},\"\\n\"]. At most 200000 "
     "items per part and 2000000 expanded characters. Match declared lengths, "
     "bounds, ordering and uniqueness exactly. Never write ellipses, comments, "
-    "or thousands of literal numbers in input. All other case fields remain "
+    "or thousands of literal numbers in input. predicted_expected and "
+    "predicted_candidate_output are diagnostic snippets, not judge answers: "
+    f"each must be at most {MAX_PREDICTED_OUTPUT_CHARS} characters. If the "
+    "predicted output would be longer, return an empty string for that field "
+    "and describe only its compact shape in reason_for_difference. Never "
+    "enumerate a long constructive output. All other case fields remain "
     "required. Keep explanations to one short sentence."
 )
 
@@ -27,7 +34,10 @@ COMPACT_RETRY_INSTRUCTION = (
     "characters MUST be represented only by input_parts with repeat or numeric "
     "sequence objects. Never enumerate long arrays, never return both input and "
     "input_parts, never use ellipses, and keep explanations to one short "
-    "sentence. Return one complete JSON object only, without Markdown."
+    "sentence. Never materialize long predicted outputs: predicted_expected and "
+    f"predicted_candidate_output must each be at most {MAX_PREDICTED_OUTPUT_CHARS} "
+    "characters, or an empty string when the real output is longer. Return one "
+    "complete JSON object only, without Markdown."
 )
 
 

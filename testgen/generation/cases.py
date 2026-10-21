@@ -8,7 +8,8 @@ import re
 from .test_model import build_test_model
 from ..domain import CaseGenerator
 from ..input_recipe import (
-    INPUT_RECIPE_INSTRUCTION, MAX_LITERAL_INPUT_CHARS, expand_input,
+    INPUT_RECIPE_INSTRUCTION, MAX_CASE_EXPLANATION_CHARS,
+    MAX_LITERAL_INPUT_CHARS, MAX_PREDICTED_OUTPUT_CHARS, expand_input,
 )
 
 
@@ -166,6 +167,7 @@ class CaseGenerationService(CaseGenerator):
         for row in value:
             if not isinstance(row, dict):
                 continue
+            row = dict(row)
             if "input_parts" in row:
                 if "input" in row:
                     continue
@@ -181,6 +183,20 @@ class CaseGenerationService(CaseGenerator):
                 # Large literal stdin is rejected even if otherwise valid. The
                 # next top-up must use the bounded declarative input_parts form.
                 continue
+            for field in ("predicted_expected", "predicted_candidate_output"):
+                prediction = row.get(field, "")
+                if (not isinstance(prediction, str)
+                        or len(prediction) > MAX_PREDICTED_OUTPUT_CHARS):
+                    # These are refinement hints, never authoritative judge
+                    # answers. A partial long output would be misleading.
+                    row[field] = ""
+            explanation = row.get("reason_for_difference", "")
+            if not isinstance(explanation, str):
+                row["reason_for_difference"] = ""
+            elif len(explanation) > MAX_CASE_EXPLANATION_CHARS:
+                row["reason_for_difference"] = (
+                    explanation[:MAX_CASE_EXPLANATION_CHARS]
+                )
             normalized.append(row)
         return [
             row for row in normalized

@@ -446,6 +446,8 @@ class OllamaJsonTests(unittest.TestCase):
         self.assertIn("ORIGINAL CASE TASK", second["messages"][1]["content"])
         self.assertIn("input_parts", retry_text)
         self.assertIn("repeat or numeric sequence", retry_text)
+        self.assertIn("predicted_expected", retry_text)
+        self.assertIn("at most 256 characters", retry_text)
         self.assertNotIn("2 2 2 2 2 2", retry_text)
 
     @patch("testgen.ollama.urllib.request.urlopen")

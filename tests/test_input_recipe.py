@@ -1,6 +1,8 @@
 import unittest
 
-from testgen.input_recipe import expand_input
+from testgen.input_recipe import (
+    INPUT_RECIPE_INSTRUCTION, MAX_PREDICTED_OUTPUT_CHARS, expand_input,
+)
 from testgen.ollama import OllamaCaseGenerator
 
 
@@ -53,3 +55,25 @@ class InputRecipeTests(unittest.TestCase):
             "family": "ambiguous",
         }], 10)
         self.assertEqual(rows, [])
+
+    def test_discards_long_predicted_outputs_without_rejecting_case(self):
+        rows = OllamaCaseGenerator._valid_rows([{
+            "input": "100 100 1\n",
+            "family": "constructive",
+            "predicted_expected": "01" * 1000,
+            "predicted_candidate_output": "10" * 1000,
+            "reason_for_difference": "x" * 1000,
+        }], 10)
+
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["predicted_expected"], "")
+        self.assertEqual(rows[0]["predicted_candidate_output"], "")
+        self.assertEqual(len(rows[0]["reason_for_difference"]), 500)
+
+    def test_prompt_forbids_materializing_long_predicted_outputs(self):
+        self.assertIn("diagnostic snippets", INPUT_RECIPE_INSTRUCTION)
+        self.assertIn(
+            f"at most {MAX_PREDICTED_OUTPUT_CHARS} characters",
+            INPUT_RECIPE_INSTRUCTION,
+        )
+        self.assertIn("empty string", INPUT_RECIPE_INSTRUCTION)
