@@ -95,10 +95,12 @@ def main() -> None:
                         help="Candidate witness inputs per mutant (capped at 2)")
     parser.add_argument("--ollama-url", default=settings["ollama_url"])
     parser.add_argument(
-        "--model", choices=("ollama", "llama-server", "claude", "chatgpt"),
+        "--model",
+        choices=("ollama", "task-router", "llama-server", "claude", "chatgpt"),
         default="ollama",
         help=(
-            "LLM backend; omit for Ollama, or select llama-server/claude/chatgpt"
+            "LLM backend; task-router sends fine-tuned testcase tasks to "
+            "llama-server and every other task to Ollama"
         ),
     )
     parser.add_argument(
@@ -289,24 +291,40 @@ def main() -> None:
             "model": args.model,
             "code_model": args.model if args.code_model == "same" else args.code_model,
             "code_claude_model": args.claude_model if args.code_model == "claude" else None,
-            "ollama_model": args.ollama_model if args.model == "ollama" else None,
-            "ollama_url": args.ollama_url if args.model == "ollama" else None,
+            "ollama_model": (
+                args.ollama_model if args.model in {"ollama", "task-router"} else None
+            ),
+            "ollama_url": (
+                args.ollama_url if args.model in {"ollama", "task-router"} else None
+            ),
             "ollama_fallback_model": (
                 args.ollama_fallback_model if args.model == "ollama" else None
             ),
             "llm_fallback_enabled": (
                 args.llm_fallback if args.model == "ollama" else False
             ),
-            "ollama_think": False if args.model == "ollama" else None,
+            "ollama_think": (
+                False if args.model in {"ollama", "task-router"} else None
+            ),
             "llama_server_url": (
-                args.llama_server_url if args.model == "llama-server" else None
+                args.llama_server_url
+                if args.model in {"llama-server", "task-router"} else None
             ),
             "llama_server_model": (
-                args.llama_server_model if args.model == "llama-server" else None
+                args.llama_server_model
+                if args.model in {"llama-server", "task-router"} else None
             ),
             "llama_server_max_tokens": (
                 args.llama_server_max_tokens
-                if args.model == "llama-server" else None
+                if args.model in {"llama-server", "task-router"} else None
+            ),
+            "task_routing": (
+                {
+                    "generate_cases": args.llama_server_model,
+                    "repair_witnesses": args.llama_server_model,
+                    "default": args.ollama_model,
+                }
+                if args.model == "task-router" else None
             ),
             "llm_timeout_seconds": args.llm_timeout,
             "ollama_timeout_seconds": args.ollama_timeout,

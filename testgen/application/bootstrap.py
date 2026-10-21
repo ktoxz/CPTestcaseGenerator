@@ -18,6 +18,7 @@ from ..generation.solutions import SolutionGenerationService
 from .run_pipeline import RunPipeline
 from ..infrastructure.file_run_store import FileRunStore
 from testgen.retrying_judge import RetryingJudge, retry_setup
+from testgen.task_router import FINETUNED_TESTGEN_TASKS, TaskRoutingLLMClient
 
 
 def ensure_image(tag: str, dockerfile: Path, root: Path) -> None:
@@ -114,6 +115,36 @@ def build_pipeline(args, parser, settings, judge_settings, catalog, checker, pro
             progress=progress,
             raw_output_dir=output / "llm-raw",
         )
+    elif args.model == "task-router":
+        general_client = OllamaClient(
+            args.ollama_url, args.ollama_model,
+            progress=progress, timeout_seconds=args.ollama_timeout,
+            max_output_tokens=args.ollama_max_tokens,
+            raw_output_dir=output / "llm-raw" / "ollama",
+            post_request_cooldown_seconds=args.ollama_throttle,
+            timeout_cooldown_seconds=args.ollama_timeout_cooldown,
+        )
+        finetuned_client = OllamaClient(
+            args.llama_server_url,
+            args.llama_server_model,
+            progress=progress,
+            timeout_seconds=args.llm_timeout,
+            raw_output_dir=output / "llm-raw" / "gemma4-testgen",
+            api_style="openai",
+            max_output_tokens=args.llama_server_max_tokens,
+            post_request_cooldown_seconds=args.ollama_throttle,
+            timeout_cooldown_seconds=args.ollama_timeout_cooldown,
+        )
+        client = TaskRoutingLLMClient(
+            general_client,
+            {task: finetuned_client for task in FINETUNED_TESTGEN_TASKS},
+            default_name=f"Ollama/{args.ollama_model}",
+            task_names={
+                task: f"llama-server/{args.llama_server_model}"
+                for task in FINETUNED_TESTGEN_TASKS
+            },
+            progress=progress,
+        )
     elif args.model == "llama-server":
         client = OllamaClient(
             args.llama_server_url,
@@ -171,6 +202,15 @@ def build_pipeline(args, parser, settings, judge_settings, catalog, checker, pro
     elif args.model == "chatgpt":
         progress.log(
             f"LLM backend: ChatGPT login via Codex CLI ({args.chatgpt_model})"
+        )
+    elif args.model == "task-router":
+        routed_tasks = ", ".join(
+            sorted(task.value for task in FINETUNED_TESTGEN_TASKS)
+        )
+        progress.log(
+            f"LLM task router: [{routed_tasks}] → "
+            f"llama-server/{args.llama_server_model} ({args.llama_server_url}); "
+            f"all other tasks → Ollama/{args.ollama_model} ({args.ollama_url})"
         )
     elif args.model == "llama-server":
         progress.log(
