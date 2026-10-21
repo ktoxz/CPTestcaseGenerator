@@ -11,6 +11,7 @@ class TaskType(str, Enum):
     GENERATE_SOLUTIONS = "generate_solutions"
     REPLACE_REFERENCE = "replace_reference"
     GENERATE_VALIDATOR = "generate_validator"
+    GENERATE_CHECKER = "generate_checker"
     GENERATE_MUTANTS = "generate_mutants"
     GENERATE_WITNESSES = "generate_witnesses"
     REPAIR_WITNESSES = "repair_witnesses"
@@ -61,6 +62,7 @@ SHAPES = {
     TaskType.GENERATE_SOLUTIONS: dict(correct=list, wrong=list, validator_python=str),
     TaskType.REPLACE_REFERENCE: dict(correct=list),
     TaskType.GENERATE_VALIDATOR: dict(validator_python=str),
+    TaskType.GENERATE_CHECKER: dict(checker_python=str, reasoning=str),
     TaskType.GENERATE_MUTANTS: dict(wrong=list),
     TaskType.REPAIR_WITNESSES: dict(witnesses=list),
     TaskType.REPAIR_CASES: dict(repairs=list),

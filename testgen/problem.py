@@ -61,6 +61,9 @@ def requires_input_aware_checker(markdown: str) -> bool:
         r"\bprint any (?:valid )?(?:answer|output|solution|one)\b",
         r"\bmore than one .{0,100}\bacceptable\b",
         r"\bif there are multiple valid .{0,80}\byou may output any of them\b",
+        r"\bany .{0,40}\bsatisfying (?:the )?(?:conditions|requirements)\b",
+        r"\bif there are multiple answers?,? (?:you may )?print any\b",
+        r"\bif there are many possible answers?,? (?:you may )?print any\b",
     )
     return any(re.search(pattern, normalized) for pattern in indicators)
 

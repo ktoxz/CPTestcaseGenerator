@@ -380,6 +380,7 @@ class OllamaClient:
         original_messages = [dict(message) for message in messages]
         source_generation = task_type in {
             TaskType.GENERATE_SOLUTIONS, TaskType.GENERATE_MUTANTS,
+            TaskType.GENERATE_CHECKER,
         }
         for attempt in range(1, self.json_attempts + 1):
             request_chars = sum(

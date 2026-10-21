@@ -16,6 +16,10 @@ from ..application.resume_run import ResumeRun
 from ..certification.reference_pool import ReferencePoolBuilder
 from ..reporting.report_builder import build_report
 from ..checker import Checker, checker_from_profile
+from ..checkers.generated_python import (
+    GeneratedCheckerSafetyError, strip_unused_imports,
+    validate_generated_checker_source,
+)
 from ..coverage import coverage_summary, normalize_test_model
 from ..evaluation.metrics import metrics
 from ..llm_contract import LLMResponseError, LLMTransportError
@@ -42,6 +46,10 @@ DEGRADABLE_PIPELINE_ERRORS = (
     OSError,
     RuntimeError,
 )
+
+
+class CheckerProvisioningError(RuntimeError):
+    """A multiple-answer problem has no certified input-aware checker."""
 
 
 class RunPipeline:
@@ -118,6 +126,7 @@ class RunPipeline:
         self.auto_checker = auto_checker
         self.auto_sandbox = auto_sandbox
         self.base_cases_per_round = getattr(case_generator, "cases_per_round", 10)
+        self.output_checker_certification: dict | None = None
         if self.base_cases_per_round < 1:
             raise ValueError("case generator base quota must be >= 1")
         self.execution = ExecutionService(judge, checker, progress, batch_size,
@@ -129,22 +138,21 @@ class RunPipeline:
         if self.auto_checker:
             spec = test_model["checker"]
             if spec.get("multiple_valid_answers") or spec.get("kind") == "PYTHON_SCRIPT":
-                raise RuntimeError(
-                    "The generated test model requires an input-aware special checker. "
-                    "Add an audited problem-local checker.json and checker script."
-                )
-            kind = spec.get("kind", "TOKEN")
-            if kind == "TOKEN" and not spec.get("case_sensitive", True):
-                kind = "CASE_INSENSITIVE_TOKEN"
-            profile = {"kind": kind}
-            if kind == "FLOAT":
-                profile["epsilon"] = spec.get("epsilon") or 1e-6
-            checker = checker_from_profile(profile)
-            self.checker = checker
-            self.execution.checker = checker
-            self.references.checker = checker
-            self.mutants.checker = checker
-            self._log(f"Áp dụng checker từ test model: {checker.profile()}")
+                if not self.checker.input_aware:
+                    raise CheckerProvisioningError(
+                        "The generated test model requires an audited problem-local "
+                        "checker, but checker provisioning did not produce one."
+                    )
+            else:
+                kind = spec.get("kind", "TOKEN")
+                if kind == "TOKEN" and not spec.get("case_sensitive", True):
+                    kind = "CASE_INSENSITIVE_TOKEN"
+                profile = {"kind": kind}
+                if kind == "FLOAT":
+                    profile["epsilon"] = spec.get("epsilon") or 1e-6
+                checker = checker_from_profile(profile)
+                self._set_checker(checker)
+                self._log(f"Áp dụng checker từ test model: {checker.profile()}")
         if self.auto_sandbox:
             configure = getattr(self.judge, "apply_sandbox_spec", None)
             if configure is not None:
@@ -154,6 +162,158 @@ class RunPipeline:
                     "Áp dụng sandbox từ test model: "
                     f"time={spec['time_limit_seconds']}s, memory={spec['memory_limit_mb']}MB"
                 )
+
+    def _set_checker(self, checker: Checker) -> None:
+        self.checker = checker
+        self.execution.checker = checker
+        self.references.checker = checker
+        self.mutants.checker = checker
+
+    @staticmethod
+    def _checker_source(value: object) -> str:
+        if not isinstance(value, str):
+            raise CheckerProvisioningError("LLM checker_python must be a string")
+        source = value.strip()
+        if source.startswith("```"):
+            source = source.split("\n", 1)[1] if "\n" in source else ""
+            if source.rstrip().endswith("```"):
+                source = source.rstrip()[:-3].rstrip()
+        return strip_unused_imports(source + "\n")
+
+    def _ensure_output_checker(
+        self,
+        statement: str,
+        test_model: dict,
+        official_samples: list[tuple[str, str]],
+        output: Path,
+    ) -> None:
+        spec = test_model.get("checker", {})
+        requires_special = (
+            requires_input_aware_checker(statement)
+            or spec.get("multiple_valid_answers") is True
+            or spec.get("kind") == "PYTHON_SCRIPT"
+        )
+        if not requires_special or self.checker.input_aware:
+            return
+        generated_dir = output / "generated"
+        generated_dir.mkdir(parents=True, exist_ok=True)
+        certification_path = generated_dir / "checker-certification.json"
+        if not official_samples:
+            raise CheckerProvisioningError(
+                "Cannot certify an input-aware special checker without official "
+                "samples"
+            )
+        rejection_feedback: list[dict] = []
+        last_reason = "unknown checker certification failure"
+        for attempt in range(1, 4):
+            with self._waiting(
+                f"LLM sinh input-aware output checker (lần {attempt}/3)"
+            ):
+                try:
+                    candidate = self.case_generator.generate_output_checker(
+                        statement, test_model, official_samples,
+                        rejection_feedback=rejection_feedback,
+                    )
+                except NotImplementedError as error:
+                    raise CheckerProvisioningError(str(error)) from error
+            try:
+                source = self._checker_source(
+                    candidate.get("checker_python")
+                    if isinstance(candidate, dict) else None
+                )
+                validate_generated_checker_source(source)
+            except (CheckerProvisioningError, GeneratedCheckerSafetyError) as error:
+                last_reason = str(error)
+                rejection_feedback.append({
+                    "attempt": attempt, "stage": "static_safety",
+                    "reason": last_reason,
+                })
+                self.store.write_json(certification_path, {
+                    "status": "retrying" if attempt < 3 else "rejected",
+                    "attempts": rejection_feedback,
+                })
+                continue
+
+            checker_path = generated_dir / "output_checker.py"
+            self.store.write_text(checker_path, source, encoding="utf-8")
+            checker = checker_from_profile({
+                "kind": "GENERATED_PYTHON_SCRIPT",
+                "script": str(checker_path.resolve()),
+                "function": "accepts",
+                "timeout_seconds": 2.0,
+            })
+            probes = []
+            accepted = True
+            for index, (input_text, expected) in enumerate(official_samples, 1):
+                official_ok = checker.accepts_case(expected, expected, input_text)
+                deterministic_ok = checker.accepts_case(
+                    expected, expected, input_text
+                )
+                invalid_outputs = [
+                    "__invalid_output__\n",
+                    expected.rstrip() + "\n__extra_invalid_token__\n",
+                ]
+                rejected_invalid = [
+                    not checker.accepts_case(value, expected, input_text)
+                    for value in invalid_outputs
+                ]
+                row_ok = official_ok and deterministic_ok and all(rejected_invalid)
+                accepted = accepted and row_ok
+                probes.append({
+                    "sample": index,
+                    "official_output_accepted": official_ok,
+                    "deterministic_repeat_accepted": deterministic_ok,
+                    "invalid_outputs_rejected": rejected_invalid,
+                    "passed": row_ok,
+                })
+            certification = {
+                "status": "accepted" if accepted else "rejected",
+                "trust": "generated_unreviewed",
+                "attempt": attempt,
+                "checker": checker.profile(),
+                "reasoning": candidate.get("reasoning", ""),
+                "probes": probes,
+                "rejected_attempts": rejection_feedback,
+            }
+            self.store.write_json(certification_path, certification)
+            if accepted:
+                self._set_checker(checker)
+                self.output_checker_certification = certification
+                self._log(
+                    "Áp dụng checker do LLM sinh, đã qua static safety và "
+                    "sample probes (trust=generated_unreviewed)"
+                )
+                return
+            last_reason = "generated checker failed official/negative probes"
+            rejection_feedback.append({
+                "attempt": attempt, "stage": "sample_probes",
+                "reason": last_reason, "probes": probes,
+            })
+        raise CheckerProvisioningError(
+            f"Could not certify an LLM-generated output checker after 3 attempts: "
+            f"{last_reason}. Inspect {certification_path}"
+        )
+
+    def _restore_generated_checker(self, output: Path) -> bool:
+        checker_path = output / "generated" / "output_checker.py"
+        certification_path = output / "generated" / "checker-certification.json"
+        if not checker_path.is_file() or not certification_path.is_file():
+            return False
+        try:
+            certification = self.store.read_json(certification_path)
+            if certification.get("status") != "accepted":
+                return False
+            checker = checker_from_profile({
+                "kind": "GENERATED_PYTHON_SCRIPT",
+                "script": str(checker_path.resolve()),
+                "function": "accepts",
+                "timeout_seconds": 2.0,
+            })
+        except (OSError, TypeError, ValueError):
+            return False
+        self._set_checker(checker)
+        self.output_checker_certification = certification
+        return True
 
     @property
     def _execution_log(self):
@@ -203,6 +363,7 @@ class RunPipeline:
 
     def resume_oracle(self, problem_id: str, output: Path, oracle_limit: int,
                       statement: str | None = None) -> dict:
+        self._restore_generated_checker(output)
         if statement is not None:
             model_path = output / "test-model.json"
             raw_model = self.store.read_json(model_path) if model_path.is_file() else {}
@@ -279,7 +440,10 @@ class RunPipeline:
             )
         except (OSError, TypeError, ValueError):
             test_model = normalize_test_model({})
-        reason = self._degradation_reason("generation", error)
+        checker_unavailable = isinstance(error, CheckerProvisioningError)
+        reason = self._degradation_reason(
+            "checker_provisioning" if checker_unavailable else "generation", error
+        )
         stop_criteria = {
             "met": False,
             "reason": "generation_failed_official_samples_preserved",
@@ -321,6 +485,12 @@ class RunPipeline:
             },
             "latency": {"log": "latency.jsonl", "summary": self._latency_report()},
         }
+        if checker_unavailable:
+            result["output_checker"] = {
+                "status": "uncertified",
+                "trust": "none",
+                "reason": str(error),
+            }
         elapsed = time.monotonic() - generation_started
         result["generation_latency"] = {
             "elapsed_seconds": round(elapsed, 3),
@@ -334,10 +504,12 @@ class RunPipeline:
             output / "checkpoint.json",
             RunCheckpoint(1, "suite_locked", problem_id, tuple(cases), result),
         )
-        if use_oracle:
+        if use_oracle and not checker_unavailable:
             self._append_oracle_safely(
                 result, problem_id, output, cases, oracle_limit
             )
+        elif use_oracle:
+            result["oracle_status"] = "skipped_uncertified_checker"
         self.store.write_json(output / "report.json", result)
         self._log(
             f"Degraded: trả {len(cases)} official testcase; "
@@ -405,9 +577,10 @@ class RunPipeline:
                     self.case_generator.build_test_model(statement)
                 )
             self.store.write_json(test_model_path, test_model)
+        self._ensure_output_checker(statement, test_model, official_samples, output)
         self._apply_test_model_specs(test_model)
         if requires_input_aware_checker(statement) and not self.checker.input_aware:
-            raise RuntimeError(
+            raise CheckerProvisioningError(
                 "Problem statement appears to allow multiple valid outputs, but "
                 f"checker {self.checker.kind} compares against one expected output. "
                 "Configure an input-aware special checker in checker.json."
@@ -464,6 +637,8 @@ class RunPipeline:
             holdout.verdicts, judge_workers=self.judge_workers,
             compile_workers=self.compile_workers, batch_size=self.batch_size,
             latency_summary=self._latency_report())
+        if self.output_checker_certification is not None:
+            result["output_checker"] = self.output_checker_certification
         elapsed = time.monotonic() - generation_started
         result["generation_latency"] = {
             "elapsed_seconds": round(elapsed, 3),

@@ -2,7 +2,7 @@
 
 ## 2026-10-21 — Multiple-answer problems are evaluated with an exact TOKEN checker
 
-Status: Open
+Status: Fixed in `Standard_v1` (pending full 50-problem rerun)
 
 Severity: High. Valid accepted solutions are rejected, reference certification
 can fail completely, and a degraded official-sample suite can report misleading
@@ -59,12 +59,11 @@ However, both statements permit multiple correct outputs:
 The TOKEN checker compares the candidate output with the non-canonical sample
 output. It therefore treats a different valid construction as wrong.
 
-### Pipeline gap
+### Original pipeline gap
 
-The pipeline can execute a trusted problem-local `PYTHON_SCRIPT` checker, but it
-does not currently generate and certify such a checker. The LLM-generated test
-model can only recommend checker semantics. Executable output checkers must be
-provided as audited files under `data/problems/<problem_id>/`.
+The pipeline could execute a trusted problem-local `PYTHON_SCRIPT` checker, but
+could not generate and certify one. The LLM-generated test model could only
+recommend checker semantics.
 
 The heuristic in `testgen/problem.py::requires_input_aware_checker` also misses
 wording used by these problems, including:
@@ -81,24 +80,32 @@ the suite, ran the oracle, returned exit code zero, and labelled the result
 multiple-answer problem. Reusing it with TOKEN comparison preserves testcase
 files while still producing invalid verdicts.
 
-### Required fix
+### Implemented fix
 
-1. Add audited `output_checker.py` files and configure `PYTHON_SCRIPT` for:
-   - `cf1003b`: validate length, alphabet, zero/one counts, and adjacent
-     transition count from the input.
-   - `cf1004b`: validate a binary string of length `n`, calculate its objective
-     over all intervals, and require the global optimum
-     `sum(floor((r_i-l_i+1)^2 / 4))`.
-   - `cf1006b`: validate the declared profit and positive segment lengths, then
-     require an optimal partition whose profit equals the sum of the `k`
-     greatest difficulties.
-2. Extend multiple-answer wording detection in `testgen/problem.py`.
-3. Treat `multiple-answer + non-input-aware checker` as a configuration error.
-   Do not convert it into an official-output degraded suite.
-4. Add positive tests with alternative valid outputs and negative tests with
-   malformed, infeasible, or suboptimal outputs.
-5. Rerun reference certification and the CodeNet oracle. Previously completed
-   degraded reports must not be promoted or reused automatically.
+1. Added the typed `GENERATE_CHECKER` LLM task. It is routed to the default
+   Ollama model, not the fine-tuned testcase model.
+2. LLM checker source is statically restricted, cannot read the non-canonical
+   `expected` output, and runs in a fresh isolated Python process with timeout.
+   Imports, files, network, subprocesses, reflection, dynamic execution and
+   private attributes/names are blocked. Unused decorative imports are removed.
+3. A checker is activated only after accepting every official output twice and
+   rejecting malformed/extra-token probes. Up to three generation attempts are
+   allowed with rejection feedback.
+4. If checker certification still fails, only official samples are returned as
+   `degraded`; generation stops and oracle evaluation is skipped with
+   `skipped_uncertified_checker`, avoiding misleading TOKEN-based metrics.
+5. Generated checker source and certification are saved under `generated/` and
+   restored for `--resume-oracle`.
+6. Extended multiple-answer wording detection and added safety, timeout, retry,
+   and alternative-output tests.
+
+### Smoke verification
+
+- `cf1003b`: checker certified on the first attempt and accepted valid
+  alternatives `0011`, `001011`, and `00101010` for the three samples.
+- `cf1004b`: checker certified on the first attempt and accepted alternative
+  optimal outputs `01010` and `010101`.
+- Full test suite: 225 passed, 1 skipped, 35 subtests passed.
 
 ### Acceptance criteria
 

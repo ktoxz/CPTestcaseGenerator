@@ -10,7 +10,10 @@ from ..domain import CaseGenerator
 from ..input_recipe import INPUT_RECIPE_INSTRUCTION, expand_input
 
 
-from ..llm_contract import LLMClient, TaskType, ask_json, LLMTransportError, LLMResponseError
+from ..llm_contract import (
+    FailurePolicy, LLMClient, TaskType, ask_json, LLMTransportError,
+    LLMResponseError,
+)
 
 
 class CaseGenerationService(CaseGenerator):
@@ -43,6 +46,48 @@ class CaseGenerationService(CaseGenerator):
     @staticmethod
     def _prompt_json(value) -> str:
         return json.dumps(value, ensure_ascii=False)
+
+    def generate_output_checker(
+        self,
+        statement: str,
+        test_model: dict,
+        official_samples: list[tuple[str, str]],
+        rejection_feedback: list[dict] | None = None,
+    ) -> dict:
+        samples_payload = [
+            {"input": input_text, "output": output_text}
+            for input_text, output_text in official_samples
+        ]
+        feedback_payload = rejection_feedback or []
+        prompt = (
+            "Write an input-aware output checker for this programming-contest "
+            "problem. Return JSON with checker_python and reasoning. "
+            "checker_python must be complete Python source defining exactly the "
+            "public function accepts(input_text, actual, expected) -> bool. "
+            "Validate actual from the problem input and objective/constraints; "
+            "expected is only a non-canonical official example and must not be "
+            "used for exact comparison when multiple answers are valid. Reject "
+            "malformed output, missing values, extra tokens, infeasible answers, "
+            "and suboptimal answers when optimization is required. Use only pure "
+            "Python builtins. Do not import modules, access files, environment, "
+            "network, processes, reflection, or dynamic code execution. Keep the "
+            "source deterministic and bounded by the stated constraints. Return "
+            "JSON only.\n"
+            f"<test_model>\n{self._prompt_json(self._compact_test_model(test_model))}"
+            "\n</test_model>\n"
+            f"<official_samples>\n{self._prompt_json(samples_payload)}"
+            "\n</official_samples>\n"
+            f"<rejected_attempts>\n{self._prompt_json(feedback_payload[-2:])}"
+            "\n</rejected_attempts>\n"
+            f"<problem>\n{statement[:12000]}\n</problem>"
+        )
+        return ask_json(
+            self.client,
+            TaskType.GENERATE_CHECKER,
+            prompt,
+            label="sinh input-aware output checker",
+            failure_policy=FailurePolicy.REQUIRED,
+        )
 
     @staticmethod
     def _input_contract(statement: str) -> str:

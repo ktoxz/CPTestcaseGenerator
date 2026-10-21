@@ -95,6 +95,16 @@ class SolutionGenerator(ABC):
 
 
 class CaseGenerator(ABC):
+    def generate_output_checker(
+        self,
+        statement: str,
+        test_model: dict,
+        official_samples: list[tuple[str, str]],
+        rejection_feedback: list[dict] | None = None,
+    ) -> dict:
+        """Generate an input-aware output checker; unsupported generators opt out."""
+        raise NotImplementedError("output-checker generation is unsupported")
+
     def build_test_model(self, statement: str) -> dict:
         """Build a specification-derived model without candidate or oracle data."""
         return {
