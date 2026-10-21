@@ -12,7 +12,13 @@ from testgen.codenet import (
 )
 
 
+ROOT = Path(__file__).resolve().parents[1]
+
+
 class CodeNetValidationTests(unittest.TestCase):
+    def test_remote_exporter_exists(self) -> None:
+        self.assertTrue((ROOT / "scripts" / "export_codenet.py").is_file())
+
     def test_accepts_codenet_problem_id_and_limit(self) -> None:
         validate_codenet_request("p00004", 100, 100)
 
