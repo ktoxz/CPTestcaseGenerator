@@ -1,0 +1,28 @@
+{
+  "problem_id": "p00106",
+  "name": "Discounts of Buckwheat",
+  "dataset": "AIZU",
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 131072,
+  "source": {
+    "statement": "https://simia.net/codenetproblems/p00106.html",
+    "limits": "https://magical-cp-library.vercel.app/codenet/problems/p00106",
+    "images": []
+  },
+  "curation": {
+    "collection": "ktoxz hard-50 follow-up",
+    "oracle_pool": {
+      "accepted": 100,
+      "non_accepted": 100
+    }
+  },
+  "translation": {
+    "performed": false,
+    "source_language": "English",
+    "target_language": "English"
+  },
+  "import": {
+    "complete": true
+  },
+  "images": []
+}

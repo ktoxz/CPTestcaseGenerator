@@ -1,0 +1,34 @@
+{
+  "problem_id": "p00198",
+  "name": "Cube Artworks",
+  "dataset": "AIZU",
+  "time_limit_ms": 1000,
+  "memory_limit_kb": 131072,
+  "source": {
+    "statement": "https://simia.net/codenetproblems/p00198.html",
+    "limits": "https://magical-cp-library.vercel.app/codenet/problems/p00198",
+    "images": [
+      "https://judgeapi.u-aizu.ac.jp/resources/images/IMAGE2_shinagawa1",
+      "https://judgeapi.u-aizu.ac.jp/resources/images/IMAGE2_shinagawa2"
+    ]
+  },
+  "curation": {
+    "collection": "ktoxz hard-50 follow-up",
+    "oracle_pool": {
+      "accepted": 100,
+      "non_accepted": 100
+    }
+  },
+  "translation": {
+    "performed": true,
+    "source_language": "Japanese",
+    "target_language": "English"
+  },
+  "import": {
+    "complete": true
+  },
+  "images": [
+    "images/01.png",
+    "images/02.png"
+  ]
+}
