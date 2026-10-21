@@ -46,7 +46,10 @@ class ReferenceCertification:
                 and runs[0].verdict == "PASS"
                 and run.verdict == "PASS"
                 and self.checker.accepts_case(
-                    run.actual, runs[0].actual, input_text
+                    run.actual,
+                    (runs[0].actual
+                     if self.checker.requires_expected_output else None),
+                    input_text,
                 )
             ):
                 consensus = run
@@ -58,7 +61,10 @@ class ReferenceCertification:
                 and sum(
                     other.verdict == "PASS"
                     and self.checker.accepts_case(
-                        other.actual, run.actual, input_text
+                        other.actual,
+                        (run.actual
+                         if self.checker.requires_expected_output else None),
+                        input_text,
                     )
                     for other in runs
                 ) >= 2
@@ -112,7 +118,9 @@ class ReferenceCertification:
                 solution, [(case_id, input_text)], purpose="reference.sample"
             )[0]
             accepted = run.verdict == "PASS" and self.checker.accepts_case(
-                run.actual, expected, input_text
+                run.actual,
+                expected if self.checker.requires_expected_output else None,
+                input_text,
             )
             rows.append({
                 "sample": index,

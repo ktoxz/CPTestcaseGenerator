@@ -70,7 +70,12 @@ class CaseCertification:
                 f"Test {original_index} {case_id}: reference bất đồng"
             )
             return
-        expected = current.get("official_expected", consensus.actual)
+        reference_output = current.get("official_expected", consensus.actual)
+        expected = (
+            reference_output
+            if self.checker.requires_expected_output
+            else None
+        )
         if not self.checker.accepts_case(
             consensus.actual, expected, input_text
         ):

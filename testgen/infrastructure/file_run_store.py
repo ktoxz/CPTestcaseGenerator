@@ -55,8 +55,12 @@ class FileRunStore:
         cases = []
         for row in rows:
             if not isinstance(row, dict) or any(not isinstance(row.get(k), str)
-                    for k in ("id", "input", "expected", "family")):
+                    for k in ("id", "input", "family")):
                 raise ValueError("Malformed checkpoint case")
+            if row.get("expected") is not None and not isinstance(
+                row.get("expected"), str
+            ):
+                raise ValueError("Malformed checkpoint expected output")
             if not isinstance(row.get("iteration"), int) or isinstance(row["iteration"], bool):
                 raise ValueError("Malformed checkpoint iteration")
             tags = row.get("coverage_tags", [])

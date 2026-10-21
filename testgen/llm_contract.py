@@ -62,7 +62,9 @@ SHAPES = {
     TaskType.GENERATE_SOLUTIONS: dict(correct=list, wrong=list, validator_python=str),
     TaskType.REPLACE_REFERENCE: dict(correct=list),
     TaskType.GENERATE_VALIDATOR: dict(validator_python=str),
-    TaskType.GENERATE_CHECKER: dict(checker_python=str, reasoning=str),
+    TaskType.GENERATE_CHECKER: dict(
+        checker_python=str, requires_expected_output=bool, reasoning=str,
+    ),
     TaskType.GENERATE_MUTANTS: dict(wrong=list),
     TaskType.REPAIR_WITNESSES: dict(witnesses=list),
     TaskType.REPAIR_CASES: dict(repairs=list),

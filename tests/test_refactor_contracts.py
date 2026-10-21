@@ -64,6 +64,22 @@ def checkpoint():
     return RunCheckpoint(1, "suite_locked", "p", cases, report)
 
 
+def test_nullable_expected_output_is_checkpointed_and_locked():
+    cases = (Case("p_i0_001", "1\n", None, "semantic", 0),)
+    lock = suite_lock(list(cases))
+    assert lock["cases"][0]["expected_sha256"] is None
+    report = {
+        "problem_id": "p", "test_suite_lock": lock,
+        "cases": [dict(cases[0].__dict__)],
+    }
+    saved = RunCheckpoint(1, "suite_locked", "p", cases, report)
+    with TemporaryDirectory(dir=ROOT / "tmp") as directory:
+        path = Path(directory) / "checkpoint.json"
+        store = FileRunStore()
+        store.checkpoint(path, saved)
+        assert store.restore(path).cases == cases
+
+
 def test_atomic_write_keeps_previous_commit_when_replace_fails():
     with TemporaryDirectory(dir=ROOT / "tmp") as directory:
         path = Path(directory) / "checkpoint.json"
@@ -131,6 +147,39 @@ def test_certification_batch_preserves_identity_and_requests_repair_without_llm(
     duplicate = certifier.validate_batch("topup", certifier.index_proposals([{"input": "good"}], "topup"), 0)
     assert duplicate.rejected[0]["reason"] == "duplicate input"
     assert len(state.cases) == 1
+
+
+def test_semantic_checker_certifies_cases_without_expected_output():
+    class Judge:
+        def execute_many(self, solution, jobs):
+            return [
+                Result(solution.id, "PASS", case_id, "7\n")
+                for case_id, _input_text in jobs
+            ]
+
+    class SemanticChecker:
+        requires_expected_output = False
+
+        def accepts_case(self, actual, expected, input_text):
+            assert expected is None
+            return actual == "7\n" and input_text == "good\n"
+
+    checker = SemanticChecker()
+    execution = ExecutionService(Judge(), checker)
+    refs = [Solution(name, "candidate_ac", "Python", Path(name)) for name in ("a", "b")]
+    state = CaseCertificationState([], set(), {}, [])
+    certifier = CaseCertification(
+        execution, ReferenceCertification(execution, checker), checker,
+        Solution("validator", "validator", "Python", Path("v")), refs,
+        {}, "p", 0, state,
+    )
+    result = certifier.validate_batch(
+        "initial",
+        certifier.index_proposals([{"input": "good", "family": "semantic"}], "initial"),
+        0,
+    )
+    assert len(result.accepted) == 1
+    assert result.accepted[0].expected is None
 
 
 def test_standalone_generator_does_not_read_neighbor_model():

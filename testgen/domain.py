@@ -29,7 +29,7 @@ class Solution:
 class Case:
     id: str
     input: str
-    expected: str
+    expected: str | None
     family: str
     iteration: int
     coverage_tags: tuple[str, ...] = field(default_factory=tuple)

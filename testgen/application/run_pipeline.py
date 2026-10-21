@@ -216,12 +216,31 @@ class RunPipeline:
                     )
                 except NotImplementedError as error:
                     raise CheckerProvisioningError(str(error)) from error
+            requires_expected_output = (
+                candidate.get("requires_expected_output")
+                if isinstance(candidate, dict) else None
+            )
+            if not isinstance(requires_expected_output, bool):
+                last_reason = (
+                    "LLM checker requires requires_expected_output as a boolean"
+                )
+                rejection_feedback.append({
+                    "attempt": attempt, "stage": "contract",
+                    "reason": last_reason,
+                })
+                self.store.write_json(certification_path, {
+                    "status": "retrying" if attempt < 3 else "rejected",
+                    "attempts": rejection_feedback,
+                })
+                continue
             try:
                 source = self._checker_source(
                     candidate.get("checker_python")
                     if isinstance(candidate, dict) else None
                 )
-                validate_generated_checker_source(source)
+                validate_generated_checker_source(
+                    source, allow_expected=requires_expected_output
+                )
             except (CheckerProvisioningError, GeneratedCheckerSafetyError) as error:
                 last_reason = str(error)
                 rejection_feedback.append({
@@ -241,20 +260,26 @@ class RunPipeline:
                 "script": str(checker_path.resolve()),
                 "function": "accepts",
                 "timeout_seconds": 2.0,
+                "requires_expected_output": requires_expected_output,
             })
             probes = []
             accepted = True
             for index, (input_text, expected) in enumerate(official_samples, 1):
-                official_ok = checker.accepts_case(expected, expected, input_text)
+                checker_expected = (
+                    expected if requires_expected_output else None
+                )
+                official_ok = checker.accepts_case(
+                    expected, checker_expected, input_text
+                )
                 deterministic_ok = checker.accepts_case(
-                    expected, expected, input_text
+                    expected, checker_expected, input_text
                 )
                 invalid_outputs = [
                     "__invalid_output__\n",
                     expected.rstrip() + "\n__extra_invalid_token__\n",
                 ]
                 rejected_invalid = [
-                    not checker.accepts_case(value, expected, input_text)
+                    not checker.accepts_case(value, checker_expected, input_text)
                     for value in invalid_outputs
                 ]
                 row_ok = official_ok and deterministic_ok and all(rejected_invalid)
@@ -271,6 +296,7 @@ class RunPipeline:
                 "trust": "generated_unreviewed",
                 "attempt": attempt,
                 "checker": checker.profile(),
+                "requires_expected_output": requires_expected_output,
                 "reasoning": candidate.get("reasoning", ""),
                 "probes": probes,
                 "rejected_attempts": rejection_feedback,
@@ -281,7 +307,9 @@ class RunPipeline:
                 self.output_checker_certification = certification
                 self._log(
                     "Áp dụng checker do LLM sinh, đã qua static safety và "
-                    "sample probes (trust=generated_unreviewed)"
+                    "sample probes "
+                    f"(requires_expected_output={requires_expected_output}, "
+                    "trust=generated_unreviewed)"
                 )
                 return
             last_reason = "generated checker failed official/negative probes"
@@ -303,11 +331,17 @@ class RunPipeline:
             certification = self.store.read_json(certification_path)
             if certification.get("status") != "accepted":
                 return False
+            requires_expected_output = certification.get(
+                "requires_expected_output", False
+            )
+            if not isinstance(requires_expected_output, bool):
+                return False
             checker = checker_from_profile({
                 "kind": "GENERATED_PYTHON_SCRIPT",
                 "script": str(checker_path.resolve()),
                 "function": "accepts",
                 "timeout_seconds": 2.0,
+                "requires_expected_output": requires_expected_output,
             })
         except (OSError, TypeError, ValueError):
             return False
@@ -389,9 +423,14 @@ class RunPipeline:
             self.store.write_text(
                 tests_dir / f"{case.id}.in", case.input, encoding="utf-8"
             )
-            self.store.write_text(
-                tests_dir / f"{case.id}.out", case.expected, encoding="utf-8"
-            )
+            expected_path = tests_dir / f"{case.id}.out"
+            if case.expected is None:
+                if expected_path.is_file():
+                    expected_path.unlink()
+            else:
+                self.store.write_text(
+                    expected_path, case.expected, encoding="utf-8"
+                )
         locked_suite = suite_lock(cases)
         self.store.write_json(output / "test-suite.lock.json", locked_suite)
         return locked_suite
@@ -426,7 +465,10 @@ class RunPipeline:
             Case(
                 f"{problem_id}_official_{index:03d}",
                 input_text.rstrip("\n") + "\n",
-                expected.rstrip("\n") + "\n",
+                (
+                    expected.rstrip("\n") + "\n"
+                    if self.checker.requires_expected_output else None
+                ),
                 "official-sample",
                 0,
             )

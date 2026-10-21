@@ -19,7 +19,10 @@ class ResumeRun:
             result = dict(checkpoint.report)
             # Detect changed or missing exported files; do not silently judge a different suite.
             for case in cases:
-                for suffix, expected in (("in", case.input), ("out", case.expected)):
+                artifacts = [("in", case.input)]
+                if case.expected is not None:
+                    artifacts.append(("out", case.expected))
+                for suffix, expected in artifacts:
                     path = output / "tests" / f"{case.id}.{suffix}"
                     if not path.is_file() or self.store.read_text(path) != expected:
                         raise ValueError("Certified test files do not match committed checkpoint")
@@ -36,10 +39,12 @@ class ResumeRun:
         cases = []
         for input_path in sorted((output / "tests").glob("*.in")):
             output_path = input_path.with_suffix(".out")
-            if not output_path.is_file():
+            if (not output_path.is_file()
+                    and self.execution.checker.requires_expected_output):
                 raise ValueError(f"Missing expected output for {input_path.name}")
             cases.append(Case(input_path.stem, self.store.read_text(input_path, encoding="utf-8"),
-                              self.store.read_text(output_path, encoding="utf-8"), "certified", 0))
+                              (self.store.read_text(output_path, encoding="utf-8")
+                               if output_path.is_file() else None), "certified", 0))
         if len(cases) != snapshot["cases"]:
             raise ValueError("Certified test count does not match iteration snapshot")
         self.execution._execution_log = output / "executions-llm.jsonl"

@@ -112,7 +112,10 @@ class MutantCertification:
                     or (
                         run.verdict == "PASS"
                         and not self.checker.accepts_case(
-                            run.actual, expected, input_text
+                            run.actual,
+                            (expected
+                             if self.checker.requires_expected_output else None),
+                            input_text,
                         )
                     )
                 )
@@ -186,7 +189,10 @@ class MutantCertification:
                 run.verdict in {"WA", "RE", "TLE"}
                 or (run.verdict == "PASS"
                     and not self.checker.accepts_case(
-                        run.actual, consensus.actual, input_text
+                        run.actual,
+                        (consensus.actual
+                         if self.checker.requires_expected_output else None),
+                        input_text,
                     ))
             )
 

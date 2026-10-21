@@ -10,7 +10,10 @@ def suite_lock(cases: list[Case]) -> dict:
         entries.append({
             "id": case.id,
             "input_sha256": hashlib.sha256(case.input.encode()).hexdigest(),
-            "expected_sha256": hashlib.sha256(case.expected.encode()).hexdigest(),
+            "expected_sha256": (
+                hashlib.sha256(case.expected.encode()).hexdigest()
+                if case.expected is not None else None
+            ),
         })
     encoded = json.dumps(entries, sort_keys=True, separators=(",", ":")).encode()
     return {"sha256": hashlib.sha256(encoded).hexdigest(), "cases": entries}

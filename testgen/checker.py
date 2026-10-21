@@ -16,11 +16,14 @@ from typing import ClassVar
 class Checker(ABC):
     kind: ClassVar[str]
     input_aware: ClassVar[bool] = False
+    requires_expected_output: ClassVar[bool] = True
 
     @abstractmethod
-    def accepts(self, actual: str, expected: str) -> bool: ...
+    def accepts(self, actual: str, expected: str | None) -> bool: ...
 
-    def accepts_case(self, actual: str, expected: str, input_text: str) -> bool:
+    def accepts_case(
+        self, actual: str, expected: str | None, input_text: str
+    ) -> bool:
         """Check one output with access to stdin when a special judge needs it."""
         return self.accepts(actual, expected)
 

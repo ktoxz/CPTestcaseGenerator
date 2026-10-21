@@ -9,7 +9,7 @@ from testgen.checkers.generated_python import (
     strip_unused_imports,
     validate_generated_checker_source,
 )
-from testgen.domain import CaseGenerator, Judge, Result, SolutionGenerator
+from testgen.domain import Case, CaseGenerator, Judge, Result, SolutionGenerator
 
 
 SAFE_CHECKER = """
@@ -50,8 +50,16 @@ class _CheckerCases(CaseGenerator):
     ):
         self.calls.append(list(rejection_feedback or []))
         if len(self.calls) == 1:
-            return {"checker_python": "import os\n", "reasoning": "bad"}
-        return {"checker_python": SAFE_CHECKER, "reasoning": "valid alternatives"}
+            return {
+                "checker_python": "import os\n",
+                "requires_expected_output": False,
+                "reasoning": "bad",
+            }
+        return {
+            "checker_python": SAFE_CHECKER,
+            "requires_expected_output": False,
+            "reasoning": "valid alternatives",
+        }
 
 
 def test_generated_checker_executes_in_subprocess(tmp_path: Path):
@@ -63,7 +71,7 @@ def test_generated_checker_executes_in_subprocess(tmp_path: Path):
         "timeout_seconds": 1.0,
     })
 
-    assert checker.accepts_case("OK\n", "YES\n", "unused\n")
+    assert checker.accepts_case("OK\n", None, "unused\n")
     assert not checker.accepts_case("NO\n", "YES\n", "unused\n")
 
 
@@ -77,6 +85,26 @@ def test_generated_checker_executes_in_subprocess(tmp_path: Path):
 def test_generated_checker_rejects_unsafe_source(source: str):
     with pytest.raises(GeneratedCheckerSafetyError):
         validate_generated_checker_source(source)
+
+
+def test_expected_dependent_checker_requires_explicit_contract(tmp_path: Path):
+    source = (
+        "def accepts(input_text, actual, expected):\n"
+        "    return expected is not None and actual.split() == expected.split()\n"
+    )
+    with pytest.raises(GeneratedCheckerSafetyError, match="requires_expected_output=false"):
+        validate_generated_checker_source(source)
+    validate_generated_checker_source(source, allow_expected=True)
+
+    script = (tmp_path / "expected_checker.py").resolve()
+    script.write_text(source, encoding="utf-8")
+    checker = checker_from_profile({
+        "kind": "GENERATED_PYTHON_SCRIPT",
+        "script": str(script),
+        "requires_expected_output": True,
+    })
+    assert checker.accepts_case("YES\n", "YES\n", "unused\n")
+    assert not checker.accepts_case("YES\n", None, "unused\n")
 
 
 def test_unused_import_is_removed_but_used_import_remains_blocked():
@@ -127,5 +155,13 @@ def test_pipeline_retries_and_certifies_generated_checker(tmp_path: Path):
     assert pipeline.checker.kind == "GENERATED_PYTHON_SCRIPT"
     assert pipeline.output_checker_certification["status"] == "accepted"
     assert pipeline.output_checker_certification["attempt"] == 2
+    assert pipeline.output_checker_certification["requires_expected_output"] is False
+    assert pipeline.checker.requires_expected_output is False
     assert cases.calls[1][0]["stage"] == "static_safety"
     assert (tmp_path / "generated" / "checker-certification.json").is_file()
+
+    semantic_case = Case("semantic_001", "1\n", None, "semantic", 0)
+    locked = pipeline._write_cases_and_lock(tmp_path, [semantic_case])
+    assert locked["cases"][0]["expected_sha256"] is None
+    assert (tmp_path / "tests" / "semantic_001.in").is_file()
+    assert not (tmp_path / "tests" / "semantic_001.out").exists()

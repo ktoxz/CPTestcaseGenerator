@@ -79,7 +79,9 @@ _BANNED_NODES = (
 )
 
 
-def validate_generated_checker_source(source: str) -> ast.Module:
+def validate_generated_checker_source(
+    source: str, *, allow_expected: bool = False
+) -> ast.Module:
     if not isinstance(source, str) or not source.strip():
         raise GeneratedCheckerSafetyError("checker source is empty")
     if len(source) > 30000:
@@ -130,15 +132,20 @@ def validate_generated_checker_source(source: str) -> ast.Module:
         raise GeneratedCheckerSafetyError(
             "accepts must take exactly input_text, actual, expected"
         )
-    if any(
+    reads_expected = any(
         isinstance(node, ast.Name)
         and node.id == "expected"
         and isinstance(node.ctx, ast.Load)
         for node in ast.walk(function)
-    ):
+    )
+    if reads_expected and not allow_expected:
         raise GeneratedCheckerSafetyError(
             "generated checker must validate from input_text and actual; "
-            "reading the non-canonical expected output is forbidden"
+            "reading expected is forbidden when requires_expected_output=false"
+        )
+    if allow_expected and not reads_expected:
+        raise GeneratedCheckerSafetyError(
+            "checker declared requires_expected_output=true but does not read expected"
         )
     for definition in [node for node in tree.body if isinstance(node, ast.FunctionDef)]:
         if definition.decorator_list:
@@ -182,6 +189,7 @@ class GeneratedPythonScriptChecker(Checker):
     script: str
     function: str = "accepts"
     timeout_seconds: float = 2.0
+    requires_expected_output: bool = False
 
     def __post_init__(self) -> None:
         path = Path(self.script)
@@ -191,12 +199,17 @@ class GeneratedPythonScriptChecker(Checker):
             )
         if not 0.1 <= self.timeout_seconds <= 5:
             raise ValueError("generated checker timeout must be between 0.1 and 5s")
-        validate_generated_checker_source(path.read_text(encoding="utf-8"))
+        validate_generated_checker_source(
+            path.read_text(encoding="utf-8"),
+            allow_expected=self.requires_expected_output,
+        )
 
-    def accepts(self, actual: str, expected: str) -> bool:
+    def accepts(self, actual: str, expected: str | None) -> bool:
         return self.accepts_case(actual, expected, "")
 
-    def accepts_case(self, actual: str, expected: str, input_text: str) -> bool:
+    def accepts_case(
+        self, actual: str, expected: str | None, input_text: str
+    ) -> bool:
         runner = Path(__file__).with_name("generated_runner.py")
         payload = json.dumps({
             "input": input_text,
@@ -228,5 +241,6 @@ class GeneratedPythonScriptChecker(Checker):
             "script": self.script,
             "function": self.function,
             "timeout_seconds": self.timeout_seconds,
+            "requires_expected_output": self.requires_expected_output,
             "trust": "generated_unreviewed",
         }
