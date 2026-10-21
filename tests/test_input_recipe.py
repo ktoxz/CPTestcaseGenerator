@@ -2,6 +2,7 @@ import unittest
 
 from testgen.input_recipe import (
     INPUT_RECIPE_INSTRUCTION, MAX_PREDICTED_OUTPUT_CHARS, expand_input,
+    expand_input_field,
 )
 from testgen.ollama import OllamaCaseGenerator
 
@@ -55,6 +56,28 @@ class InputRecipeTests(unittest.TestCase):
             "family": "ambiguous",
         }], 10)
         self.assertEqual(rows, [])
+
+    def test_expands_named_witness_recipe_and_rejects_long_literal(self):
+        row = {
+            "witness_input_parts": [
+                "1000\n",
+                {"text": "1000 ", "repeat": 1000},
+                "\n",
+            ]
+        }
+        value = expand_input_field(
+            row,
+            literal_key="witness_input",
+            parts_key="witness_input_parts",
+        )
+        self.assertTrue(value.startswith("1000\n1000 1000 "))
+        self.assertEqual(len(value.split()), 1001)
+        with self.assertRaisesRegex(ValueError, "use witness_input_parts"):
+            expand_input_field(
+                {"witness_input": "1 " * 1001},
+                literal_key="witness_input",
+                parts_key="witness_input_parts",
+            )
 
     def test_discards_long_predicted_outputs_without_rejecting_case(self):
         rows = OllamaCaseGenerator._valid_rows([{

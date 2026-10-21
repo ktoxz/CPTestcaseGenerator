@@ -671,6 +671,30 @@ class OllamaJsonTests(unittest.TestCase):
         self.assertEqual(urlopen.call_count, 1)
 
     @patch("testgen.ollama.urllib.request.urlopen")
+    def test_mutant_retry_discards_long_raw_witness_and_requires_recipe(
+        self, urlopen
+    ) -> None:
+        oversized = '{"wrong":[{"witness_input":"' + ("1000 " * 500)
+        urlopen.side_effect = [
+            response(oversized),
+            response('{"wrong":[]}'),
+        ]
+        result = OllamaClient("http://ollama.test", "model").ask_json(
+            "original mutant prompt",
+            label="sinh mutant ban đầu",
+            task_type=TaskType.GENERATE_MUTANTS,
+        )
+        self.assertEqual(result, {"wrong": []})
+        retry = json.loads(urlopen.call_args_list[1].args[0].data)
+        retry_text = retry["messages"][-1]["content"]
+        self.assertIn("witness_input_parts", retry_text)
+        self.assertTrue(any(
+            "original mutant prompt" in message["content"]
+            for message in retry["messages"]
+        ))
+        self.assertNotIn("1000 1000 1000", retry_text)
+
+    @patch("testgen.ollama.urllib.request.urlopen")
     def test_retries_valid_json_with_wrong_structure(self, urlopen) -> None:
         urlopen.side_effect = [
             response('{"answer": 1}'),
@@ -835,6 +859,49 @@ class OllamaJsonTests(unittest.TestCase):
             self.assertIn("exactly 7 NEW items", prompt)
             self.assertTrue((output / "mutant-initial.json").is_file())
             self.assertTrue((output / "mutant-initial-validation.json").is_file())
+
+    def test_mutant_generation_expands_compact_witness_recipe(self) -> None:
+        class FakeClient:
+            def __init__(self):
+                self.prompt = ""
+
+            def ask_json(self, prompt, label="Ollama"):
+                self.prompt = prompt
+                return {"wrong": [{
+                    "language": "Python",
+                    "source_code": "print(0)",
+                    "strategy_id": "large-boundary",
+                    "approach": "wrong at maximum size",
+                    "bug_class": "wrong answer",
+                    "bug_origin": "intentional",
+                    "failure_condition": "large repeated values",
+                    "witness_input_parts": [
+                        "1000\n",
+                        {"text": "1000 ", "repeat": 1000},
+                        "\n",
+                    ],
+                    "parent_ac_id": "reference",
+                    "mutation_operator": "replace result",
+                    "target_behavior": "maximum-size input",
+                    "sample_preservation_reason": "samples are smaller",
+                }]}
+
+        with TemporaryDirectory(dir=Path(__file__).resolve().parents[1]) as temp:
+            output = Path(temp)
+            reference = output / "reference.py"
+            reference.write_text("print(1)", encoding="utf-8")
+            client = FakeClient()
+            replacements = OllamaSolutionGenerator(
+                client, ac_count=1, wa_count=1
+            ).regenerate_wrong(
+                "statement", output, 1, [],
+                [Solution("reference", "candidate_ac", "Python", reference)],
+                1,
+            )
+            self.assertEqual(len(replacements), 1)
+            self.assertEqual(len(replacements[0].witness_input.split()), 1001)
+            self.assertIn("witness_input_parts", client.prompt)
+            self.assertIn("never enumerate thousands", client.prompt)
 
     def test_mutant_requests_continue_after_an_empty_model_response(self) -> None:
         class FakeClient:

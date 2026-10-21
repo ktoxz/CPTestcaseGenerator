@@ -16,7 +16,10 @@ from pathlib import Path
 from ...llm_contract import (
     LLMRequest, TaskType, SHAPES, LLMResponseError, LLMTransportError,
 )
-from ...input_recipe import COMPACT_RETRY_INSTRUCTION
+from ...input_recipe import (
+    COMPACT_RETRY_INSTRUCTION,
+    COMPACT_WITNESS_RETRY_INSTRUCTION,
+)
 from pydantic import BaseModel
 
 from ...progress import ConsoleProgress
@@ -388,6 +391,11 @@ class OllamaClient:
             TaskType.REPAIR_CASE,
             TaskType.REPAIR_CASES,
         }
+        compact_witness_task = task_type in {
+            TaskType.GENERATE_MUTANTS,
+            TaskType.GENERATE_WITNESSES,
+            TaskType.REPAIR_WITNESSES,
+        }
         for attempt in range(1, self.json_attempts + 1):
             request_chars = sum(
                 len(str(message.get("content", ""))) for message in messages
@@ -604,6 +612,20 @@ class OllamaClient:
                             "role": "user",
                             "content": (
                                 COMPACT_RETRY_INSTRUCTION
+                                + f" Parser validation error: {error}."
+                            ),
+                        },
+                    ]
+                elif compact_witness_task:
+                    # A long literal witness is the most common source of
+                    # truncated mutant JSON. Re-run from the original request
+                    # and require a locally expandable compact recipe.
+                    messages = [
+                        *original_messages,
+                        {
+                            "role": "user",
+                            "content": (
+                                COMPACT_WITNESS_RETRY_INSTRUCTION
                                 + f" Parser validation error: {error}."
                             ),
                         },

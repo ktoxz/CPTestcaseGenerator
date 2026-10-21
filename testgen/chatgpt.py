@@ -13,7 +13,10 @@ from pathlib import Path
 
 from pydantic import BaseModel
 from .llm_contract import LLMRequest, TaskType, SHAPES, LLMResponseError, LLMTransportError
-from .input_recipe import COMPACT_RETRY_INSTRUCTION
+from .input_recipe import (
+    COMPACT_RETRY_INSTRUCTION,
+    COMPACT_WITNESS_RETRY_INSTRUCTION,
+)
 
 from .infrastructure.llm.ollama import _parse_json_locally
 from .progress import ConsoleProgress
@@ -132,6 +135,11 @@ class ChatGPTClient:
             TaskType.REPAIR_CASE,
             TaskType.REPAIR_CASES,
         }
+        compact_witness_task = task_type in {
+            TaskType.GENERATE_MUTANTS,
+            TaskType.GENERATE_WITNESSES,
+            TaskType.REPAIR_WITNESSES,
+        }
         last_error: Exception | None = None
         for attempt in range(1, self.json_attempts + 1):
             default_prompt_throttle.wait()
@@ -249,6 +257,12 @@ class ChatGPTClient:
                 if compact_case_task:
                     current_prompt = (
                         prompt + "\n" + COMPACT_RETRY_INSTRUCTION
+                        + f"\nParser validation error: {error}."
+                        + schema_instruction
+                    )
+                elif compact_witness_task:
+                    current_prompt = (
+                        prompt + "\n" + COMPACT_WITNESS_RETRY_INSTRUCTION
                         + f"\nParser validation error: {error}."
                         + schema_instruction
                     )

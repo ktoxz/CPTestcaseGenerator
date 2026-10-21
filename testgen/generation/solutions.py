@@ -17,6 +17,11 @@ from pathlib import Path
 from ..domain import Solution, SolutionGenerator
 from ..runtime import RuntimeCatalog
 from ..source_edits import apply_source_edits
+from ..input_recipe import (
+    MUTANT_WITNESS_RECIPE_INSTRUCTION,
+    WITNESS_RECIPE_INSTRUCTION,
+    expand_input_field,
+)
 
 
 from ..llm_contract import LLMClient, TaskType, ask_json, LLMTransportError, LLMResponseError
@@ -975,12 +980,15 @@ class SolutionGenerationService(SolutionGenerator):
             "this batch share the same edit. Each item must contain "
             f"language, {mutation_payload}, "
             "strategy_id, approach, bug_class, bug_origin, failure_condition, "
-            "witness_input, parent_ac_id, mutation_operator, target_behavior, and "
+            "a witness represented by exactly one of witness_input or "
+            "witness_input_parts, plus parent_ac_id, mutation_operator, "
+            "target_behavior, and "
             "sample_preservation_reason. parent_ac_id must name one of the verified "
             "references and language must match that parent. bug_origin must be "
             "intentional, accidental, or "
-            "near_correct. Every witness_input must be a complete valid stdin "
+            "near_correct. Every expanded witness must be a complete valid stdin "
             "payload. "
+            f"{MUTANT_WITNESS_RECIPE_INSTRUCTION} "
             f"{mutation_instructions} "
             "Before returning, compare code against the parent and verify that at "
             "least one executable token changed, not only a comment. Before "
@@ -1065,7 +1073,7 @@ class SolutionGenerationService(SolutionGenerator):
         validation_rows = []
         required = (
             "language", "strategy_id", "approach", "bug_class",
-            "bug_origin", "failure_condition", "witness_input", "parent_ac_id",
+            "bug_origin", "failure_condition", "parent_ac_id",
             "mutation_operator", "target_behavior", "sample_preservation_reason",
         )
         reference_by_id = {row["id"]: row for row in verified_references}
@@ -1083,6 +1091,14 @@ class SolutionGenerationService(SolutionGenerator):
                     "issues": ["item is not an object"],
                 })
                 continue
+            try:
+                witness_input = expand_input_field(
+                    row,
+                    literal_key="witness_input",
+                    parts_key="witness_input_parts",
+                )
+            except ValueError as error:
+                issues.append(str(error))
             code = row.get("code")
             if "code_edits" in row:
                 edit_parent = reference_by_id.get(row.get("parent_ac_id"))
@@ -1179,7 +1195,7 @@ class SolutionGenerationService(SolutionGenerator):
                 strategy_id=row["strategy_id"],
                 bug_origin=row["bug_origin"],
                 failure_condition=row["failure_condition"],
-                witness_input=row["witness_input"],
+                witness_input=witness_input,
                 parent_ac_id=row["parent_ac_id"],
                 mutation_operator=row["mutation_operator"],
                 target_behavior=row["target_behavior"],
@@ -1230,8 +1246,10 @@ class SolutionGenerationService(SolutionGenerator):
             return
         result = ask_json(self.analysis_client, TaskType.GENERATE_WITNESSES,
             "Generate one complete valid stdin witness per mutant that distinguishes it from "
-            "its verified parent. Return JSON {\"witnesses\":[{\"index\":0,\"input\":\"...\"}]}. "
+            "its verified parent. Return JSON with witnesses; each item has index and "
+            "exactly one of input or input_parts. "
             "Use the supplied index. Do not generate or edit code.\n"
+            f"{WITNESS_RECIPE_INSTRUCTION}\n"
             f"<problem>\n{statement}\n</problem>\n"
             f"<references>\n{self._prompt_json(references)}\n</references>\n"
             f"<mutants>\n{self._prompt_json(indexed)}\n</mutants>",
@@ -1244,9 +1262,13 @@ class SolutionGenerationService(SolutionGenerator):
         for witness in witnesses:
             if not isinstance(witness, dict):
                 continue
-            index, value = witness.get("index"), witness.get("input")
+            index = witness.get("index")
+            try:
+                value = expand_input_field(witness)
+            except ValueError:
+                continue
             if (type(index) is int and 0 <= index < len(rows)
-                    and isinstance(rows[index], dict) and isinstance(value, str)):
+                    and isinstance(rows[index], dict)):
                 rows[index]["witness_input"] = value
 
     def generate_mutant_witnesses(
@@ -1358,9 +1380,11 @@ class SolutionGenerationService(SolutionGenerator):
                     "reorder only tokens required by the authoritative input format. "
                     "Return JSON with key witnesses containing one item per "
                     "supplied solution_id. Its candidates must contain exactly "
-                    f"{requested_candidates} objects with input and reasoning. Every "
+                    f"{requested_candidates} objects with reasoning and exactly one "
+                    "of input or input_parts. Every expanded "
                     "input must be a complete stdin payload accepted by the stated "
                     "input contract. Return JSON only.\n"
+                    f"{WITNESS_RECIPE_INSTRUCTION}\n"
                     f"<input_contract>\n{self._input_contract(statement)}\n"
                     "</input_contract>\n"
                     f"<witness_to_repair>\n{self._prompt_json(mutant_rows)}\n"
@@ -1372,13 +1396,15 @@ class SolutionGenerationService(SolutionGenerator):
                     "mutant below. Do NOT write or modify program source code. Return "
                     "JSON with key witnesses containing one item per "
                     "supplied solution_id. Its candidates must be an array of exactly "
-                    f"{requested_candidates} objects, each with input and reasoning. "
-                    "Every input must be a complete valid stdin payload that makes the "
+                    f"{requested_candidates} objects, each with reasoning and exactly "
+                    "one of input or input_parts. Every expanded input must be a "
+                    "complete valid stdin payload that makes the "
                     "mutant differ from its reference, or deterministically RE/TLE. "
                     "Trace the parent source plus the supplied mutation diff; do not "
                     "trust a failure condition disproved by execution evidence. Do not "
                     "repeat attempted inputs. Prefer small counterexamples. Return JSON "
                     "only. The external CodeNet oracle is unavailable.\n"
+                    f"{WITNESS_RECIPE_INSTRUCTION}\n"
                     "<verified_parent>\n"
                     f"{self._prompt_json(list(parent_rows.values()))}\n"
                     "</verified_parent>\n"
@@ -1419,10 +1445,13 @@ class SolutionGenerationService(SolutionGenerator):
                     seen.add(original)
                 accepted = proposals.setdefault(solution_id, [])
                 for candidate in raw_candidates:
-                    input_text = (
-                        candidate.get("input", "")
-                        if isinstance(candidate, dict) else candidate
-                    )
+                    if isinstance(candidate, dict):
+                        try:
+                            input_text = expand_input_field(candidate)
+                        except ValueError:
+                            continue
+                    else:
+                        input_text = candidate
                     if not isinstance(input_text, str) or not input_text.strip():
                         continue
                     normalized = input_text.strip()

@@ -66,6 +66,7 @@ SHAPES = {
         checker_python=str, requires_expected_output=bool, reasoning=str,
     ),
     TaskType.GENERATE_MUTANTS: dict(wrong=list),
+    TaskType.GENERATE_WITNESSES: dict(witnesses=list),
     TaskType.REPAIR_WITNESSES: dict(witnesses=list),
     TaskType.REPAIR_CASES: dict(repairs=list),
     TaskType.GENERATE_CASES: dict(cases=list),
