@@ -91,6 +91,43 @@ class MainBatchTests(unittest.TestCase):
             "--output=custom",
         ]), ["--judge=remote"])
 
+    def test_degraded_report_counts_as_completed_not_failed(self) -> None:
+        TEST_TMP.mkdir(exist_ok=True)
+        with TemporaryDirectory(dir=TEST_TMP) as directory:
+            root = Path(directory)
+            problems = root / "data" / "problems"
+            problems.mkdir(parents=True)
+            make_problem(problems, "p02548")
+            output = root / "output"
+            args = argparse.Namespace(
+                statement=None, resume_oracle=None, oracle_cache=None,
+                problem_range=None, problems=["p02548"], output=output,
+                batch_fail_fast=False,
+            )
+
+            def fake_run(command, **kwargs):
+                dest = Path(command[command.index("--output") + 1])
+                dest.mkdir(parents=True)
+                (dest / "report.json").write_text(json.dumps({
+                    "quality_status": "degraded",
+                    "degradation_reasons": [{"stage": "generation"}],
+                    "oracle_status": "completed",
+                    "cases": [{}],
+                }), encoding="utf-8")
+                return subprocess.CompletedProcess(command, 0)
+
+            with patch("main.ROOT", root), \
+                    patch("main.subprocess.run", side_effect=fake_run), \
+                    redirect_stdout(io.StringIO()):
+                run_batch(args, [], argparse.ArgumentParser())
+
+            saved = json.loads(
+                (output / "batch-report.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(saved["degraded"], 1)
+            self.assertEqual(saved["failed"], 0)
+            self.assertEqual(saved["results"][0]["status"], "degraded")
+
 
 if __name__ == "__main__":
     unittest.main()

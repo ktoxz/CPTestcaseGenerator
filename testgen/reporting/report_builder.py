@@ -5,7 +5,13 @@ from ..evaluation.metrics import metrics
 def build_report(problem_id, refinement, pool, test_model, locked_suite,
                  holdout_metrics, holdout_verdicts, *, judge_workers, compile_workers,
                  batch_size, latency_summary):
+    degradation_reasons = list(getattr(refinement, "degradation_reasons", []))
+    stop_met = bool(refinement.snapshot["stop_criteria"]["met"])
+    quality_status = "qualified" if stop_met and not degradation_reasons else "degraded"
     result = {"problem_id": problem_id, "iterations_used": refinement.iteration + 1,
+              "quality_status": quality_status,
+              "degradation_reasons": degradation_reasons,
+              "oracle_status": "not_requested",
               "llm_metrics": metrics(pool.candidates, refinement.latest, "candidate_ac", "candidate_wa"),
               "llm_holdout_metrics": holdout_metrics,
               "cases": [case_record(case) for case in refinement.cases], "quarantined": refinement.quarantined,

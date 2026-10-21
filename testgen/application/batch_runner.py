@@ -114,6 +114,7 @@ def run_batch(args: argparse.Namespace, raw_args: list[str], parser: argparse.Ar
         "total": len(problems),
         "completed": 0,
         "succeeded": 0,
+        "degraded": 0,
         "failed": 0,
         "results": [],
     }
@@ -160,6 +161,9 @@ def run_batch(args: argparse.Namespace, raw_args: list[str], parser: argparse.Ar
         }
         if problem_report_path.is_file():
             problem_report = json.loads(problem_report_path.read_text(encoding="utf-8"))
+            if (completed.returncode == 0
+                    and problem_report.get("quality_status") == "degraded"):
+                result["status"] = "degraded"
             result.update({
                 "cases": len(problem_report.get("cases", [])),
                 "stop_reason": problem_report.get("stop_reason"),
@@ -168,6 +172,9 @@ def run_batch(args: argparse.Namespace, raw_args: list[str], parser: argparse.Ar
                 "coverage": problem_report.get("coverage"),
                 "oracle_metrics": problem_report.get("oracle_metrics"),
                 "generation_latency": problem_report.get("generation_latency"),
+                "quality_status": problem_report.get("quality_status"),
+                "degradation_reasons": problem_report.get("degradation_reasons", []),
+                "oracle_status": problem_report.get("oracle_status"),
             })
         batch_report["results"].append(result)
         batch_report["completed"] += 1
@@ -189,6 +196,7 @@ def run_batch(args: argparse.Namespace, raw_args: list[str], parser: argparse.Ar
         "total": batch_report["total"],
         "completed": batch_report["completed"],
         "succeeded": batch_report["succeeded"],
+        "degraded": batch_report["degraded"],
         "failed": batch_report["failed"],
     }, ensure_ascii=False, indent=2))
     if batch_report["failed"]:

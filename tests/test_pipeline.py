@@ -12,6 +12,7 @@ from testgen.coverage import coverage_summary, normalize_test_model
 from testgen.domain import Case, CaseGenerator, Judge, OracleSource, Result, Solution, SolutionGenerator
 from testgen.pipeline import Pipeline, dynamic_case_bounds, metrics, samples, merge_certified_coverage
 from testgen.progress import ConsoleProgress
+from testgen.llm_contract import LLMTransportError
 from testgen.runtime import RuntimeCatalog
 
 
@@ -326,6 +327,78 @@ class PipelineTests(unittest.TestCase):
             self.assertEqual(report["llm_metrics"]["tpr_label_based"], 1.0)
             self.assertEqual(report["llm_metrics"]["tnr_label_based"], 1.0)
             self.assertTrue((output / "report.json").exists())
+
+    def test_generation_failure_returns_locked_degraded_samples_and_runs_oracle(self):
+        class UnavailableSolutions(SolutionGenerator):
+            def generate(self, statement, output):
+                raise LLMTransportError("all generation providers unavailable")
+
+        class FakeOracle:
+            def fetch(self, problem_id, output, per_label):
+                output.mkdir(parents=True, exist_ok=True)
+                source = output / "oracle.py"
+                source.write_text("# oracle", encoding="utf-8")
+                return [
+                    Solution("oracle-ac", "CodeNet Accepted", "Python", source),
+                    Solution("oracle-wa", "CodeNet Wrong Answer", "Python", source),
+                ]
+
+        statement = (
+            "## Sample Input\n\n```text\n1 2\n```\n\n"
+            "## Output for the Sample Input\n\n```text\n1.000\n```\n"
+        )
+        with TemporaryDirectory(dir=Path(__file__).resolve().parents[1]) as temp:
+            output = Path(temp)
+            report = Pipeline(
+                UnavailableSolutions(), FakeCases(), FakeJudge(),
+                checker_from_profile({"kind": "TOKEN"}),
+                oracle=FakeOracle(),
+            ).run(
+                "p00004", statement, output, iterations=1,
+                use_oracle=True, oracle_limit=1,
+            )
+
+            self.assertEqual(report["quality_status"], "degraded")
+            self.assertEqual(report["stop_reason"], "degraded_official_samples")
+            self.assertEqual(report["oracle_status"], "completed")
+            self.assertEqual(len(report["cases"]), 1)
+            self.assertEqual(report["cases"][0]["family"], "official-sample")
+            self.assertIn("oracle_metrics", report)
+            self.assertTrue((output / "test-suite.lock.json").is_file())
+            self.assertTrue((output / "tests" / "p00004_official_001.in").is_file())
+
+    def test_oracle_failure_keeps_degraded_testcases_and_report(self):
+        class UnavailableSolutions(SolutionGenerator):
+            def generate(self, statement, output):
+                raise LLMTransportError("generation unavailable")
+
+        class UnavailableOracle:
+            def fetch(self, problem_id, output, per_label):
+                raise RuntimeError("oracle host unavailable")
+
+        statement = (
+            "## Sample Input\n\n```text\n1 2\n```\n\n"
+            "## Output for the Sample Input\n\n```text\n1.000\n```\n"
+        )
+        with TemporaryDirectory(dir=Path(__file__).resolve().parents[1]) as temp:
+            output = Path(temp)
+            report = Pipeline(
+                UnavailableSolutions(), FakeCases(), FakeJudge(),
+                checker_from_profile({"kind": "TOKEN"}),
+                oracle=UnavailableOracle(),
+            ).run(
+                "p00004", statement, output, iterations=1,
+                use_oracle=True, oracle_limit=1,
+            )
+
+            self.assertEqual(report["quality_status"], "degraded")
+            self.assertEqual(report["oracle_status"], "failed")
+            self.assertEqual(len(report["cases"]), 1)
+            self.assertEqual(report["degradation_reasons"][-1]["stage"], "oracle")
+            persisted = json.loads(
+                (output / "report.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(persisted["oracle_status"], "failed")
 
     def test_failed_references_are_replenished_before_pipeline_aborts(self):
         class ReferenceReplacingSolutions(SolutionGenerator):

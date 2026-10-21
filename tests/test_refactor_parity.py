@@ -63,4 +63,13 @@ def run(cls, scenario):
 @pytest.mark.parametrize("scenario", ["basic", "holdout", "repair"])
 def test_report_and_artifact_parity(scenario):
     expected = json.loads((ROOT / "tests/fixtures/refactor" / (scenario + ".json")).read_text(encoding="utf-8"))
+    # Standard_v1 intentionally extends the report schema. Keep the historical
+    # golden payload stable while making the additive quality/oracle state
+    # explicit in both returned and persisted reports.
+    for report in (expected["report"], expected["artifacts"]["report.json"]):
+        report["quality_status"] = (
+            "qualified" if report["stop_criteria"]["met"] else "degraded"
+        )
+        report["degradation_reasons"] = []
+        report["oracle_status"] = "not_requested"
     assert run(Pipeline, scenario) == expected

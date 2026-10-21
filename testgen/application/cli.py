@@ -409,6 +409,9 @@ def main() -> None:
     except InfrastructureError as exc:
         raise SystemExit(f"Judge infrastructure failed; partial output: {output}\n{exc}") from None
     print(json.dumps({"report": str(output / "report.json"), "cases": len(report["cases"]),
+                      "quality_status": report.get("quality_status"),
+                      "degradation_reasons": report.get("degradation_reasons", []),
+                      "oracle_status": report.get("oracle_status"),
                       "llm_metrics": report["llm_metrics"],
                       "llm_holdout_metrics": report.get("llm_holdout_metrics"),
                       "coverage": report.get("coverage"),

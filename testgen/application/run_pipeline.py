@@ -16,9 +16,12 @@ from ..application.resume_run import ResumeRun
 from ..certification.reference_pool import ReferencePoolBuilder
 from ..reporting.report_builder import build_report
 from ..checker import Checker, checker_from_profile
-from ..coverage import normalize_test_model
+from ..coverage import coverage_summary, normalize_test_model
+from ..evaluation.metrics import metrics
+from ..llm_contract import LLMResponseError, LLMTransportError
+from ..throttle import EndpointBusyError
 from ..generation.test_model import _statement_sandbox_limits
-from ..domain import CaseGenerator, Judge, OracleSource, Solution, SolutionGenerator
+from ..domain import Case, CaseGenerator, Judge, OracleSource, Solution, SolutionGenerator
 from ..progress import ConsoleProgress
 
 
@@ -27,7 +30,18 @@ from ..problem import samples, requires_input_aware_checker, _has_sample_section
 from ..evaluation.holdout import HoldoutEvaluator
 
 
-from ..suite import suite_lock
+from ..suite import case_record, suite_lock
+
+
+DEGRADABLE_PIPELINE_ERRORS = (
+    LLMTransportError,
+    LLMResponseError,
+    EndpointBusyError,
+    TimeoutError,
+    ConnectionError,
+    OSError,
+    RuntimeError,
+)
 
 
 class RunPipeline:
@@ -199,7 +213,165 @@ class RunPipeline:
                          ExternalEvaluator(self.oracle, self.execution)).run(
                              problem_id, output, oracle_limit)
 
+    @staticmethod
+    def _degradation_reason(stage: str, error: BaseException) -> dict:
+        return {
+            "stage": stage,
+            "error_type": type(error).__name__,
+            "message": str(error),
+        }
+
+    def _write_cases_and_lock(self, output: Path, cases: list[Case]) -> dict:
+        tests_dir = output / "tests"
+        tests_dir.mkdir(parents=True, exist_ok=True)
+        for case in cases:
+            self.store.write_text(
+                tests_dir / f"{case.id}.in", case.input, encoding="utf-8"
+            )
+            self.store.write_text(
+                tests_dir / f"{case.id}.out", case.expected, encoding="utf-8"
+            )
+        locked_suite = suite_lock(cases)
+        self.store.write_json(output / "test-suite.lock.json", locked_suite)
+        return locked_suite
+
+    def _append_oracle_safely(
+        self, result: dict, problem_id: str, output: Path,
+        cases: list[Case], oracle_limit: int,
+    ) -> None:
+        result["oracle_status"] = "running"
+        try:
+            self._append_oracle(result, problem_id, output, cases, oracle_limit)
+        except (RuntimeError, ValueError, TimeoutError, OSError,
+                ConnectionError) as error:
+            result["oracle_status"] = "failed"
+            result["quality_status"] = "degraded"
+            result.setdefault("degradation_reasons", []).append(
+                self._degradation_reason("oracle", error)
+            )
+            self._log(
+                f"Oracle lỗi; vẫn giữ test suite đã khóa: "
+                f"{type(error).__name__}: {error}"
+            )
+        else:
+            result["oracle_status"] = "completed"
+
+    def _degraded_from_official_samples(
+        self, problem_id: str, statement: str, output: Path,
+        official_samples: list[tuple[str, str]], error: BaseException,
+        *, use_oracle: bool, oracle_limit: int, generation_started: float,
+    ) -> dict:
+        cases = [
+            Case(
+                f"{problem_id}_official_{index:03d}",
+                input_text.rstrip("\n") + "\n",
+                expected.rstrip("\n") + "\n",
+                "official-sample",
+                0,
+            )
+            for index, (input_text, expected) in enumerate(official_samples, 1)
+        ]
+        locked_suite = self._write_cases_and_lock(output, cases)
+        model_path = output / "test-model.json"
+        try:
+            test_model = normalize_test_model(
+                self.store.read_json(model_path) if model_path.is_file() else {}
+            )
+        except (OSError, TypeError, ValueError):
+            test_model = normalize_test_model({})
+        reason = self._degradation_reason("generation", error)
+        stop_criteria = {
+            "met": False,
+            "reason": "generation_failed_official_samples_preserved",
+        }
+        result = {
+            "problem_id": problem_id,
+            "iterations_used": 0,
+            "quality_status": "degraded",
+            "degradation_reasons": [reason],
+            "oracle_status": "not_requested",
+            "llm_metrics": metrics([], {}, "candidate_ac", "candidate_wa"),
+            "llm_holdout_metrics": metrics([], {}, "candidate_ac", "candidate_wa"),
+            "cases": [case_record(case) for case in cases],
+            "quarantined": [],
+            "llm_verdicts": {},
+            "llm_holdout_verdicts": {},
+            "test_model": test_model,
+            "coverage": coverage_summary(test_model, cases),
+            "stop_reason": "degraded_official_samples",
+            "stop_criteria": stop_criteria,
+            "mutant_certification": {
+                "stage_status": "skipped_due_to_degraded_generation",
+                "requested_wrong_candidates": 0,
+                "validated_wrong_candidates": 0,
+                "strict_sample_preserving_verified": 0,
+                "official_sample_fallback_used": [],
+                "holdout_mutants": [],
+            },
+            "candidate_contexts": {},
+            "test_suite_lock": locked_suite,
+            "experiment_protocol": {
+                "baseline_generation_pool": "statement and test model only",
+                "test_generation_pool": "official samples only after generation failure",
+                "external_evaluation_pool": "CodeNet oracle",
+                "oracle_used_for_generation_or_refinement": False,
+                "llm_execution_log": "executions-llm.jsonl",
+                "oracle_execution_log": "oracle/executions.jsonl",
+                "degraded_fallback": "official samples copied verbatim and suite locked",
+            },
+            "latency": {"log": "latency.jsonl", "summary": self._latency_report()},
+        }
+        elapsed = time.monotonic() - generation_started
+        result["generation_latency"] = {
+            "elapsed_seconds": round(elapsed, 3),
+            "target_seconds": 180,
+            "target_met": elapsed <= 180,
+            "scope": "startup through locked degraded official-sample suite",
+            "quality_criteria_met": False,
+        }
+        self.store.write_json(output / "report.json", result)
+        self.store.checkpoint(
+            output / "checkpoint.json",
+            RunCheckpoint(1, "suite_locked", problem_id, tuple(cases), result),
+        )
+        if use_oracle:
+            self._append_oracle_safely(
+                result, problem_id, output, cases, oracle_limit
+            )
+        self.store.write_json(output / "report.json", result)
+        self._log(
+            f"Degraded: trả {len(cases)} official testcase; "
+            f"báo cáo={output / 'report.json'}"
+        )
+        return result
+
     def run(self, problem_id: str, statement: str, output: Path, *,
+            iterations: int = 3, oracle_limit: int = 100, use_oracle: bool = False,
+            started_at: float | None = None) -> dict:
+        generation_started = time.monotonic() if started_at is None else started_at
+        try:
+            return self._run_primary(
+                problem_id, statement, output, iterations=iterations,
+                oracle_limit=oracle_limit, use_oracle=use_oracle,
+                started_at=generation_started,
+            )
+        except DEGRADABLE_PIPELINE_ERRORS as error:
+            official_samples = samples(statement)
+            if not official_samples:
+                raise
+            output.mkdir(parents=True, exist_ok=True)
+            self._execution_log = output / "executions-llm.jsonl"
+            self._log(
+                f"Pipeline generation lỗi; chuyển sang official-sample degraded: "
+                f"{type(error).__name__}: {error}"
+            )
+            return self._degraded_from_official_samples(
+                problem_id, statement, output, official_samples, error,
+                use_oracle=use_oracle, oracle_limit=oracle_limit,
+                generation_started=generation_started,
+            )
+
+    def _run_primary(self, problem_id: str, statement: str, output: Path, *,
             iterations: int = 3, oracle_limit: int = 100, use_oracle: bool = False,
             started_at: float | None = None) -> dict:
         generation_started = time.monotonic() if started_at is None else started_at
@@ -284,13 +456,7 @@ class RunPipeline:
               certification_records, certification_summary)
         cases = refinement.cases
         snapshot = refinement.snapshot
-        tests_dir = output / "tests"
-        tests_dir.mkdir(exist_ok=True)
-        for case in cases:
-            self.store.write_text(tests_dir / f"{case.id}.in", case.input, encoding="utf-8")
-            self.store.write_text(tests_dir / f"{case.id}.out", case.expected, encoding="utf-8")
-        locked_suite = suite_lock(cases)
-        self.store.write_json(output / "test-suite.lock.json", locked_suite)
+        locked_suite = self._write_cases_and_lock(output, cases)
         holdout = HoldoutEvaluator(self.execution).evaluate(
             pool, cases, refinement.latest, locked_suite, output)
         result = build_report(
@@ -312,7 +478,9 @@ class RunPipeline:
         self.store.checkpoint(output / "checkpoint.json",
                               RunCheckpoint(1, "suite_locked", problem_id, tuple(cases), result))
         if use_oracle:
-            self._append_oracle(result, problem_id, output, cases, oracle_limit)
+            self._append_oracle_safely(
+                result, problem_id, output, cases, oracle_limit
+            )
         self.store.write_json(output / "report.json", result)
         self._log(f"Đã ghi báo cáo: {output / 'report.json'}")
         return result

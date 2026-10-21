@@ -3,15 +3,19 @@
 from __future__ import annotations
 
 import json
+import http.client
 import queue
 import re
 import sys
 import threading
 import time
 import urllib.request
+import urllib.error
 from pathlib import Path
 
-from ...llm_contract import LLMRequest, TaskType, SHAPES, LLMResponseError
+from ...llm_contract import (
+    LLMRequest, TaskType, SHAPES, LLMResponseError, LLMTransportError,
+)
 from pydantic import BaseModel
 
 from ...progress import ConsoleProgress
@@ -144,6 +148,7 @@ class OllamaClient:
                  raw_output_dir: Path | None = None,
                  timeout_seconds: int = 50,
                  api_style: str = "ollama",
+                 api_key: str | None = None,
                  max_output_tokens: int = 4096,
                  soft_timeout_seconds: float = 50,
                  soft_timeout_retry_delay_seconds: float = 2,
@@ -176,6 +181,7 @@ class OllamaClient:
         self.raw_output_dir = raw_output_dir
         self.timeout_seconds = timeout_seconds
         self.api_style = api_style
+        self.api_key = api_key
         self.max_output_tokens = max_output_tokens
         # These legacy soft-timeout fields remain accepted for config/API
         # compatibility. A timed-out HTTP request is never resent to the same
@@ -293,6 +299,54 @@ class OllamaClient:
             request, request_deadline, endpoint_lease
         )
 
+    def _load_envelope_with_transport_retries(
+        self,
+        request: urllib.request.Request,
+        label: str,
+        attempt: int,
+        endpoint_lease: int,
+        *,
+        max_attempts: int = 3,
+    ) -> dict:
+        """Retry connection-level failures without retrying hard timeouts.
+
+        A hard timeout may leave work running on the server and is deliberately
+        not retried. Connection refusal/reset and transient gateway responses
+        are safe to retry because no usable response was received.
+        """
+        lease = endpoint_lease
+        retryable_statuses = {429, 500, 502, 503, 504}
+        for transport_attempt in range(1, max_attempts + 1):
+            try:
+                return self._load_envelope_once(request, label, attempt, lease)
+            except TimeoutError:
+                raise
+            except urllib.error.HTTPError as error:
+                retryable = error.code in retryable_statuses
+                last_error = error
+            except urllib.error.URLError as error:
+                if isinstance(error.reason, TimeoutError):
+                    raise TimeoutError(str(error)) from error
+                retryable = True
+                last_error = error
+            except (http.client.RemoteDisconnected, ConnectionError) as error:
+                retryable = True
+                last_error = error
+            if not retryable or transport_attempt == max_attempts:
+                raise LLMTransportError(
+                    f"LLM HTTP request failed after {transport_attempt} "
+                    f"attempt(s): {type(last_error).__name__}: {last_error}"
+                ) from last_error
+            delay = min(4.0, 0.5 * (2 ** (transport_attempt - 1)))
+            if self.progress:
+                self.progress.log(
+                    f"LLM transport retry {transport_attempt + 1}/{max_attempts} "
+                    f"cho {label} sau {type(last_error).__name__}"
+                )
+            time.sleep(delay)
+            lease = self._endpoint_gate.acquire(self.url)
+        raise AssertionError("unreachable")
+
     def ask(self, request: LLMRequest) -> dict:
         return self.ask_json(request.prompt, request.label, request.response_model,
                              task_type=request.task_type)
@@ -381,10 +435,13 @@ class OllamaClient:
                 else:
                     payload["format"] = schema
             body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+            headers = {"Content-Type": "application/json"}
+            if self.api_key:
+                headers["Authorization"] = f"Bearer {self.api_key}"
             request = urllib.request.Request(
                 self.url + endpoint,
                 data=body,
-                headers={"Content-Type": "application/json"},
+                headers=headers,
             )
             # Acquire only after the complete request is ready. The endpoint
             # gate waits out a successful-request cooldown, but refuses to
@@ -402,7 +459,7 @@ class OllamaClient:
                     f"prompt_chars={request_chars}; thinking={thinking_mode}"
                 )
             try:
-                envelope = self._load_envelope_once(
+                envelope = self._load_envelope_with_transport_retries(
                     request, label, attempt, endpoint_lease
                 )
                 raw = (

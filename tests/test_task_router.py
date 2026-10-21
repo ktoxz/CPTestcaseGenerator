@@ -1,6 +1,8 @@
 import unittest
 
-from testgen.llm_contract import LLMRequest, TaskType
+from testgen.llm_contract import (
+    FailurePolicy, LLMRequest, LLMTransportError, TaskType,
+)
 from testgen.task_router import FINETUNED_TESTGEN_TASKS, TaskRoutingLLMClient
 
 
@@ -20,6 +22,16 @@ class RecordingProgress:
 
     def log(self, message: str) -> None:
         self.messages.append(message)
+
+
+class FailingClient:
+    def __init__(self, error: BaseException) -> None:
+        self.error = error
+        self.requests: list[LLMRequest] = []
+
+    def ask(self, request: LLMRequest) -> dict:
+        self.requests.append(request)
+        raise self.error
 
 
 class TaskRoutingLLMClientTests(unittest.TestCase):
@@ -73,6 +85,58 @@ class TaskRoutingLLMClientTests(unittest.TestCase):
                 "LLM route: task=generate_validator; provider=Ollama/general",
             ],
         )
+
+    def test_specialized_transport_failure_falls_back_to_ollama(self) -> None:
+        failing = FailingClient(LLMTransportError("llama is down"))
+        router = TaskRoutingLLMClient(
+            self.ollama,
+            {TaskType.GENERATE_CASES: failing},
+            default_name="Ollama/general",
+            task_names={TaskType.GENERATE_CASES: "llama/testgen"},
+            progress=self.progress,
+        )
+
+        result = router.ask(LLMRequest(TaskType.GENERATE_CASES, "prompt"))
+
+        self.assertEqual(result["provider"], "ollama")
+        self.assertEqual(len(failing.requests), 1)
+        self.assertEqual(len(self.ollama.requests), 1)
+        self.assertTrue(any("fallback=Ollama/general" in row
+                            for row in self.progress.messages))
+
+    def test_optional_task_returns_neutral_when_both_routes_fail(self) -> None:
+        router = TaskRoutingLLMClient(
+            FailingClient(LLMTransportError("ollama down")),
+            {TaskType.GENERATE_CASES:
+             FailingClient(LLMTransportError("llama down"))},
+        )
+
+        result = router.ask(LLMRequest(
+            TaskType.GENERATE_CASES, "prompt",
+            failure_policy=FailurePolicy.OPTIONAL,
+        ))
+
+        self.assertEqual(result["cases"], [])
+        self.assertEqual(result["requested_count"], 0)
+
+    def test_required_task_raises_when_both_routes_fail(self) -> None:
+        router = TaskRoutingLLMClient(
+            FailingClient(LLMTransportError("ollama down")),
+            {TaskType.GENERATE_CASES:
+             FailingClient(LLMTransportError("llama down"))},
+        )
+
+        with self.assertRaisesRegex(LLMTransportError, "All routed"):
+            router.ask(LLMRequest(TaskType.GENERATE_CASES, "prompt"))
+
+    def test_programming_error_is_not_swallowed(self) -> None:
+        router = TaskRoutingLLMClient(
+            self.ollama,
+            {TaskType.GENERATE_CASES: FailingClient(AssertionError("bug"))},
+        )
+
+        with self.assertRaisesRegex(AssertionError, "bug"):
+            router.ask(LLMRequest(TaskType.GENERATE_CASES, "prompt"))
 
 
 if __name__ == "__main__":

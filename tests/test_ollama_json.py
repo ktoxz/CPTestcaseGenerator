@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import io
+import http.client
 import json
 import re
 import threading
 import time
 import unittest
+import urllib.error
 from contextlib import redirect_stderr
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -324,6 +326,52 @@ class OllamaJsonTests(unittest.TestCase):
         self.assertEqual(payload["max_tokens"], 4096)
         self.assertEqual(payload["response_format"], {"type": "json_object"})
         self.assertNotIn("format", payload)
+
+    @patch("testgen.infrastructure.llm.ollama.time.sleep")
+    @patch("testgen.ollama.urllib.request.urlopen")
+    def test_transient_gateway_error_is_retried(self, urlopen, sleep) -> None:
+        urlopen.side_effect = [
+            urllib.error.HTTPError(
+                "http://llama.test/v1/chat/completions", 502,
+                "Bad Gateway", {}, None,
+            ),
+            openai_response('{"cases":[]}'),
+        ]
+
+        result = OllamaClient(
+            "http://llama.test", "gemma-local", api_style="openai",
+        ).ask_json("prompt", task_type=TaskType.GENERATE_CASES)
+
+        self.assertEqual(result, {"cases": []})
+        self.assertEqual(urlopen.call_count, 2)
+        sleep.assert_called_once_with(0.5)
+
+    @patch("testgen.infrastructure.llm.ollama.time.sleep")
+    @patch("testgen.ollama.urllib.request.urlopen")
+    def test_remote_disconnect_is_retried(self, urlopen, sleep) -> None:
+        urlopen.side_effect = [
+            http.client.RemoteDisconnected("closed"),
+            openai_response('{"cases":[]}'),
+        ]
+
+        result = OllamaClient(
+            "http://llama.test", "gemma-local", api_style="openai",
+        ).ask_json("prompt", task_type=TaskType.GENERATE_CASES)
+
+        self.assertEqual(result, {"cases": []})
+        self.assertEqual(urlopen.call_count, 2)
+
+    @patch("testgen.ollama.urllib.request.urlopen")
+    def test_openai_api_key_is_sent_as_bearer_token(self, urlopen) -> None:
+        urlopen.return_value = openai_response('{"cases":[]}')
+
+        OllamaClient(
+            "http://llama.test", "gemma-local", api_style="openai",
+            api_key="secret-token",
+        ).ask_json("prompt", task_type=TaskType.GENERATE_CASES)
+
+        request = urlopen.call_args.args[0]
+        self.assertEqual(request.get_header("Authorization"), "Bearer secret-token")
 
     def test_compact_mutant_rejection_keeps_actionable_sample_input(self) -> None:
         compact = OllamaSolutionGenerator._compact_mutant_rejection({
