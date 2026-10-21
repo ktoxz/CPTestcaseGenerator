@@ -2,10 +2,12 @@
 
 MAX_INPUT_CHARS = 2_000_000
 MAX_ITEMS = 200_000
+MAX_LITERAL_INPUT_CHARS = 2_000
 
 INPUT_RECIPE_INSTRUCTION = (
-    " Keep each literal input under 2000 characters. For larger/stress inputs, "
-    "omit input and provide input_parts: an array concatenated locally. Each "
+    f" Keep each literal input at most {MAX_LITERAL_INPUT_CHARS} characters. "
+    "For larger/stress inputs, you MUST omit input and provide input_parts: "
+    "an array concatenated locally. Never return both input and input_parts. Each "
     "part is a literal string, {text:string,repeat:integer}, or "
     "{start:integer,step:integer,count:integer,separator:string}. A sequence "
     "joins count integers start+i*step using separator (no trailing separator). "
@@ -15,6 +17,17 @@ INPUT_RECIPE_INSTRUCTION = (
     "bounds, ordering and uniqueness exactly. Never write ellipses, comments, "
     "or thousands of literal numbers in input. All other case fields remain "
     "required. Keep explanations to one short sentence."
+)
+
+
+COMPACT_RETRY_INSTRUCTION = (
+    "The previous testcase response was invalid, oversized, truncated, or "
+    "repetitive. Discard it completely and regenerate the requested JSON from "
+    "the original task. Use compact input recipes: any stdin longer than 2000 "
+    "characters MUST be represented only by input_parts with repeat or numeric "
+    "sequence objects. Never enumerate long arrays, never return both input and "
+    "input_parts, never use ellipses, and keep explanations to one short "
+    "sentence. Return one complete JSON object only, without Markdown."
 )
 
 

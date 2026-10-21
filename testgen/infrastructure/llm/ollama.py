@@ -16,6 +16,7 @@ from pathlib import Path
 from ...llm_contract import (
     LLMRequest, TaskType, SHAPES, LLMResponseError, LLMTransportError,
 )
+from ...input_recipe import COMPACT_RETRY_INSTRUCTION
 from pydantic import BaseModel
 
 from ...progress import ConsoleProgress
@@ -149,7 +150,7 @@ class OllamaClient:
                  timeout_seconds: int = 50,
                  api_style: str = "ollama",
                  api_key: str | None = None,
-                 max_output_tokens: int = 4096,
+                 max_output_tokens: int = 32768,
                  soft_timeout_seconds: float = 50,
                  soft_timeout_retry_delay_seconds: float = 2,
                  soft_timeout_budget_seconds: float = 200,
@@ -382,6 +383,11 @@ class OllamaClient:
             TaskType.GENERATE_SOLUTIONS, TaskType.GENERATE_MUTANTS,
             TaskType.GENERATE_CHECKER,
         }
+        compact_case_task = task_type in {
+            TaskType.GENERATE_CASES,
+            TaskType.REPAIR_CASE,
+            TaskType.REPAIR_CASES,
+        }
         for attempt in range(1, self.json_attempts + 1):
             request_chars = sum(
                 len(str(message.get("content", ""))) for message in messages
@@ -587,6 +593,20 @@ class OllamaClient:
                         *original_messages,
                         {"role": "assistant", "content": raw},
                         {"role": "user", "content": repair_instruction},
+                    ]
+                elif compact_case_task:
+                    # Oversized literal arrays are a common reason testcase
+                    # JSON gets truncated. Never echo that payload back: rerun
+                    # the original task with a strict recipe-only correction.
+                    messages = [
+                        *original_messages,
+                        {
+                            "role": "user",
+                            "content": (
+                                COMPACT_RETRY_INSTRUCTION
+                                + f" Parser validation error: {error}."
+                            ),
+                        },
                     ]
                 elif source_generation or "cases" in expected_shape:
                     # Never feed a long, truncated or repetitive source response

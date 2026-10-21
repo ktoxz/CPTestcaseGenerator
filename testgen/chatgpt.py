@@ -13,6 +13,7 @@ from pathlib import Path
 
 from pydantic import BaseModel
 from .llm_contract import LLMRequest, TaskType, SHAPES, LLMResponseError, LLMTransportError
+from .input_recipe import COMPACT_RETRY_INSTRUCTION
 
 from .infrastructure.llm.ollama import _parse_json_locally
 from .progress import ConsoleProgress
@@ -126,6 +127,11 @@ class ChatGPTClient:
             )
         current_prompt = prompt + schema_instruction
         expected_shape = SHAPES.get(task_type, {})
+        compact_case_task = task_type in {
+            TaskType.GENERATE_CASES,
+            TaskType.REPAIR_CASE,
+            TaskType.REPAIR_CASES,
+        }
         last_error: Exception | None = None
         for attempt in range(1, self.json_attempts + 1):
             default_prompt_throttle.wait()
@@ -240,10 +246,17 @@ class ChatGPTClient:
                     raise LLMResponseError(
                         f"ChatGPT returned invalid JSON after {attempt} attempts: {error}"
                     ) from error
-                current_prompt = (
-                    "Repair the response below. Return one complete JSON object "
-                    "matching the original requested structure, with no Markdown.\n"
-                    f"Parser error: {error}\n<invalid_json>\n{raw}\n</invalid_json>"
-                    + schema_instruction
-                )
+                if compact_case_task:
+                    current_prompt = (
+                        prompt + "\n" + COMPACT_RETRY_INSTRUCTION
+                        + f"\nParser validation error: {error}."
+                        + schema_instruction
+                    )
+                else:
+                    current_prompt = (
+                        "Repair the response below. Return one complete JSON object "
+                        "matching the original requested structure, with no Markdown.\n"
+                        f"Parser error: {error}\n<invalid_json>\n{raw}\n</invalid_json>"
+                        + schema_instruction
+                    )
         raise AssertionError(f"unreachable: {last_error}")

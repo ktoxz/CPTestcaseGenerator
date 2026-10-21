@@ -131,7 +131,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--llama-server-max-tokens", type=int,
-        default=settings.get("llama_server_max_tokens", 8192),
+        default=settings.get("llama_server_max_tokens", 32768),
         help="Maximum completion tokens per llama-server request",
     )
     parser.add_argument(
@@ -145,7 +145,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--ollama-max-tokens", type=int,
-        default=settings.get("ollama_max_tokens", 16384),
+        default=settings.get("ollama_max_tokens", 32768),
         help="Maximum completion tokens per Ollama request",
     )
     parser.add_argument(

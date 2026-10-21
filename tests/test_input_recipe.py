@@ -32,3 +32,24 @@ class InputRecipeTests(unittest.TestCase):
             {"input_parts": [{"code": "unsafe"}], "family": "invalid"},
         ], 10)
         self.assertEqual(rows, [{"input": "2\n1 1 ", "family": "stress"}])
+
+    def test_large_literal_input_is_rejected_but_large_recipe_is_expanded(self):
+        literal = "1 " * 1001
+        rows = OllamaCaseGenerator._valid_rows([
+            {"input": literal, "family": "raw-large"},
+            {
+                "input_parts": [{"text": "1 ", "repeat": 1001}],
+                "family": "recipe-large",
+            },
+        ], 10)
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["family"], "recipe-large")
+        self.assertEqual(rows[0]["input"], literal)
+
+    def test_rejects_ambiguous_input_and_input_parts(self):
+        rows = OllamaCaseGenerator._valid_rows([{
+            "input": "1\n",
+            "input_parts": ["1\n"],
+            "family": "ambiguous",
+        }], 10)
+        self.assertEqual(rows, [])

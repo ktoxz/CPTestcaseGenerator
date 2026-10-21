@@ -323,7 +323,7 @@ class OllamaJsonTests(unittest.TestCase):
         payload = json.loads(request.data)
         self.assertEqual(payload["model"], "gemma-local")
         self.assertEqual(payload["temperature"], 0)
-        self.assertEqual(payload["max_tokens"], 4096)
+        self.assertEqual(payload["max_tokens"], 32768)
         self.assertEqual(payload["response_format"], {"type": "json_object"})
         self.assertNotIn("format", payload)
 
@@ -410,7 +410,7 @@ class OllamaJsonTests(unittest.TestCase):
         self.assertEqual(urlopen.call_count, 2)
         second_request = urlopen.call_args_list[1].args[0]
         payload = json.loads(second_request.data)
-        self.assertEqual(payload["options"], {"temperature": 0, "num_predict": 4096})
+        self.assertEqual(payload["options"], {"temperature": 0, "num_predict": 32768})
         self.assertIs(payload["think"], False)
         self.assertEqual(len(payload["messages"]), 2)
         self.assertEqual(payload["messages"][0]["role"], "system")
@@ -424,6 +424,29 @@ class OllamaJsonTests(unittest.TestCase):
         self.assertIn('{"analysis":"missing quote}', stderr.getvalue())
         self.assertIn('{"analysis":"repaired"}', stderr.getvalue())
         self.assertIn("LLM OUTPUT END", stderr.getvalue())
+
+    @patch("testgen.ollama.urllib.request.urlopen")
+    def test_case_json_retry_discards_raw_and_requires_compact_recipe(self, urlopen) -> None:
+        oversized_invalid = '{"cases":[{"input":"' + ("2 " * 5000)
+        urlopen.side_effect = [
+            response(oversized_invalid),
+            response('{"cases":[]}'),
+        ]
+
+        result = OllamaClient(
+            "http://ollama.test", "model", max_output_tokens=32768,
+        ).ask_json(
+            "ORIGINAL CASE TASK", task_type=TaskType.GENERATE_CASES,
+        )
+
+        self.assertEqual(result, {"cases": []})
+        second = json.loads(urlopen.call_args_list[1].args[0].data)
+        self.assertEqual(second["options"]["num_predict"], 32768)
+        retry_text = second["messages"][-1]["content"]
+        self.assertIn("ORIGINAL CASE TASK", second["messages"][1]["content"])
+        self.assertIn("input_parts", retry_text)
+        self.assertIn("repeat or numeric sequence", retry_text)
+        self.assertNotIn("2 2 2 2 2 2", retry_text)
 
     @patch("testgen.ollama.urllib.request.urlopen")
     def test_logs_response_label_and_full_content_to_stderr(self, urlopen) -> None:

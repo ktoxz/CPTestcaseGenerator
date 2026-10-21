@@ -69,7 +69,9 @@ SHAPES = {
     TaskType.REPAIR_WITNESSES: dict(witnesses=list),
     TaskType.REPAIR_CASES: dict(repairs=list),
     TaskType.GENERATE_CASES: dict(cases=list),
-    TaskType.REPAIR_CASE: dict(input=str, family=str),
+    # A repaired case may carry either a short literal input or input_parts;
+    # CaseGenerationService enforces that exclusive union after transport.
+    TaskType.REPAIR_CASE: dict(family=str),
     TaskType.AUDIT_BATCH: dict(audits=list),
     TaskType.AUDIT: dict(classification=str),
 }
