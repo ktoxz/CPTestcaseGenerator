@@ -1,6 +1,7 @@
 """Composition root for concrete provider, judge and oracle adapters."""
 from __future__ import annotations
 
+import os
 import subprocess
 import time
 from pathlib import Path
@@ -131,6 +132,7 @@ def build_pipeline(args, parser, settings, judge_settings, catalog, checker, pro
             timeout_seconds=args.llm_timeout,
             raw_output_dir=output / "llm-raw" / "gemma4-testgen",
             api_style="openai",
+            api_key=os.environ.get("LLAMA_SERVER_API_KEY"),
             max_output_tokens=args.llama_server_max_tokens,
             post_request_cooldown_seconds=args.ollama_throttle,
             timeout_cooldown_seconds=args.ollama_timeout_cooldown,
@@ -153,6 +155,7 @@ def build_pipeline(args, parser, settings, judge_settings, catalog, checker, pro
             timeout_seconds=args.llm_timeout,
             raw_output_dir=output / "llm-raw" / "llama-server",
             api_style="openai",
+            api_key=os.environ.get("LLAMA_SERVER_API_KEY"),
             max_output_tokens=args.llama_server_max_tokens,
             post_request_cooldown_seconds=args.ollama_throttle,
             timeout_cooldown_seconds=args.ollama_timeout_cooldown,
