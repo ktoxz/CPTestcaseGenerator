@@ -376,10 +376,12 @@ class SolutionGenerationService(SolutionGenerator):
                             and len(probe["input"]) <= 8000
                             and isinstance(probe.get("rule"), str)
                             and probe["rule"].strip()
+                            and isinstance(probe.get("expected_valid"), bool)
                         ):
                             normalized_probes.append({
                                 "input": probe["input"].rstrip() + "\n",
                                 "rule": probe["rule"].strip()[:600],
+                                "expected_valid": probe["expected_valid"],
                             })
                 semantic_rules = [
                     item for key in ("constraints", "relations", "validator_requirements")
@@ -392,13 +394,18 @@ class SolutionGenerationService(SolutionGenerator):
                 ]
                 if isinstance(validator, str) and validator.strip():
                     syntax_error = self._validator_syntax_error(validator)
-                    if syntax_error is None and (normalized_probes or not semantic_rules):
+                    has_negative_probe = any(
+                        not probe["expected_valid"]
+                        for probe in normalized_probes
+                    )
+                    if syntax_error is None and (has_negative_probe or not semantic_rules):
                         payload["validator_python"] = validator
                         payload["validator_semantic_probes"] = normalized_probes
                     elif syntax_error is None:
                         batch_feedback.append(
                             f"{source_tag}: semantic_probes must include at least "
-                            "one syntactically framed but semantically invalid input."
+                            "one item with expected_valid=false containing a "
+                            "syntactically framed but semantically invalid input."
                         )
                     else:
                         batch_feedback.append(
@@ -537,10 +544,12 @@ class SolutionGenerationService(SolutionGenerator):
                 "the programming-contest problem below. Return one JSON "
                 "object with keys validator_python (non-empty string) and "
                 "semantic_probes (non-empty array) and warnings (array of strings). "
-                "Each semantic_probes item must contain input and rule: input is a "
-                "complete, syntactically framed payload that violates one stated "
-                "semantic/cross-field rule, and rule identifies that rule. The "
-                "validator must reject every probe. Cover reachability, feasibility, "
+                "Each semantic_probes item must contain input, rule, and "
+                "expected_valid (boolean). A positive sanity probe has "
+                "expected_valid=true and must be accepted. A negative probe has "
+                "expected_valid=false: it is a complete, syntactically framed "
+                "payload that violates the stated rule and must be rejected. Include "
+                "at least one negative probe. Cover reachability, feasibility, "
                 "uniqueness, connectivity, ordering, and cross-field guarantees when "
                 "the statement states them; a range-only probe is insufficient when "
                 "a semantic rule exists. The validator must read all "

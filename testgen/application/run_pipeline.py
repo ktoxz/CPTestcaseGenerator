@@ -651,6 +651,7 @@ class RunPipeline:
                     if isinstance(probe, dict)
                     and isinstance(probe.get("input"), str)
                     and isinstance(probe.get("rule"), str)
+                    and isinstance(probe.get("expected_valid"), bool)
                 ]
                 jobs = [
                     (f"validator-semantic-probe-{index:03d}", probe["input"])
@@ -663,23 +664,30 @@ class RunPipeline:
                     {
                         "case_id": result.case_id,
                         "rule": probe.get("rule", ""),
+                        "expected_valid": probe["expected_valid"],
                         "verdict": result.verdict,
-                        # Validators signal invalid input with a deliberate
-                        # non-zero exit (RE). INFRA/TLE are audit failures, not
-                        # successful rejection evidence.
-                        "rejected": result.verdict == "RE",
+                        "matched_expectation": (
+                            result.verdict == "PASS"
+                            if probe["expected_valid"]
+                            # Validators signal invalid input with a deliberate
+                            # non-zero exit (RE). INFRA/TLE are audit failures.
+                            else result.verdict == "RE"
+                        ),
                         "stderr": result.stderr,
                     }
                     for probe, result in zip(valid_probes, results)
                 ]
                 self.store.write_json(generated / "validator-semantic-audit.json", audit)
-                accepted_invalid = [row for row in audit if not row["rejected"]]
-                if accepted_invalid:
-                    rules = "; ".join(
-                        row["rule"] for row in accepted_invalid[:3]
+                mismatches = [row for row in audit if not row["matched_expectation"]]
+                if mismatches:
+                    details = "; ".join(
+                        f"{row['rule']} (expected "
+                        f"{'PASS' if row['expected_valid'] else 'RE'}, "
+                        f"got {row['verdict']})"
+                        for row in mismatches[:3]
                     )
                     raise RuntimeError(
-                        "Generated validator accepted semantic-invalid probes: " + rules
+                        "Generated validator mismatched semantic probes: " + details
                     )
         reference_pool = ReferencePoolBuilder(
             self.solution_generator, self.execution, self.references, self.store

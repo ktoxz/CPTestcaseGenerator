@@ -58,18 +58,45 @@ class PipelineTests(unittest.TestCase):
                     "validator_semantic_probes": [{
                         "input": "unreachable\n",
                         "rule": "state must be reachable",
+                        "expected_valid": False,
                     }],
                 }), encoding="utf-8")
                 return solutions
 
         with TemporaryDirectory(dir=Path(__file__).resolve().parents[1]) as temp:
             with self.assertRaisesRegex(
-                RuntimeError, "accepted semantic-invalid probes"
+                RuntimeError, "mismatched semantic probes"
             ):
                 Pipeline(
                     ProbedSolutions(), FakeCases(), FakeJudge(),
                     checker_from_profile({"kind": "TOKEN"}),
                 ).run("p00004", "statement", Path(temp), iterations=1)
+
+    def test_validator_may_accept_positive_semantic_probe(self):
+        class ProbedSolutions(FakeSolutions):
+            def generate(self, statement, output):
+                solutions = super().generate(statement, output)
+                (output / "generation.json").write_text(json.dumps({
+                    "validator_semantic_probes": [{
+                        "input": "1 2\n",
+                        "rule": "positive sanity input",
+                        "expected_valid": True,
+                    }],
+                }), encoding="utf-8")
+                return solutions
+
+        with TemporaryDirectory(dir=Path(__file__).resolve().parents[1]) as temp:
+            output = Path(temp)
+            Pipeline(
+                ProbedSolutions(), FakeCases(), FakeJudge(),
+                checker_from_profile({"kind": "TOKEN"}),
+                min_total_cases=1,
+                top_up_rounds=0,
+            ).run("p00004", "statement", output, iterations=1)
+            audit = json.loads((
+                output / "generated" / "validator-semantic-audit.json"
+            ).read_text(encoding="utf-8"))
+            self.assertTrue(audit[0]["matched_expectation"])
 
     def test_duplicate_proposal_preserves_sample_coverage_without_counting_new_case(self):
         cases = [Case("sample", "1\n", "7\n", "official-sample", 0, ("old",))]
