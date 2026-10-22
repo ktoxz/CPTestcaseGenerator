@@ -11,6 +11,16 @@ class ReferenceCertification:
     def __init__(self, execution, checker):
         self.execution, self.checker = execution, checker
 
+    def _usable(self, run: Result) -> bool:
+        """A reference answer must contain judgeable output when one is needed."""
+        return (
+            run.verdict == "PASS"
+            and (
+                not self.checker.requires_expected_output
+                or bool(run.actual.strip())
+            )
+        )
+
     def certify(self, solution, compile_result, official_samples):
         sample_results = (self._sample_results(
             solution, official_samples, f"reference-certification-{solution.id}"
@@ -43,8 +53,8 @@ class ReferenceCertification:
             runs.append(run)
             if (
                 len(runs) == 2
-                and runs[0].verdict == "PASS"
-                and run.verdict == "PASS"
+                and self._usable(runs[0])
+                and self._usable(run)
                 and self.checker.accepts_case(
                     run.actual,
                     (runs[0].actual
@@ -57,9 +67,9 @@ class ReferenceCertification:
         if consensus is None:
             consensus = next((
                 run for run in runs
-                if run.verdict == "PASS"
+                if self._usable(run)
                 and sum(
-                    other.verdict == "PASS"
+                    self._usable(other)
                     and self.checker.accepts_case(
                         other.actual,
                         (run.actual

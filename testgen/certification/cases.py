@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib
 from dataclasses import dataclass, field
 from ..domain import Case, Result, Solution
-from ..coverage import known_coverage_tags
+from ..coverage import evidenced_coverage_tags
 from ..suite import merge_certified_coverage
 
 @dataclass
@@ -59,7 +59,7 @@ class CaseCertification:
                 "case_id": case_id,
                 "iteration": self.iteration,
                 "source": source,
-                "reason": "reference disagreement",
+                "reason": "reference disagreement or unusable empty output",
                 "family": current.get("family", "llm"),
                 "coverage_tags": current.get("coverage_tags", []),
                 "input": input_text,
@@ -71,6 +71,28 @@ class CaseCertification:
             )
             return
         reference_output = current.get("official_expected", consensus.actual)
+        if (
+            self.checker.requires_expected_output
+            and (
+                not isinstance(reference_output, str)
+                or not reference_output.strip()
+            )
+        ):
+            rejected = {
+                "case_id": case_id,
+                "iteration": self.iteration,
+                "source": source,
+                "reason": "empty expected output",
+                "family": current.get("family", "llm"),
+                "coverage_tags": current.get("coverage_tags", []),
+                "input": input_text,
+            }
+            self.state.quarantined.append(rejected)
+            self.state.rejected.append(rejected)
+            self.execution._log(
+                f"Test {original_index} {case_id}: expected output rỗng"
+            )
+            return
         expected = (
             reference_output
             if self.checker.requires_expected_output
@@ -90,8 +112,11 @@ class CaseCertification:
             self.state.rejected.append(rejected)
             self.execution._log(f"Test {original_index} {case_id}: lệch sample")
             return
-        tags = known_coverage_tags(
-            current.get("coverage_tags", []), self.test_model
+        tags, rejected_tags = evidenced_coverage_tags(
+            current.get("coverage_tags", []),
+            current.get("coverage_evidence", []),
+            input_text,
+            self.test_model,
         )
         accepted = Case(
             case_id,
@@ -123,6 +148,8 @@ class CaseCertification:
                 "reason_for_difference", ""
             ),
             "coverage_tags": list(tags),
+            "coverage_evidence": current.get("coverage_evidence", []),
+            "rejected_coverage_claims": list(rejected_tags),
         }
         self.execution._log(
             f"Test {original_index} {case_id}: nhận; tổng {len(self.state.cases)}"
@@ -146,10 +173,14 @@ class CaseCertification:
                 f"_r{repair_attempt}"
             )
             if digest in self.state.hashes:
+                tags, rejected_tags = evidenced_coverage_tags(
+                    current.get("coverage_tags", []),
+                    current.get("coverage_evidence", []),
+                    input_text,
+                    self.test_model,
+                )
                 updated = merge_certified_coverage(
-                    self.state.cases, input_text, known_coverage_tags(
-                        current.get("coverage_tags", []), self.test_model
-                    ),
+                    self.state.cases, input_text, tags,
                 )
                 if updated is not None:
                     for index, case in enumerate(self.state.accepted):
@@ -158,6 +189,9 @@ class CaseCertification:
                     self.state.intents.setdefault(updated.id, {})["coverage_tags"] = list(
                         updated.coverage_tags
                     )
+                    intent = self.state.intents.setdefault(updated.id, {})
+                    intent["coverage_evidence"] = current.get("coverage_evidence", [])
+                    intent["rejected_coverage_claims"] = list(rejected_tags)
                 rejected = {
                     "case_id": validation_id,
                     "iteration": self.iteration,

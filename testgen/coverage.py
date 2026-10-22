@@ -260,6 +260,40 @@ def known_coverage_tags(value, test_model: dict) -> tuple[str, ...]:
     return tuple(dict.fromkeys(tag for tag in tags if tag in known))
 
 
+def evidenced_coverage_tags(
+    value, evidence, input_text: str, test_model: dict
+) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """Verify coverage claims against explicit, input-anchored evidence.
+
+    A generated tag is not coverage by itself.  Each retained tag must have a
+    separate evidence row whose excerpt occurs verbatim in the certified input.
+    Validator acceptance and reference consensus are enforced by the caller.
+    """
+    claimed = known_coverage_tags(value, test_model)
+    rows = evidence if isinstance(evidence, list) else []
+    evidenced: set[str] = set()
+    for row in rows[:80]:
+        if not isinstance(row, dict):
+            continue
+        tag = row.get("tag")
+        excerpt = row.get("input_excerpt")
+        rationale = row.get("rationale")
+        if (
+            tag in claimed
+            and isinstance(excerpt, str)
+            and excerpt.strip()
+            and len(excerpt) <= 240
+            and excerpt in input_text
+            and isinstance(rationale, str)
+            and rationale.strip()
+            and len(rationale) <= 600
+        ):
+            evidenced.add(tag)
+    accepted = tuple(tag for tag in claimed if tag in evidenced)
+    rejected = tuple(tag for tag in claimed if tag not in evidenced)
+    return accepted, rejected
+
+
 def coverage_summary(test_model: dict, cases: list[Case]) -> dict:
     obligations = [
         row for row in test_model.get("coverage_obligations", [])

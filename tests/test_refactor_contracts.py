@@ -182,6 +182,68 @@ def test_semantic_checker_certifies_cases_without_expected_output():
     assert result.accepted[0].expected is None
 
 
+def test_reference_consensus_rejects_empty_expected_output():
+    class Judge:
+        def execute_many(self, solution, jobs):
+            return [
+                Result(solution.id, "PASS", case_id, "\n")
+                for case_id, _input_text in jobs
+            ]
+
+    checker = checker_from_profile({"kind": "TOKEN"})
+    execution = ExecutionService(Judge(), checker)
+    references = ReferenceCertification(execution, checker)
+    refs = [
+        Solution(name, "candidate_ac", "Python", Path(name))
+        for name in ("a", "b")
+    ]
+    assert references._reference_consensus(refs, "case", "input\n") is None
+
+
+def test_coverage_claim_requires_input_anchored_evidence():
+    class Judge:
+        def execute_many(self, solution, jobs):
+            return [
+                Result(solution.id, "PASS", case_id, "7\n")
+                for case_id, _input_text in jobs
+            ]
+
+    checker = checker_from_profile({"kind": "TOKEN"})
+    execution = ExecutionService(Judge(), checker)
+    refs = [Solution(name, "candidate_ac", "Python", Path(name)) for name in ("a", "b")]
+    model = {"coverage_obligations": [{"id": "reachable"}]}
+    state = CaseCertificationState([], set(), {}, [])
+    certifier = CaseCertification(
+        execution, ReferenceCertification(execution, checker), checker,
+        Solution("validator", "validator", "Python", Path("v")), refs,
+        model, "p", 0, state,
+    )
+    result = certifier.validate_batch(
+        "initial",
+        certifier.index_proposals([
+            {
+                "input": "1 2 3",
+                "family": "semantic",
+                "coverage_tags": ["reachable"],
+            },
+            {
+                "input": "3 2 1",
+                "family": "semantic",
+                "coverage_tags": ["reachable"],
+                "coverage_evidence": [{
+                    "tag": "reachable",
+                    "input_excerpt": "3 2 1",
+                    "rationale": "this concrete state exercises the relation",
+                }],
+            },
+        ], "initial"),
+        0,
+    )
+    assert result.accepted[0].coverage_tags == ()
+    assert result.accepted[1].coverage_tags == ("reachable",)
+    assert state.intents[result.accepted[0].id]["rejected_coverage_claims"] == ["reachable"]
+
+
 def test_standalone_generator_does_not_read_neighbor_model():
     class StopAnalysis(Exception): pass
     class Client:

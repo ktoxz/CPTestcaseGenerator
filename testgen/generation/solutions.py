@@ -328,6 +328,7 @@ class SolutionGenerationService(SolutionGenerator):
             "correct": [],
             "wrong": [],
             "validator_python": "",
+            "validator_semantic_probes": [],
             "warnings": [],
         }
         seen = set()
@@ -361,10 +362,44 @@ class SolutionGenerationService(SolutionGenerator):
 
             if not accept_correct:
                 validator = batch.get("validator_python")
+                probes = batch.get(
+                    "semantic_probes",
+                    batch.get("validator_semantic_probes", []),
+                )
+                normalized_probes = []
+                if isinstance(probes, list):
+                    for probe in probes[:20]:
+                        if (
+                            isinstance(probe, dict)
+                            and isinstance(probe.get("input"), str)
+                            and probe["input"].strip()
+                            and len(probe["input"]) <= 8000
+                            and isinstance(probe.get("rule"), str)
+                            and probe["rule"].strip()
+                        ):
+                            normalized_probes.append({
+                                "input": probe["input"].rstrip() + "\n",
+                                "rule": probe["rule"].strip()[:600],
+                            })
+                semantic_rules = [
+                    item for key in ("constraints", "relations", "validator_requirements")
+                    for item in (
+                        analysis.get(key, [])
+                        if isinstance(analysis.get(key), list)
+                        else [analysis.get(key)]
+                    )
+                    if isinstance(item, str) and item.strip()
+                ]
                 if isinstance(validator, str) and validator.strip():
                     syntax_error = self._validator_syntax_error(validator)
-                    if syntax_error is None:
+                    if syntax_error is None and (normalized_probes or not semantic_rules):
                         payload["validator_python"] = validator
+                        payload["validator_semantic_probes"] = normalized_probes
+                    elif syntax_error is None:
+                        batch_feedback.append(
+                            f"{source_tag}: semantic_probes must include at least "
+                            "one syntactically framed but semantically invalid input."
+                        )
                     else:
                         batch_feedback.append(
                             f"{source_tag}: validator_python is not valid Python 3: "
@@ -501,7 +536,14 @@ class SolutionGenerationService(SolutionGenerator):
                 "Generate only a standalone Python 3 input validator for "
                 "the programming-contest problem below. Return one JSON "
                 "object with keys validator_python (non-empty string) and "
-                "warnings (array of strings). The validator must read all "
+                "semantic_probes (non-empty array) and warnings (array of strings). "
+                "Each semantic_probes item must contain input and rule: input is a "
+                "complete, syntactically framed payload that violates one stated "
+                "semantic/cross-field rule, and rule identifies that rule. The "
+                "validator must reject every probe. Cover reachability, feasibility, "
+                "uniqueness, connectivity, ordering, and cross-field guarantees when "
+                "the statement states them; a range-only probe is insufficient when "
+                "a semantic rule exists. The validator must read all "
                 "stdin and exit 0 iff the complete input satisfies every "
                 "explicit framing rule and constraint. Reject malformed, "
                 "truncated, trailing, and out-of-range input. Do not invent "
@@ -512,6 +554,8 @@ class SolutionGenerationService(SolutionGenerator):
                 f"Previous validator feedback: {self._as_json(feedback)}\n"
                 f"Runtime requirements: {runtime_notes}\n"
                 f"Round: {round_number}\n"
+                f"<semantic_contract>\n{self._prompt_json(self._compact_analysis(analysis))}\n"
+                "</semantic_contract>\n"
                 f"<problem>\n{statement}\n</problem>"
             )
 

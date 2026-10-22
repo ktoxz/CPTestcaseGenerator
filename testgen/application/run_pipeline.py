@@ -641,6 +641,46 @@ class RunPipeline:
         all_compiles = self._compile_pool(to_compile, "Biên dịch ứng viên")
         if all_compiles[validator.id].verdict != "PASS":
             raise RuntimeError(f"Generated validator did not compile: {all_compiles[validator.id].stderr}")
+        generation_path = generated / "generation.json"
+        if self.validator_override is None and generation_path.is_file():
+            generation_payload = self.store.read_json(generation_path)
+            probes = generation_payload.get("validator_semantic_probes", [])
+            if probes:
+                valid_probes = [
+                    probe for probe in probes
+                    if isinstance(probe, dict)
+                    and isinstance(probe.get("input"), str)
+                    and isinstance(probe.get("rule"), str)
+                ]
+                jobs = [
+                    (f"validator-semantic-probe-{index:03d}", probe["input"])
+                    for index, probe in enumerate(valid_probes, 1)
+                ]
+                results = self.execution._execute_many(
+                    validator, jobs, purpose="validator.semantic_probe"
+                )
+                audit = [
+                    {
+                        "case_id": result.case_id,
+                        "rule": probe.get("rule", ""),
+                        "verdict": result.verdict,
+                        # Validators signal invalid input with a deliberate
+                        # non-zero exit (RE). INFRA/TLE are audit failures, not
+                        # successful rejection evidence.
+                        "rejected": result.verdict == "RE",
+                        "stderr": result.stderr,
+                    }
+                    for probe, result in zip(valid_probes, results)
+                ]
+                self.store.write_json(generated / "validator-semantic-audit.json", audit)
+                accepted_invalid = [row for row in audit if not row["rejected"]]
+                if accepted_invalid:
+                    rules = "; ".join(
+                        row["rule"] for row in accepted_invalid[:3]
+                    )
+                    raise RuntimeError(
+                        "Generated validator accepted semantic-invalid probes: " + rules
+                    )
         reference_pool = ReferencePoolBuilder(
             self.solution_generator, self.execution, self.references, self.store
         ).build(statement, generated, candidates, all_compiles, official_samples)

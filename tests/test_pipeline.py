@@ -50,6 +50,27 @@ class FakeJudge(Judge):
 
 
 class PipelineTests(unittest.TestCase):
+    def test_validator_must_reject_generated_semantic_probes(self):
+        class ProbedSolutions(FakeSolutions):
+            def generate(self, statement, output):
+                solutions = super().generate(statement, output)
+                (output / "generation.json").write_text(json.dumps({
+                    "validator_semantic_probes": [{
+                        "input": "unreachable\n",
+                        "rule": "state must be reachable",
+                    }],
+                }), encoding="utf-8")
+                return solutions
+
+        with TemporaryDirectory(dir=Path(__file__).resolve().parents[1]) as temp:
+            with self.assertRaisesRegex(
+                RuntimeError, "accepted semantic-invalid probes"
+            ):
+                Pipeline(
+                    ProbedSolutions(), FakeCases(), FakeJudge(),
+                    checker_from_profile({"kind": "TOKEN"}),
+                ).run("p00004", "statement", Path(temp), iterations=1)
+
     def test_duplicate_proposal_preserves_sample_coverage_without_counting_new_case(self):
         cases = [Case("sample", "1\n", "7\n", "official-sample", 0, ("old",))]
         updated = merge_certified_coverage(cases, "1\n", ("boundary", "old"))
@@ -1165,6 +1186,11 @@ class PipelineTests(unittest.TestCase):
                 return {"requested_count": 1, "rationale": "cover zero", "cases": [{
                     "input": "1 2\n", "family": "boundary",
                     "coverage_tags": ["zero-boundary"],
+                    "coverage_evidence": [{
+                        "tag": "zero-boundary",
+                        "input_excerpt": "1",
+                        "rationale": "the first field is the exercised boundary",
+                    }],
                 }]}
 
         with TemporaryDirectory(dir=Path(__file__).resolve().parents[1]) as temp:
