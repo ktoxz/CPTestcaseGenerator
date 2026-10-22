@@ -98,6 +98,65 @@ class PipelineTests(unittest.TestCase):
             ).read_text(encoding="utf-8"))
             self.assertTrue(audit[0]["matched_expectation"])
 
+    def test_failed_semantic_audit_regenerates_validator(self):
+        class RecoveringSolutions(FakeSolutions):
+            def __init__(self):
+                self.replacement_calls = 0
+
+            def generate(self, statement, output):
+                solutions = super().generate(statement, output)
+                (output / "generation.json").write_text(json.dumps({
+                    "validator_semantic_probes": [{
+                        "input": "unreachable\n",
+                        "rule": "state must be reachable",
+                        "expected_valid": False,
+                    }],
+                }), encoding="utf-8")
+                return solutions
+
+            def regenerate_validator(
+                self, statement, test_model, output, rejected, round_number,
+            ):
+                self.replacement_calls += 1
+                source = output / f"validator-replacement-{round_number:02d}.py"
+                source.write_text("# replacement", encoding="utf-8")
+                payload = json.loads((output / "generation.json").read_text(
+                    encoding="utf-8"
+                ))
+                payload["validator_semantic_probes"] = [{
+                    "input": "unreachable\n",
+                    "rule": "state must be reachable",
+                    "expected_valid": False,
+                }]
+                (output / "generation.json").write_text(
+                    json.dumps(payload), encoding="utf-8"
+                )
+                return Solution(
+                    f"validator-replacement-{round_number:02d}",
+                    "validator", "Python", source,
+                )
+
+        class RecoveryJudge(FakeJudge):
+            def execute(self, solution, case_id, input_text):
+                if solution.id.startswith("validator-replacement"):
+                    return Result(
+                        solution.id,
+                        "RE" if input_text == "unreachable\n" else "PASS",
+                        case_id,
+                    )
+                return super().execute(solution, case_id, input_text)
+
+        with TemporaryDirectory(dir=Path(__file__).resolve().parents[1]) as temp:
+            generator = RecoveringSolutions()
+            report = Pipeline(
+                generator, FakeCases(), RecoveryJudge(),
+                checker_from_profile({"kind": "TOKEN"}),
+                min_total_cases=1,
+                top_up_rounds=0,
+            ).run("p00004", "statement", Path(temp), iterations=1)
+            self.assertEqual(generator.replacement_calls, 1)
+            self.assertNotEqual(report["stop_reason"], "degraded_official_samples")
+
     def test_duplicate_proposal_preserves_sample_coverage_without_counting_new_case(self):
         cases = [Case("sample", "1\n", "7\n", "official-sample", 0, ("old",))]
         updated = merge_certified_coverage(cases, "1\n", ("boundary", "old"))

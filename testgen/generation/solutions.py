@@ -85,6 +85,39 @@ class SolutionGenerationService(SolutionGenerator):
         return {key: analysis[key] for key in keys if key in analysis}
 
     @staticmethod
+    def _normalize_semantic_probes(value: object) -> list[dict]:
+        probes = value if isinstance(value, list) else []
+        normalized = []
+        for probe in probes[:20]:
+            if (
+                isinstance(probe, dict)
+                and isinstance(probe.get("input"), str)
+                and probe["input"].strip()
+                and len(probe["input"]) <= 8000
+                and isinstance(probe.get("rule"), str)
+                and probe["rule"].strip()
+                and isinstance(probe.get("expected_valid"), bool)
+            ):
+                normalized.append({
+                    "input": probe["input"].rstrip() + "\n",
+                    "rule": probe["rule"].strip()[:600],
+                    "expected_valid": probe["expected_valid"],
+                })
+        return normalized
+
+    @staticmethod
+    def _semantic_rules(analysis: dict) -> list[str]:
+        return [
+            item for key in ("constraints", "relations", "validator_requirements")
+            for item in (
+                analysis.get(key, [])
+                if isinstance(analysis.get(key), list)
+                else [analysis.get(key)]
+            )
+            if isinstance(item, str) and item.strip()
+        ]
+
+    @staticmethod
     def _accepted_candidate_summary(payload: dict) -> dict:
         """Describe accepted candidates without resending their complete source."""
         rows = []
@@ -362,45 +395,20 @@ class SolutionGenerationService(SolutionGenerator):
 
             if not accept_correct:
                 validator = batch.get("validator_python")
-                probes = batch.get(
+                probes = self._normalize_semantic_probes(batch.get(
                     "semantic_probes",
                     batch.get("validator_semantic_probes", []),
-                )
-                normalized_probes = []
-                if isinstance(probes, list):
-                    for probe in probes[:20]:
-                        if (
-                            isinstance(probe, dict)
-                            and isinstance(probe.get("input"), str)
-                            and probe["input"].strip()
-                            and len(probe["input"]) <= 8000
-                            and isinstance(probe.get("rule"), str)
-                            and probe["rule"].strip()
-                            and isinstance(probe.get("expected_valid"), bool)
-                        ):
-                            normalized_probes.append({
-                                "input": probe["input"].rstrip() + "\n",
-                                "rule": probe["rule"].strip()[:600],
-                                "expected_valid": probe["expected_valid"],
-                            })
-                semantic_rules = [
-                    item for key in ("constraints", "relations", "validator_requirements")
-                    for item in (
-                        analysis.get(key, [])
-                        if isinstance(analysis.get(key), list)
-                        else [analysis.get(key)]
-                    )
-                    if isinstance(item, str) and item.strip()
-                ]
+                ))
+                semantic_rules = self._semantic_rules(analysis)
                 if isinstance(validator, str) and validator.strip():
                     syntax_error = self._validator_syntax_error(validator)
                     has_negative_probe = any(
                         not probe["expected_valid"]
-                        for probe in normalized_probes
+                        for probe in probes
                     )
                     if syntax_error is None and (has_negative_probe or not semantic_rules):
                         payload["validator_python"] = validator
-                        payload["validator_semantic_probes"] = normalized_probes
+                        payload["validator_semantic_probes"] = probes
                     elif syntax_error is None:
                         batch_feedback.append(
                             f"{source_tag}: semantic_probes must include at least "
@@ -683,6 +691,131 @@ class SolutionGenerationService(SolutionGenerator):
                 )
 
         return solutions
+
+    def regenerate_validator(
+        self,
+        statement: str,
+        test_model: dict,
+        output: Path,
+        rejected: dict,
+        round_number: int,
+    ) -> Solution | None:
+        """Generate one complete validator replacement from runtime audit evidence."""
+        artifact = output / f"validator-replacement-{round_number:02d}.json"
+        validation_artifact = output / (
+            f"validator-replacement-{round_number:02d}-validation.json"
+        )
+        rejected_source = rejected.get("validator_python", "")
+        if not isinstance(rejected_source, str):
+            rejected_source = ""
+        audit = rejected.get("audit", [])
+        if not isinstance(audit, list):
+            audit = []
+        compact_audit = [
+            {
+                key: row.get(key)
+                for key in (
+                    "rule", "expected_valid", "verdict",
+                    "matched_expectation", "stderr",
+                )
+                if key in row
+            }
+            for row in audit[:20] if isinstance(row, dict)
+        ]
+        prompt = (
+            "Replace a failed standalone Python 3 input validator. Return JSON "
+            "with validator_python, semantic_probes, and warnings. Return a "
+            "complete new program, not a patch. It must read stdin exactly once "
+            "and exit 0 iff the entire input is valid. Do not call multiple "
+            "top-level validator implementations or consume stdin more than once. "
+            "Each semantic probe must contain input, rule, and expected_valid. "
+            "Positive probes (expected_valid=true) must be accepted; negative "
+            "probes (expected_valid=false) must be rejected with a non-zero exit. "
+            "Include at least one positive official-format sanity probe and one "
+            "negative semantic/cross-field probe. Fix every supplied audit "
+            "mismatch. Use only Python builtins and return JSON only.\n"
+            f"Replacement round: {round_number}\n"
+            f"<test_model>\n{self._prompt_json(self._compact_analysis({'analysis_source': 'pipeline_test_model', **test_model}))}\n"
+            "</test_model>\n"
+            f"<failed_audit>\n{self._prompt_json(compact_audit)}\n"
+            "</failed_audit>\n"
+            f"<rejected_validator>\n{rejected_source[:20000]}\n"
+            "</rejected_validator>\n"
+            f"<problem>\n{statement}\n</problem>"
+        )
+        result = None
+        last_error = None
+        for attempt in range(1, 4):
+            try:
+                result = ask_json(
+                    self.analysis_client,
+                    TaskType.GENERATE_VALIDATOR,
+                    prompt,
+                    label=f"sinh validator thay thế vòng {round_number}",
+                )
+                break
+            except (LLMTransportError, LLMResponseError, TimeoutError) as error:
+                last_error = error
+                if attempt == 3:
+                    raise
+                print(
+                    "Sinh validator thay thế lỗi "
+                    f"{type(error).__name__}; chờ {self.retry_delay_seconds:g}s "
+                    f"trước lần {attempt + 1}/3",
+                    file=sys.stderr,
+                    flush=True,
+                )
+                time.sleep(self.retry_delay_seconds)
+        if result is None:
+            raise last_error or RuntimeError("validator replacement returned no response")
+        self.store.write_json(artifact, result)
+
+        source = result.get("validator_python") if isinstance(result, dict) else None
+        probes = self._normalize_semantic_probes(
+            result.get("semantic_probes", []) if isinstance(result, dict) else []
+        )
+        issues = []
+        if not isinstance(source, str) or not source.strip():
+            issues.append("validator_python must be a non-empty string")
+        elif (syntax_error := self._validator_syntax_error(source)) is not None:
+            issues.append(f"invalid Python 3: {syntax_error}")
+        if self._semantic_rules(test_model) and not any(
+            not probe["expected_valid"] for probe in probes
+        ):
+            issues.append("missing expected_valid=false semantic probe")
+        if not any(probe["expected_valid"] for probe in probes):
+            issues.append("missing expected_valid=true sanity probe")
+        self.store.write_json(validation_artifact, {
+            "accepted": not issues,
+            "issues": issues,
+            "semantic_probes": probes,
+        })
+        if issues:
+            return None
+
+        name = f"validator-replacement-{round_number:02d}"
+        source_path = output / f"{name}.py"
+        self.store.write_text(source_path, source, encoding="utf-8")
+        generation_path = output / "generation.json"
+        generation = (
+            self.store.read_json(generation_path)
+            if generation_path.is_file() else {}
+        )
+        if not isinstance(generation, dict):
+            generation = {}
+        generation["validator_python"] = source
+        generation["validator_semantic_probes"] = probes
+        history = generation.get("validator_replacement_history", [])
+        if not isinstance(history, list):
+            history = []
+        history.append({
+            "round": round_number,
+            "solution_id": name,
+            "artifact": artifact.name,
+        })
+        generation["validator_replacement_history"] = history
+        self.store.write_json(generation_path, generation)
+        return Solution(name, "validator", "Python", source_path)
 
     def regenerate_correct(
         self,

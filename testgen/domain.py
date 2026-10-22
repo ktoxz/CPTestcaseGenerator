@@ -68,6 +68,17 @@ class SolutionGenerator(ABC):
         """Generate replacement references; unsupported generators return none."""
         return []
 
+    def regenerate_validator(
+        self,
+        statement: str,
+        test_model: dict,
+        output: Path,
+        rejected: dict,
+        round_number: int,
+    ) -> Solution | None:
+        """Generate a replacement validator; unsupported generators return none."""
+        return None
+
     def regenerate_wrong(
         self,
         statement: str,

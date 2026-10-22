@@ -39,6 +39,65 @@ class RecoveryClient:
 
 
 class SolutionGenerationRecoveryTests(unittest.TestCase):
+    def test_validator_replacement_uses_audit_and_persists_probes(self):
+        class Client:
+            def __init__(self):
+                self.prompt = ""
+
+            def ask_json(self, prompt, label="LLM"):
+                self.prompt = prompt
+                return {
+                    "validator_python": "import sys\nsys.exit(0)\n",
+                    "semantic_probes": [
+                        {
+                            "input": "1\n",
+                            "rule": "valid sanity input",
+                            "expected_valid": True,
+                        },
+                        {
+                            "input": "0\n",
+                            "rule": "value must be positive",
+                            "expected_valid": False,
+                        },
+                    ],
+                    "warnings": [],
+                }
+
+        client = Client()
+        with TemporaryDirectory(dir=Path(__file__).resolve().parents[1]) as temp:
+            output = Path(temp)
+            output.joinpath("generation.json").write_text(
+                json.dumps({"correct": []}), encoding="utf-8"
+            )
+            replacement = SolutionGenerationService(
+                client, ac_count=1, wa_count=0, retry_delay_seconds=0,
+            ).regenerate_validator(
+                "statement",
+                {"constraints": ["x > 0"], "relations": []},
+                output,
+                {
+                    "validator_python": "raise SystemExit(1)",
+                    "audit": [{
+                        "rule": "valid sanity input",
+                        "expected_valid": True,
+                        "verdict": "RE",
+                        "matched_expectation": False,
+                    }],
+                },
+                1,
+            )
+
+            self.assertIsNotNone(replacement)
+            self.assertIn("<failed_audit>", client.prompt)
+            self.assertIn("raise SystemExit(1)", client.prompt)
+            saved = json.loads(output.joinpath("generation.json").read_text(
+                encoding="utf-8"
+            ))
+            self.assertEqual(len(saved["validator_semantic_probes"]), 2)
+            self.assertEqual(
+                saved["validator_replacement_history"][0]["round"], 1
+            )
+
     def test_uses_recovery_rounds_beyond_the_old_two_round_cap(self):
         client = RecoveryClient(fail_rounds=2)
         with TemporaryDirectory(dir=Path(__file__).resolve().parents[1]) as temp:

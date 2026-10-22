@@ -25,7 +25,9 @@ from ..evaluation.metrics import metrics
 from ..llm_contract import LLMResponseError, LLMTransportError
 from ..throttle import EndpointBusyError
 from ..generation.test_model import _statement_sandbox_limits
-from ..domain import Case, CaseGenerator, Judge, OracleSource, Solution, SolutionGenerator
+from ..domain import (
+    Case, CaseGenerator, Judge, OracleSource, Result, Solution, SolutionGenerator,
+)
 from ..progress import ConsoleProgress
 
 
@@ -53,6 +55,8 @@ class CheckerProvisioningError(RuntimeError):
 
 
 class RunPipeline:
+    MAX_VALIDATOR_REPLACEMENT_ROUNDS = 2
+
     def __init__(self, solution_generator: SolutionGenerator, case_generator: CaseGenerator,
                  judge: Judge, checker: Checker, oracle: OracleSource | None = None,
                  validator_override: Path | None = None,
@@ -374,6 +378,177 @@ class RunPipeline:
     def _compile_pool(self, *args, **kwargs):
         return self.execution._compile_pool(*args, **kwargs)
 
+    def _audit_validator_semantics(
+        self,
+        validator: Solution,
+        probes: object,
+        generated: Path,
+        round_number: int,
+    ) -> list[dict]:
+        valid_probes = [
+            probe for probe in (probes if isinstance(probes, list) else [])
+            if isinstance(probe, dict)
+            and isinstance(probe.get("input"), str)
+            and isinstance(probe.get("rule"), str)
+            and isinstance(probe.get("expected_valid"), bool)
+        ]
+        if not valid_probes:
+            return []
+        jobs = [
+            (
+                f"validator-semantic-r{round_number:02d}-probe-{index:03d}",
+                probe["input"],
+            )
+            for index, probe in enumerate(valid_probes, 1)
+        ]
+        results = self.execution._execute_many(
+            validator, jobs, purpose="validator.semantic_probe"
+        )
+        audit = [
+            {
+                "case_id": result.case_id,
+                "rule": probe["rule"],
+                "expected_valid": probe["expected_valid"],
+                "verdict": result.verdict,
+                "matched_expectation": (
+                    result.verdict == "PASS"
+                    if probe["expected_valid"]
+                    else result.verdict == "RE"
+                ),
+                "stderr": result.stderr,
+            }
+            for probe, result in zip(valid_probes, results)
+        ]
+        self.store.write_json(
+            generated / f"validator-semantic-audit-{round_number:02d}.json",
+            audit,
+        )
+        self.store.write_json(generated / "validator-semantic-audit.json", audit)
+        return audit
+
+    @staticmethod
+    def _validator_audit_error(audit: list[dict]) -> str | None:
+        mismatches = [row for row in audit if not row["matched_expectation"]]
+        if not mismatches:
+            return None
+        details = "; ".join(
+            f"{row['rule']} (expected "
+            f"{'PASS' if row['expected_valid'] else 'RE'}, "
+            f"got {row['verdict']})"
+            for row in mismatches[:3]
+        )
+        return "Generated validator mismatched semantic probes: " + details
+
+    def _recover_validator(
+        self,
+        statement: str,
+        test_model: dict,
+        generated: Path,
+        validator: Solution,
+        compile_results: dict[str, Result],
+        official_samples: list[tuple[str, str]],
+    ) -> tuple[Solution, dict[str, Result]]:
+        generation_path = generated / "generation.json"
+        if self.validator_override is not None or not generation_path.is_file():
+            return validator, compile_results
+
+        generation = self.store.read_json(generation_path)
+        probes = generation.get("validator_semantic_probes", [])
+        if not isinstance(probes, list):
+            probes = []
+        probes = [*probes, *[
+            {
+                "input": input_text,
+                "rule": f"official sample {index} must be accepted",
+                "expected_valid": True,
+            }
+            for index, (input_text, _expected) in enumerate(official_samples, 1)
+        ]]
+        audit = self._audit_validator_semantics(
+            validator, probes, generated, round_number=0
+        )
+        error = self._validator_audit_error(audit)
+        if error is None:
+            return validator, compile_results
+
+        for round_number in range(1, self.MAX_VALIDATOR_REPLACEMENT_ROUNDS + 1):
+            self._log(
+                f"Validator semantic audit lỗi; sinh bản thay thế "
+                f"{round_number}/{self.MAX_VALIDATOR_REPLACEMENT_ROUNDS}"
+            )
+            try:
+                source = self.store.read_text(
+                    validator.source, encoding="utf-8", errors="replace"
+                )
+            except OSError:
+                source = ""
+            replacement = self.solution_generator.regenerate_validator(
+                statement,
+                test_model,
+                generated,
+                {"validator_python": source, "audit": audit, "error": error},
+                round_number,
+            )
+            if replacement is None:
+                continue
+            validator = replacement
+            compiled = self._compile_pool(
+                [validator], f"Biên dịch validator thay thế vòng {round_number}"
+            )[validator.id]
+            compile_results[validator.id] = compiled
+            if compiled.verdict != "PASS":
+                audit = [{
+                    "rule": "replacement validator must compile",
+                    "expected_valid": True,
+                    "verdict": compiled.verdict,
+                    "matched_expectation": False,
+                    "stderr": compiled.stderr,
+                }]
+                error = (
+                    "Generated replacement validator did not compile: "
+                    + compiled.stderr
+                )
+            else:
+                generation = self.store.read_json(generation_path)
+                replacement_probes = generation.get(
+                    "validator_semantic_probes", []
+                )
+                if not isinstance(replacement_probes, list):
+                    replacement_probes = []
+                replacement_probes = [*replacement_probes, *[
+                    {
+                        "input": input_text,
+                        "rule": f"official sample {index} must be accepted",
+                        "expected_valid": True,
+                    }
+                    for index, (input_text, _expected) in enumerate(
+                        official_samples, 1
+                    )
+                ]]
+                audit = self._audit_validator_semantics(
+                    validator,
+                    replacement_probes,
+                    generated,
+                    round_number=round_number,
+                )
+                error = self._validator_audit_error(audit)
+            self.store.write_json(
+                generated / (
+                    f"validator-replacement-{round_number:02d}-certification.json"
+                ),
+                {
+                    "solution_id": validator.id,
+                    "compile_verdict": compiled.verdict,
+                    "audit": audit,
+                    "accepted": error is None,
+                    "error": error,
+                },
+            )
+            if error is None:
+                self._log(f"Validator thay thế {validator.id} đã được chứng nhận")
+                return validator, compile_results
+        raise RuntimeError(error)
+
 
     def _execute_many(self, *args, **kwargs):
         """Compatibility hook for existing execution-contract callers."""
@@ -641,54 +816,10 @@ class RunPipeline:
         all_compiles = self._compile_pool(to_compile, "Biên dịch ứng viên")
         if all_compiles[validator.id].verdict != "PASS":
             raise RuntimeError(f"Generated validator did not compile: {all_compiles[validator.id].stderr}")
-        generation_path = generated / "generation.json"
-        if self.validator_override is None and generation_path.is_file():
-            generation_payload = self.store.read_json(generation_path)
-            probes = generation_payload.get("validator_semantic_probes", [])
-            if probes:
-                valid_probes = [
-                    probe for probe in probes
-                    if isinstance(probe, dict)
-                    and isinstance(probe.get("input"), str)
-                    and isinstance(probe.get("rule"), str)
-                    and isinstance(probe.get("expected_valid"), bool)
-                ]
-                jobs = [
-                    (f"validator-semantic-probe-{index:03d}", probe["input"])
-                    for index, probe in enumerate(valid_probes, 1)
-                ]
-                results = self.execution._execute_many(
-                    validator, jobs, purpose="validator.semantic_probe"
-                )
-                audit = [
-                    {
-                        "case_id": result.case_id,
-                        "rule": probe.get("rule", ""),
-                        "expected_valid": probe["expected_valid"],
-                        "verdict": result.verdict,
-                        "matched_expectation": (
-                            result.verdict == "PASS"
-                            if probe["expected_valid"]
-                            # Validators signal invalid input with a deliberate
-                            # non-zero exit (RE). INFRA/TLE are audit failures.
-                            else result.verdict == "RE"
-                        ),
-                        "stderr": result.stderr,
-                    }
-                    for probe, result in zip(valid_probes, results)
-                ]
-                self.store.write_json(generated / "validator-semantic-audit.json", audit)
-                mismatches = [row for row in audit if not row["matched_expectation"]]
-                if mismatches:
-                    details = "; ".join(
-                        f"{row['rule']} (expected "
-                        f"{'PASS' if row['expected_valid'] else 'RE'}, "
-                        f"got {row['verdict']})"
-                        for row in mismatches[:3]
-                    )
-                    raise RuntimeError(
-                        "Generated validator mismatched semantic probes: " + details
-                    )
+        validator, all_compiles = self._recover_validator(
+            statement, test_model, generated, validator, all_compiles,
+            official_samples,
+        )
         reference_pool = ReferencePoolBuilder(
             self.solution_generator, self.execution, self.references, self.store
         ).build(statement, generated, candidates, all_compiles, official_samples)
